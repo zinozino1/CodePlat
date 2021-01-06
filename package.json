@@ -1,0 +1,48 @@
+{
+    "name": "projectfrontend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next",
+        "build": "next build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Project-Study-suwon/Frontend.git"
+    },
+    "author": "ParkJinho",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/Project-Study-suwon/Frontend/issues"
+    },
+    "homepage": "https://github.com/Project-Study-suwon/Frontend#readme",
+    "dependencies": {
+        "@ant-design/icons": "^4.3.0",
+        "antd": "^4.9.4",
+        "axios": "^0.21.1",
+        "babel-plugin-styled-components": "^1.12.0",
+        "faker": "^5.1.0",
+        "immer": "^8.0.0",
+        "next": "^9.5.5",
+        "next-redux-saga": "^4.1.2",
+        "next-redux-wrapper": "^6.0.2",
+        "prop-types": "^15.7.2",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1",
+        "react-redux": "^7.2.2",
+        "react-slick": "^0.27.13",
+        "redux": "^4.0.5",
+        "redux-actions": "^2.6.5",
+        "redux-devtools-extension": "^2.13.8",
+        "redux-saga": "^1.1.3",
+        "shortid": "^2.2.16",
+        "styled-components": "^5.2.1"
+    },
+    "devDependencies": {
+        "eslint": "^7.17.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-react": "^7.22.0",
+        "eslint-plugin-react-hooks": "^4.2.0"
+    }
+}
