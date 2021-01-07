@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Layout, Menu, Button, Badge } from "antd";
 import { BellOutlined } from "@ant-design/icons";
@@ -6,6 +6,24 @@ import styled from "styled-components";
 
 const AntHeader = Layout.Header;
 const { SubMenu } = Menu;
+
+const HeaderWrapper = styled(AntHeader)`
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    background: #fff;
+`;
+
+const InnerHeader = styled.div`
+    width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    @media (max-width: 1368px) {
+        & {
+            width: 100%;
+        }
+    }
+`;
 
 const LogoWrapper = styled.div`
     background: #222;
@@ -42,6 +60,9 @@ const ButtonGroup = styled.div`
     .btn-register {
         margin-left: 10px;
     }
+    .btn-logout {
+        margin-left: 10px;
+    }
 `;
 
 const BadgeWrapper = styled.div`
@@ -49,44 +70,97 @@ const BadgeWrapper = styled.div`
 `;
 
 const Header = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const [currentMenu, setCurrentMenu] = useState(null);
+
+    const onClickLogout = () => {
+        setIsLoggedIn(false);
+    };
+
+    const onClickMenu = (e) => {
+        console.log(e.key);
+        setCurrentMenu(e.key);
+    };
+
     return (
-        <AntHeader
-            style={{
-                position: "fixed",
-                zIndex: 1,
-                width: "100%",
-                display: "flex",
-                background: "#fff",
-            }}
-        >
-            <LogoWrapper>Logo</LogoWrapper>
-            <MenuWrapper mode="horizontal">
-                <MenuItemWrapper key="1" className="menu-study">
-                    스터디
-                </MenuItemWrapper>
-                <MenuItemWrapper key="2" className="menu-project">
-                    프로젝트
-                </MenuItemWrapper>
-                <MenuItemWrapper key="3" className="menu-community">
-                    커뮤니티
-                </MenuItemWrapper>
-            </MenuWrapper>
-            <BadgeWrapper>
-                <Badge count={99} overflowCount={10} offset={[20, 0]}>
-                    <Link href="#">
-                        <a className="head-example">
-                            <BellOutlined />
-                        </a>
-                    </Link>
-                </Badge>
-            </BadgeWrapper>
-            <ButtonGroup>
-                <Button className="btn-login">로그인</Button>
-                <Button className="btn-register" type="primary">
-                    회원가입
-                </Button>
-            </ButtonGroup>
-        </AntHeader>
+        <HeaderWrapper>
+            <InnerHeader>
+                <Link href="/">
+                    <a>
+                        <LogoWrapper>Logo</LogoWrapper>
+                    </a>
+                </Link>
+
+                <MenuWrapper
+                    mode="horizontal"
+                    onClick={onClickMenu}
+                    selectedKeys={[currentMenu]}
+                >
+                    <MenuItemWrapper key="1" className="menu-study">
+                        <Link href="/articles/study">
+                            <a>스터디</a>
+                        </Link>
+                    </MenuItemWrapper>
+
+                    <MenuItemWrapper key="2" className="menu-project">
+                        <Link href="/articles/project">
+                            <a>프로젝트</a>
+                        </Link>
+                    </MenuItemWrapper>
+
+                    <MenuItemWrapper key="3" className="menu-community">
+                        <Link href="/articles/community">
+                            <a>커뮤니티</a>
+                        </Link>
+                    </MenuItemWrapper>
+                </MenuWrapper>
+                {isLoggedIn && (
+                    <BadgeWrapper>
+                        <Badge count={99} overflowCount={10} offset={[20, 0]}>
+                            <Link href="#">
+                                <a className="head-example">
+                                    <BellOutlined />
+                                </a>
+                            </Link>
+                        </Badge>
+                    </BadgeWrapper>
+                )}
+
+                {!isLoggedIn ? (
+                    <ButtonGroup>
+                        <Link href="/auth/login">
+                            <a>
+                                <Button className="btn-login">로그인</Button>
+                            </a>
+                        </Link>
+                        <Link href="/auth/register">
+                            <a>
+                                <Button className="btn-register" type="primary">
+                                    회원가입
+                                </Button>
+                            </a>
+                        </Link>
+                    </ButtonGroup>
+                ) : (
+                    <ButtonGroup>
+                        <Link href="/mypage">
+                            <a>
+                                <Button className="btn-mypage">
+                                    마이페이지
+                                </Button>
+                            </a>
+                        </Link>
+                        <Button
+                            className="btn-logout"
+                            type="primary"
+                            onClick={onClickLogout}
+                        >
+                            로그아웃
+                        </Button>
+                    </ButtonGroup>
+                )}
+            </InnerHeader>
+        </HeaderWrapper>
     );
 };
 

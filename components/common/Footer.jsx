@@ -1,13 +1,19 @@
 import React from "react";
 import { Layout, Menu, Breadcrumb } from "antd";
+import styled from "styled-components";
 
 const AntFooter = Layout.Footer;
 
+const FooterWrapper = styled(AntFooter)`
+    background: #222;
+    color: #fff;
+`;
+
 const Footer = () => {
     return (
-        <AntFooter style={{ textAlign: "center" }}>
+        <FooterWrapper style={{ textAlign: "center" }}>
             ©2021 Created by Park Jinho
-        </AntFooter>
+        </FooterWrapper>
     );
 };
 

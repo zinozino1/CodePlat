@@ -4,9 +4,11 @@
         [
             "babel-plugin-styled-components",
             {
+                "fileName": true,
                 "ssr": true,
                 "displayName": true,
-                "preprocess": false
+                "preprocess": false,
+                "pure": true
             }
         ]
     ]

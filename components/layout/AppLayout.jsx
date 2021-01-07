@@ -1,7 +1,13 @@
-import React from "react";
+// import React from "react";
+// import styled from "styled-components";
 
-const AppLayout = () => {
-    return <div></div>;
-};
+// const AppWrapper = styled.div`
+//     width: 1200px;
+//     margin: 0 auto;
+// `;
 
-export default AppLayout;
+// const AppLayout = ({ children }) => {
+//     return <AppWrapper>{children}</AppWrapper>;
+// };
+
+// export default AppLayout;

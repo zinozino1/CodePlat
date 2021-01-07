@@ -1,7 +1,8 @@
 import React from "react";
+import ArticleLayout from "../../../components/layout/ArticleLayout";
 
 const Project = () => {
-    return <div>Project</div>;
+    return <ArticleLayout>Project</ArticleLayout>;
 };
 
 export default Project;
