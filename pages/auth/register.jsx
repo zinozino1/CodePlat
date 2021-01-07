@@ -1,7 +1,8 @@
 import React from "react";
+import AuthLayout from "../../components/layout/AuthLayout";
 
 const register = () => {
-    return <div>register</div>;
+    return <AuthLayout>register</AuthLayout>;
 };
 
 export default register;
