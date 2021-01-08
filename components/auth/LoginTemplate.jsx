@@ -3,7 +3,10 @@ import styled from "styled-components";
 import LoginInputForm from "./LoginInputForm";
 
 const LoginTemplateWrapper = styled.div`
-    margin: 200px 0;
+    background: #fff;
+    border-radius: 5px;
+    padding: 40px;
+    margin: 140px 0;
 `;
 
 const LoginTemplate = () => {

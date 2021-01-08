@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Card } from "antd";
 import HotContent from "./HotContent";
 import ScrapContent from "./ScrapContent";
+import { useSelector } from "react-redux";
 
 const ContentTemplateWrapper = styled.div`
     padding: 20px;

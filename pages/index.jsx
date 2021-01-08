@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Row, Col } from "antd";
+import { Layout, Row, Col, Divider } from "antd";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import styled from "styled-components";
@@ -7,6 +7,7 @@ import AppLayout from "../components/layout/AppLayout";
 import MyProfile from "../components/home/MyProfile";
 import ContentTemplate from "../components/home/ContentTemplate";
 import { useDispatch, useSelector } from "react-redux";
+import List from "../components/common/contents/List";
 
 const Content = Layout.Content;
 
@@ -23,8 +24,15 @@ const ContentWrapper = styled(Content)`
     }
 `;
 
+const ListWrapper = styled.div`
+    padding: 20px;
+`;
+
 const index = () => {
     const { me } = useSelector((state) => state.user);
+    const { studyPosts, projectPosts, communityPosts } = useSelector(
+        (state) => state.post,
+    );
 
     return (
         <Layout>
@@ -83,7 +91,10 @@ const index = () => {
                                 md={24}
                                 style={{ border: "1px solid black" }}
                             >
-                                study
+                                <Divider orientation="left">스터디</Divider>
+                                <ListWrapper>
+                                    <List data={studyPosts} type="study"></List>
+                                </ListWrapper>
                             </Col>
                         </Row>
                         <Row>
@@ -93,7 +104,13 @@ const index = () => {
                                 md={24}
                                 style={{ border: "1px solid black" }}
                             >
-                                project
+                                <Divider orientation="left">프로젝트</Divider>
+                                <ListWrapper>
+                                    <List
+                                        data={projectPosts}
+                                        type="project"
+                                    ></List>
+                                </ListWrapper>
                             </Col>
                         </Row>
                     </Col>

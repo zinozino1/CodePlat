@@ -47,7 +47,7 @@ const MenuWrapper = styled(Menu)`
 `;
 
 const MenuItemWrapper = styled(Menu.Item)`
-    margin: 0 10px;
+    margin: 0 40px !important;
 `;
 
 const ButtonGroup = styled.div`

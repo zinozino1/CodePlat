@@ -14,6 +14,7 @@ const initialState = {
 
 const dummyMeCreator = () => {
     return {
+        id: 111,
         nickname: "zinozino",
         email: "gogod23@naver.com",
         password: "safmimf3i2@#k9aci",
