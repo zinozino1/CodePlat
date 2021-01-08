@@ -8,14 +8,14 @@ const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
     /* background: #fff; */
-    width: 1300px;
+    width: 400px;
     margin: 0 auto;
     margin-top: 65px;
-    @media (max-width: 1368px) {
+    /* @media (max-width: 1368px) {
         & {
             width: 100%;
         }
-    }
+    } */
 `;
 
 const AuthLayout = ({ children }) => {

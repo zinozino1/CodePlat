@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Layout, Menu, Button, Badge } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { withRouter } from "next/router";
+import { useSelector, useDispatch } from "react-redux";
+import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
 
 const AntHeader = Layout.Header;
 const { SubMenu } = Menu;
@@ -71,16 +73,16 @@ const BadgeWrapper = styled.div`
 `;
 
 const Header = ({ router }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    // page변경되기 떄문에 메뉴 죽음
+    const dispatch = useDispatch();
+    const { me, logoutLoading } = useSelector((state) => state.user);
+
     const [currentMenu, setCurrentMenu] = useState(null);
 
-    const onClickLogout = () => {
-        setIsLoggedIn(false);
-    };
+    const onLogout = useCallback(() => {
+        dispatch(logoutRequestAction());
+    }, []);
 
     useEffect(() => {
-        console.log(router.route);
         setCurrentMenu(router.route);
     }, [router]);
 
@@ -121,7 +123,7 @@ const Header = ({ router }) => {
                         </Link>
                     </MenuItemWrapper>
                 </MenuWrapper>
-                {isLoggedIn && (
+                {me && (
                     <BadgeWrapper>
                         <Badge count={99} overflowCount={10} offset={[20, 0]}>
                             <Link href="#">
@@ -133,7 +135,7 @@ const Header = ({ router }) => {
                     </BadgeWrapper>
                 )}
 
-                {!isLoggedIn ? (
+                {!me ? (
                     <ButtonGroup>
                         <Link href="/auth/login">
                             <a>
@@ -160,7 +162,8 @@ const Header = ({ router }) => {
                         <Button
                             className="btn-logout"
                             type="primary"
-                            onClick={onClickLogout}
+                            onClick={onLogout}
+                            loading={logoutLoading}
                         >
                             로그아웃
                         </Button>

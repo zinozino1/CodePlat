@@ -6,6 +6,7 @@ import styled from "styled-components";
 import AppLayout from "../components/layout/AppLayout";
 import MyProfile from "../components/home/MyProfile";
 import ContentTemplate from "../components/home/ContentTemplate";
+import { useDispatch, useSelector } from "react-redux";
 
 const Content = Layout.Content;
 
@@ -23,17 +24,14 @@ const ContentWrapper = styled(Content)`
 `;
 
 const index = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(true);
-    const onLogout = () => {
-        setIsLoggedIn(false);
-    };
+    const { me } = useSelector((state) => state.user);
 
     return (
         <Layout>
             <Header />
             <ContentWrapper>
                 <Row>
-                    {isLoggedIn ? (
+                    {me ? (
                         <Col
                             xs={24}
                             sm={8}
@@ -47,7 +45,7 @@ const index = () => {
                                     md={24}
                                     style={{ border: "1px solid black" }}
                                 >
-                                    <MyProfile onLogout={onLogout} />
+                                    <MyProfile me={me} />
                                 </Col>
                             </Row>
                             <Row>

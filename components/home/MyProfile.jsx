@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Card, Avatar, Button } from "antd";
 import styled from "styled-components";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutRequestAction } from "../../reducers/user";
 
 const CardWrapper = styled.div`
     padding: 20px;
@@ -15,7 +17,15 @@ const ButtonsWrapper = styled.div`
     }
 `;
 
-const MyProfile = ({ onLogout }) => {
+const MyProfile = ({ me }) => {
+    const dispatch = useDispatch();
+
+    const { logoutLoading } = useSelector((state) => state.user);
+
+    const onLogout = useCallback(() => {
+        dispatch(logoutRequestAction());
+    }, []);
+
     return (
         <CardWrapper>
             <Card
@@ -35,8 +45,8 @@ const MyProfile = ({ onLogout }) => {
             // ]}
             >
                 <Card.Meta
-                    title={"nickname"}
-                    avatar={<Avatar>{"s"}</Avatar>}
+                    title={me.nickname}
+                    avatar={<Avatar>{me.nickname[0]}</Avatar>}
                 ></Card.Meta>
                 <ButtonsWrapper>
                     <Link href="/mypage">
@@ -49,6 +59,7 @@ const MyProfile = ({ onLogout }) => {
                         type="primary"
                         className="logout"
                         onClick={onLogout}
+                        loading={logoutLoading}
                     >
                         로그아웃
                     </Button>
