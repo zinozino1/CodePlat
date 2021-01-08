@@ -3,7 +3,6 @@ import { Layout, Row, Col, Divider } from "antd";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import styled from "styled-components";
-import AppLayout from "../components/layout/AppLayout";
 import MyProfile from "../components/home/MyProfile";
 import ContentTemplate from "../components/home/ContentTemplate";
 import { useDispatch, useSelector } from "react-redux";

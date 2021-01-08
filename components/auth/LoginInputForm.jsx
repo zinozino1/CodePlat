@@ -1,10 +1,40 @@
 import React, { useCallback, useEffect } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequestAction } from "../../reducers/user";
 import Router from "next/router";
+
+const SocialLoginWrapper = styled.div`
+    display: flex;
+    margin-bottom: 3px;
+    font-weight: 300;
+    .login-google {
+        background: #dd4b39;
+    }
+    .login-naver {
+        background: #00c300;
+        margin-left: 3px;
+    }
+    .login-github {
+        background: #333;
+    }
+    .login-facebook {
+        background: #3b5999;
+        margin-left: 3px;
+    }
+`;
+
+const SocialLoginButton = styled(Button)`
+    flex: 1;
+    color: #fff;
+    font-size: 12px;
+    &:hover {
+        color: #fff;
+    }
+`;
 
 const LoginInputForm = () => {
     const dispatch = useDispatch();
@@ -75,13 +105,44 @@ const LoginInputForm = () => {
                         type="primary"
                         htmlType="submit"
                         className="login-form-button"
-                        style={{ width: "200px" }}
+                        style={{ width: "100%" }}
                         onClick={onLogin}
                         loading={loginLoading}
                     >
                         로그인
                     </Button>
                 </Form.Item>
+                <Divider style={{ fontSize: "12px", color: "#888" }}>
+                    소셜 로그인
+                </Divider>
+                <SocialLoginWrapper>
+                    <SocialLoginButton
+                        className="login-google"
+                        style={{ flex: "1" }}
+                    >
+                        Google
+                    </SocialLoginButton>
+                    <SocialLoginButton
+                        className="login-naver"
+                        style={{ flex: "1", marginLeft: "3px" }}
+                    >
+                        Naver
+                    </SocialLoginButton>
+                </SocialLoginWrapper>
+                <SocialLoginWrapper>
+                    <SocialLoginButton
+                        className="login-github"
+                        style={{ flex: "1" }}
+                    >
+                        Github
+                    </SocialLoginButton>
+                    <SocialLoginButton
+                        className="login-facebook"
+                        style={{ flex: "1", marginLeft: "3px" }}
+                    >
+                        Facebook
+                    </SocialLoginButton>
+                </SocialLoginWrapper>
                 <Form.Item style={{ textAlign: "center" }}>
                     계정이 없으신가요?{" "}
                     <Link href="/auth/register">

@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Avatar, Space, Tag } from "antd";
+import { List, Avatar, Space, Tag, Popover } from "antd";
 import {
     MessageOutlined,
     LikeOutlined,
@@ -42,6 +42,13 @@ const ListHeader = styled.div`
     }
 `;
 
+const userInfoWindow = (
+    <div>
+        <p>Content</p>
+        <p>Content</p>
+    </div>
+);
+
 const IconText = ({ icon, text }) => (
     <Space>
         {React.createElement(icon)}
@@ -81,7 +88,13 @@ const ListItem = ({ item, type }) => {
                         )}
                     </div>
                     <div className="user-date-wrapper">
-                        <Avatar size={24} icon={<UserOutlined />} />{" "}
+                        <Popover content={userInfoWindow}>
+                            <Avatar
+                                style={{ cursor: "pointer" }}
+                                size={24}
+                                icon={<UserOutlined />}
+                            />{" "}
+                        </Popover>
                         <span className="user-nickname">
                             {item.writer.nickname}
                         </span>
