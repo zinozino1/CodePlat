@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Layout, Menu, Button, Badge } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import { withRouter } from "next/router";
 
 const AntHeader = Layout.Header;
 const { SubMenu } = Menu;
@@ -69,18 +70,19 @@ const BadgeWrapper = styled.div`
     margin-right: 60px;
 `;
 
-const Header = () => {
+const Header = ({ router }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(true);
+    // page변경되기 떄문에 메뉴 죽음
     const [currentMenu, setCurrentMenu] = useState(null);
 
     const onClickLogout = () => {
         setIsLoggedIn(false);
     };
 
-    const onClickMenu = (e) => {
-        console.log(e.key);
-        setCurrentMenu(e.key);
-    };
+    useEffect(() => {
+        console.log(router.route);
+        setCurrentMenu(router.route);
+    }, [router]);
 
     return (
         <HeaderWrapper>
@@ -91,24 +93,29 @@ const Header = () => {
                     </a>
                 </Link>
 
-                <MenuWrapper
-                    mode="horizontal"
-                    onClick={onClickMenu}
-                    selectedKeys={[currentMenu]}
-                >
-                    <MenuItemWrapper key="1" className="menu-study">
+                <MenuWrapper mode="horizontal" selectedKeys={[currentMenu]}>
+                    <MenuItemWrapper
+                        key="/articles/study"
+                        className="menu-study"
+                    >
                         <Link href="/articles/study">
                             <a>스터디</a>
                         </Link>
                     </MenuItemWrapper>
 
-                    <MenuItemWrapper key="2" className="menu-project">
+                    <MenuItemWrapper
+                        key="/articles/project"
+                        className="menu-project"
+                    >
                         <Link href="/articles/project">
                             <a>프로젝트</a>
                         </Link>
                     </MenuItemWrapper>
 
-                    <MenuItemWrapper key="3" className="menu-community">
+                    <MenuItemWrapper
+                        key="/articles/community"
+                        className="menu-community"
+                    >
                         <Link href="/articles/community">
                             <a>커뮤니티</a>
                         </Link>
@@ -164,4 +171,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default withRouter(Header);

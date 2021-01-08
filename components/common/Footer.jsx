@@ -12,7 +12,7 @@ const FooterWrapper = styled(AntFooter)`
 const Footer = () => {
     return (
         <FooterWrapper style={{ textAlign: "center" }}>
-            ©2021 Created by Park Jinho
+            ©2021 All right reserved.
         </FooterWrapper>
     );
 };

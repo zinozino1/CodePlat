@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout, Row, Col } from "antd";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import styled from "styled-components";
 import AppLayout from "../components/layout/AppLayout";
+import MyProfile from "../components/home/MyProfile";
+import ContentTemplate from "../components/home/ContentTemplate";
 
 const Content = Layout.Content;
 
@@ -21,23 +23,59 @@ const ContentWrapper = styled(Content)`
 `;
 
 const index = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(true);
+    const onLogout = () => {
+        setIsLoggedIn(false);
+    };
+
     return (
         <Layout>
             <Header />
             <ContentWrapper>
                 <Row>
+                    {isLoggedIn ? (
+                        <Col
+                            xs={24}
+                            sm={8}
+                            md={8}
+                            style={{ border: "1px solid black" }}
+                        >
+                            <Row>
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    md={24}
+                                    style={{ border: "1px solid black" }}
+                                >
+                                    <MyProfile onLogout={onLogout} />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col
+                                    xs={24}
+                                    sm={24}
+                                    md={24}
+                                    style={{ border: "1px solid black" }}
+                                >
+                                    <ContentTemplate />
+                                </Col>
+                            </Row>
+                        </Col>
+                    ) : (
+                        <Col
+                            xs={24}
+                            sm={8}
+                            md={8}
+                            style={{ border: "1px solid black" }}
+                        >
+                            <ContentTemplate />
+                        </Col>
+                    )}
+
                     <Col
                         xs={24}
-                        sm={6}
-                        md={6}
-                        style={{ border: "1px solid black" }}
-                    >
-                        left banner
-                    </Col>
-                    <Col
-                        xs={24}
-                        sm={18}
-                        md={18}
+                        sm={16}
+                        md={16}
                         style={{ border: "1px solid black" }}
                     >
                         <Row>
