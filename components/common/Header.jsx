@@ -115,10 +115,10 @@ const Header = ({ router }) => {
                     </MenuItemWrapper>
 
                     <MenuItemWrapper
-                        key="/articles/community"
-                        className="menu-community"
+                        key="/articles/forum"
+                        className="menu-forum"
                     >
-                        <Link href="/articles/community">
+                        <Link href="/articles/forum">
                             <a>커뮤니티</a>
                         </Link>
                     </MenuItemWrapper>

@@ -109,13 +109,29 @@ const ListItem = ({ item, type }) => {
                             </div>
                             <div className="user-date-wrapper">
                                 <Popover
+                                    onMouseOver={(e) => {
+                                        console.log(1);
+                                    }}
                                     content={
-                                        <ProfileModal
-                                            writer={item.writer}
-                                        ></ProfileModal>
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                        >
+                                            <ProfileModal
+                                                writer={item.writer}
+                                            ></ProfileModal>
+                                        </div>
                                     }
                                 >
                                     <Avatar
+                                        onMouseOver={(e) => {
+                                            console.log(1);
+                                        }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            console.log("1");
+                                        }}
                                         style={{ cursor: "pointer" }}
                                         size={24}
                                         icon={<UserOutlined />}
@@ -175,9 +191,18 @@ const ListItem = ({ item, type }) => {
                             <div className="user-date-wrapper">
                                 <Popover
                                     content={
-                                        <ProfileModal
-                                            writer={item.writer}
-                                        ></ProfileModal>
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                        >
+                                            <ProfileModal
+                                                writer={item.writer}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                            ></ProfileModal>
+                                        </div>
                                     }
                                 >
                                     <Avatar

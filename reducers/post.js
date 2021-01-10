@@ -28,12 +28,12 @@ const dummyPostCreator = (type, number) => {
                 writer: {
                     id: shortId.generate(),
                     nickname: faker.name.findName(),
-                    email: faker.lorem.sentence(),
+                    email: faker.random.word(),
                     password: faker.random.word(),
                     techStack: Array(3)
                         .fill()
                         .map((v, i) => faker.lorem.word()),
-                    githubUrl: faker.lorem.sentence(),
+                    githubUrl: faker.random.word(),
                     filePath: faker.image.image(),
                     posts: Array(3)
                         .fill()
@@ -78,12 +78,12 @@ const dummyPostCreator = (type, number) => {
                 writer: {
                     id: shortId.generate(),
                     nickname: faker.name.findName(),
-                    email: faker.lorem.sentence(),
+                    email: faker.random.word(),
                     password: faker.random.word(),
                     techStack: Array(3)
                         .fill()
                         .map((v, i) => faker.lorem.word()),
-                    githubUrl: faker.lorem.sentence(),
+                    githubUrl: faker.random.word(),
                     filePath: faker.image.image(),
                     posts: Array(3)
                         .fill()

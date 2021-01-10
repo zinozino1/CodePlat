@@ -25,9 +25,7 @@ const ArticleLayout = ({ children }) => {
             <Header />
             <ContentWrapper>
                 <SearchContentForm />
-                {children !== "Community" && (
-                    <SkillFilterForm></SkillFilterForm>
-                )}
+                {children !== "Forum" && <SkillFilterForm></SkillFilterForm>}
                 {children}
             </ContentWrapper>
         </Layout>
