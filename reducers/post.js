@@ -40,6 +40,8 @@ const dummyPostCreator = (type, number) => {
                         .map((v, i) => {
                             dummy: i;
                         }),
+                    rating: 4,
+                    registerDate: faker.date.recent(),
                 },
                 createAt: faker.date.recent(),
                 techStack: Array(3)
@@ -88,6 +90,8 @@ const dummyPostCreator = (type, number) => {
                         .map((v, i) => {
                             dummy: i;
                         }),
+                    rating: 4,
+                    registerDate: faker.date.recent(),
                 },
                 createAt: faker.date.recent(),
                 techStack: Array(3)

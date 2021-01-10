@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import styled, { css } from "styled-components";
 import Link from "next/link";
+import ProfileModal from "../../modal/ProfileModal";
 
 const ListItemWrapper = styled(List.Item)`
     background: #fff;
@@ -107,7 +108,13 @@ const ListItem = ({ item, type }) => {
                                 )}
                             </div>
                             <div className="user-date-wrapper">
-                                <Popover content={userInfoWindow}>
+                                <Popover
+                                    content={
+                                        <ProfileModal
+                                            writer={item.writer}
+                                        ></ProfileModal>
+                                    }
+                                >
                                     <Avatar
                                         style={{ cursor: "pointer" }}
                                         size={24}
@@ -166,7 +173,13 @@ const ListItem = ({ item, type }) => {
                                 </Tag>
                             </div>
                             <div className="user-date-wrapper">
-                                <Popover content={userInfoWindow}>
+                                <Popover
+                                    content={
+                                        <ProfileModal
+                                            writer={item.writer}
+                                        ></ProfileModal>
+                                    }
+                                >
                                     <Avatar
                                         style={{ cursor: "pointer" }}
                                         size={24}

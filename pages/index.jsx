@@ -15,7 +15,6 @@ import {
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
-    /* background: #fff; */
     width: 1300px;
     margin: 100px auto;
 
@@ -50,10 +49,6 @@ const index = () => {
             dispatch(initializePostsAction());
         };
     }, []);
-
-    // if (!studyPosts || !projectPosts || !forumPosts) {
-    //     return null;
-    // }
 
     return (
         <Layout>
