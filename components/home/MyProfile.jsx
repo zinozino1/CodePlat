@@ -28,22 +28,7 @@ const MyProfile = ({ me }) => {
 
     return (
         <CardWrapper>
-            <Card
-            // actions={[
-            //     <div key="twit">
-            //         트윗
-            //         <br /> ㅁㄴㅇㄹ
-            //     </div>,
-            //     <div key="followings">
-            //         팔로잉
-            //         <br /> ㅁㄴㅇㄹ
-            //     </div>,
-            //     <div key="followers">
-            //         팔로워
-            //         <br /> ㅁㄴㅇㄹ
-            //     </div>,
-            // ]}
-            >
+            <Card>
                 <Card.Meta
                     title={me.nickname}
                     avatar={<Avatar>{me.nickname[0]}</Avatar>}

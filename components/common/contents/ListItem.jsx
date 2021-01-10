@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Avatar, Space, Tag, Popover } from "antd";
+import { List, Avatar, Space, Tag, Popover, Skeleton } from "antd";
 import {
     MessageOutlined,
     LikeOutlined,
@@ -7,13 +7,19 @@ import {
     EyeOutlined,
     CommentOutlined,
     UserOutlined,
+    TagsOutlined,
 } from "@ant-design/icons";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const ListItemWrapper = styled(List.Item)`
     background: #fff;
     padding: 10px 30px;
     margin-bottom: 10px;
+    ${(props) =>
+        props.forumHome &&
+        css`
+            /* margin: 0; */
+        `}
     .ant-list-item-action {
         margin-top: 5px;
         margin-left: 0;
@@ -31,13 +37,18 @@ const ListHeader = styled.div`
         flex: 1;
     }
     .user-date-wrapper {
-        flex: 1;
         text-align: right;
         .user-nickname {
             margin-right: 10px;
         }
         .create-date {
             color: #888;
+        }
+    }
+    @media (max-width: 768px) {
+        flex-direction: column;
+        .user-date-wrapper {
+            margin-top: 10px;
         }
     }
 `;
@@ -57,7 +68,7 @@ const IconText = ({ icon, text }) => (
 );
 
 const ListItem = ({ item, type }) => {
-    if (type == "study") {
+    if (type == "study" || type == "project") {
         return (
             <ListItemWrapper
                 actions={[
@@ -110,7 +121,7 @@ const ListItem = ({ item, type }) => {
                 {""}
             </ListItemWrapper>
         );
-    } else if (type == "project") {
+        //else if (type == "project") {
         return (
             <ListItemWrapper
                 actions={[
@@ -137,22 +148,55 @@ const ListItem = ({ item, type }) => {
             <ListItemWrapper
                 actions={[
                     <IconText
-                        icon={StarOutlined}
-                        text="156"
-                        key="list-vertical-star-o"
-                    />,
-                    <IconText
-                        icon={LikeOutlined}
-                        text="156"
-                        key="list-vertical-like-o"
+                        icon={EyeOutlined}
+                        text={item.views}
+                        key="list-vertical-eye-o"
                     />,
                     <IconText
                         icon={MessageOutlined}
-                        text="2"
+                        text={item.comments.length}
                         key="list-vertical-message"
                     />,
+                    <IconText
+                        icon={LikeOutlined}
+                        text={item.likes}
+                        key="list-vertical-like-o"
+                    />,
+                    <IconText
+                        icon={TagsOutlined}
+                        text={item.scraped}
+                        key="list-vertical-scrap-o"
+                    />,
                 ]}
-            ></ListItemWrapper>
+            >
+                <ListHeader>
+                    <div className="tag-wrapper">
+                        <Tag color="red" key={item}>
+                            {item.filter}
+                        </Tag>
+                    </div>
+                    <div className="user-date-wrapper">
+                        <Popover content={userInfoWindow}>
+                            <Avatar
+                                style={{ cursor: "pointer" }}
+                                size={24}
+                                icon={<UserOutlined />}
+                            />{" "}
+                        </Popover>
+                        <span className="user-nickname">
+                            {item.writer.nickname}
+                        </span>
+                        <span className="create-date">{`${item.createAt.getFullYear()}.${
+                            item.createAt.getMonth() + 1
+                        }.${item.createAt.getDay()}`}</span>
+                    </div>
+                </ListHeader>
+                <List.Item.Meta
+                    //avatar={<Avatar src={item.avatar} />}
+                    title={item.title}
+                />
+                {""}
+            </ListItemWrapper>
         );
     }
 };

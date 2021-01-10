@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Form, Input, Button, Checkbox, Divider } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import styled from "styled-components";
@@ -39,9 +39,23 @@ const SocialLoginButton = styled(Button)`
 const LoginInputForm = () => {
     const dispatch = useDispatch();
     const { loginLoading, me, loginError } = useSelector((state) => state.user);
-    const onLogin = useCallback(() => {
-        dispatch(loginRequestAction());
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const onChangeEmail = useCallback((e) => {
+        setEmail(e.target.value);
     }, []);
+    const onChangePassword = useCallback((e) => {
+        setPassword(e.target.value);
+    }, []);
+
+    const onLogin = useCallback(() => {
+        if (email == "" || password == "") {
+            return;
+        }
+        dispatch(loginRequestAction());
+    }, [email, password]);
 
     useEffect(() => {
         if (loginError) {
@@ -69,6 +83,7 @@ const LoginInputForm = () => {
                             message: "이메일을 입력해주세요.",
                         },
                     ]}
+                    onChange={onChangeEmail}
                 >
                     <Input
                         prefix={
@@ -85,6 +100,7 @@ const LoginInputForm = () => {
                             message: "비밀번호를 입력해주세요.",
                         },
                     ]}
+                    onChange={onChangePassword}
                 >
                     <Input
                         prefix={
