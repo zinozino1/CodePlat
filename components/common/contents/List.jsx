@@ -16,4 +16,4 @@ const List = ({ data, type }) => {
     );
 };
 
-export default List;
+export default React.memo(List);

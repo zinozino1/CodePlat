@@ -125,10 +125,12 @@ const dummyPostCreator = (type, number) => {
 
 export const INITIALIZE_POSTS = "post/INITIALIZE_POSTS";
 
+// 10개씩 불러오기
 export const LOAD_POSTS_REQUEST = "post/LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "post/LOAD_POSTS_SUCCESS";
 export const LOAD_POSTS_FAILURE = "post/LOAD_POSTS_FAILURE";
 
+// 5,8개씩 불러오기
 export const MAIN_LOAD_POSTS_REQUEST = "post/MAIN_LOAD_POSTS_REQUEST";
 export const MAIN_LOAD_POSTS_SUCCESS = "post/MAIN_LOAD_POSTS_SUCCESS";
 export const MAIN_LOAD_POSTS_FAILURE = "post/MAIN_LOAD_POSTS_FAILURE";

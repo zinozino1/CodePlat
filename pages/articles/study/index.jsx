@@ -42,7 +42,7 @@ const Study = () => {
     }, []);
 
     return (
-        <ArticleLayout>
+        <ArticleLayout contentType="study">
             <List data={studyPosts} type="study" />
             {loadPostsLoading && (
                 <SpinWrapper>

@@ -119,7 +119,7 @@ const Header = ({ router }) => {
                         className="menu-forum"
                     >
                         <Link href="/articles/forum">
-                            <a>커뮤니티</a>
+                            <a>포럼</a>
                         </Link>
                     </MenuItemWrapper>
                 </MenuWrapper>

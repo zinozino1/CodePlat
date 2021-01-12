@@ -19,11 +19,7 @@ const ListItemWrapper = styled(List.Item)`
     padding: 10px 30px;
     margin-bottom: 10px;
     transition: 0.3s;
-    ${(props) =>
-        props.forumHome &&
-        css`
-            /* margin: 0; */
-        `}
+
     .ant-list-item-action {
         margin-top: 5px;
         margin-left: 0;

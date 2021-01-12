@@ -27,6 +27,10 @@ const RadioWrapper = styled.div`
 const CheckBoxWrapper = styled.div`
     padding: 20px;
     background: #fff;
+    .ant-checkbox-wrapper {
+        color: #777;
+        font-weight: 400;
+    }
 `;
 
 const SelectWrapper = styled.div`

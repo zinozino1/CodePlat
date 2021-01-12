@@ -27,13 +27,13 @@ const ArticleWrapper = styled.div`
     }
 `;
 
-const ArticleLayout = ({ children }) => {
+const ArticleLayout = ({ children, contentType }) => {
     return (
         <Layout>
             <Header />
             <ContentWrapper>
                 <SearchContentForm />
-                {children !== "Forum" && <SkillFilterForm></SkillFilterForm>}
+                {contentType !== "forum" && <SkillFilterForm></SkillFilterForm>}
                 <ArticleWrapper>{children}</ArticleWrapper>
             </ContentWrapper>
         </Layout>
