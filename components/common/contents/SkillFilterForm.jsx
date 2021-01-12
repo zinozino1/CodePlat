@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { StackList } from "../../../lib/constant/constant";
 
 const SkillFilterFormWrapper = styled.div`
-    border: 1px solid black;
     margin: 0 auto;
     width: 900px;
     @media (max-width: 900px) {
@@ -27,11 +26,11 @@ const RadioWrapper = styled.div`
 
 const CheckBoxWrapper = styled.div`
     padding: 20px;
-    background: #f2f8f7;
+    background: #fff;
 `;
 
 const SelectWrapper = styled.div`
-    padding: 20px;
+    padding: 20px 0;
     .ant-select-selection-item-remove {
         display: none;
     }

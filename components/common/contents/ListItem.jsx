@@ -12,6 +12,7 @@ import {
 import styled, { css } from "styled-components";
 import Link from "next/link";
 import ProfileModal from "../../modal/ProfileModal";
+import shortid from "shortid";
 
 const ListItemWrapper = styled(List.Item)`
     background: #fff;
@@ -96,7 +97,10 @@ const ListItem = ({ item, type }) => {
                         <ListHeader>
                             <div className="tag-wrapper">
                                 {item.techStack.map((v, i) => (
-                                    <Tag color="magenta" key={v}>
+                                    <Tag
+                                        color="magenta"
+                                        key={v + shortid.generate()}
+                                    >
                                         {v}
                                     </Tag>
                                 ))}
@@ -109,9 +113,6 @@ const ListItem = ({ item, type }) => {
                             </div>
                             <div className="user-date-wrapper">
                                 <Popover
-                                    onMouseOver={(e) => {
-                                        console.log(1);
-                                    }}
                                     content={
                                         <div
                                             onClick={(e) => {
@@ -125,12 +126,8 @@ const ListItem = ({ item, type }) => {
                                     }
                                 >
                                     <Avatar
-                                        onMouseOver={(e) => {
-                                            console.log(1);
-                                        }}
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            console.log("1");
                                         }}
                                         style={{ cursor: "pointer" }}
                                         size={24}

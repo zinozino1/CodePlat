@@ -19,6 +19,14 @@ const ContentWrapper = styled(Content)`
     }
 `;
 
+const ArticleWrapper = styled.div`
+    margin: 0 auto;
+    width: 900px;
+    @media (max-width: 900px) {
+        width: 100%;
+    }
+`;
+
 const ArticleLayout = ({ children }) => {
     return (
         <Layout>
@@ -26,7 +34,7 @@ const ArticleLayout = ({ children }) => {
             <ContentWrapper>
                 <SearchContentForm />
                 {children !== "Forum" && <SkillFilterForm></SkillFilterForm>}
-                {children}
+                <ArticleWrapper>{children}</ArticleWrapper>
             </ContentWrapper>
         </Layout>
     );

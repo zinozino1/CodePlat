@@ -165,12 +165,15 @@ const postReducer = handleActions(
             loadPostsLoading: false,
             loadPostsDone: true,
             loadPostsError: null,
+            [action.contentType + "Posts"]: state[
+                action.contentType + "Posts"
+            ].concat(dummyPostCreator(action.contentType, 10)),
         }),
         [LOAD_POSTS_FAILURE]: (state, action) => ({
             ...state,
             loadPostsLoading: false,
             loadPostsDone: false,
-            loadPostsError: null,
+            loadPostsError: action.error,
         }),
         [MAIN_LOAD_POSTS_REQUEST]: (state, action) => ({
             ...state,
@@ -194,7 +197,7 @@ const postReducer = handleActions(
             ...state,
             mainLoadPostsLoading: false,
             mainLoadPostsDone: false,
-            mainLoadPostsError: null,
+            mainLoadPostsError: action.error,
         }),
     },
     initialState,
