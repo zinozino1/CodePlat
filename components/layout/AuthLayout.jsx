@@ -2,26 +2,33 @@ import React from "react";
 import { Layout } from "antd";
 import Header from "../common/Header";
 import Footer from "../common/Footer";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
     /* background: #fff; */
-    width: 400px;
+    /* width: 400px; */
     margin: 0 auto;
     margin-top: 65px;
-    /* @media (max-width: 1368px) {
+    ${(props) =>
+        props.type === "register"
+            ? css`
+                  width: 600px;
+              `
+            : css`
+                  width: 400px;
+              `}/* @media (max-width: 1368px) {
         & {
             width: 100%;
         }
     } */
 `;
 
-const AuthLayout = ({ children }) => {
+const AuthLayout = ({ children, type }) => {
     return (
         <Layout>
-            <ContentWrapper>{children}</ContentWrapper>
+            <ContentWrapper type={type}>{children}</ContentWrapper>
             <Footer />
         </Layout>
     );

@@ -4,7 +4,7 @@ import LoginTemplate from "../../components/auth/LoginTemplate";
 
 const login = () => {
     return (
-        <AuthLayout>
+        <AuthLayout type="login">
             <LoginTemplate />
         </AuthLayout>
     );
