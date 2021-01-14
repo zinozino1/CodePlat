@@ -12,42 +12,29 @@ const { SubMenu } = Menu;
 
 const HeaderWrapper = styled(AntHeader)`
     position: fixed;
-    z-index: 1;
-    padding-left: 80px;
-    padding-right: 50px;
+    z-index: 10;
     width: 100%;
     background: #16172b;
-    @media (max-width: 768px) {
-        & {
-            padding-left: 0px;
-            padding-right: 0px;
-            position: absolute;
-            left: 0px;
-        }
-    }
 `;
 
 const InnerHeader = styled.div`
     width: 1300px;
     margin: 0 auto;
     display: flex;
+    .ant-menu-horizontal {
+        border: none;
+    }
     @media (max-width: 1368px) {
         & {
             width: 100%;
         }
     }
-    @media (max-width: 768px) {
-        a {
-            order: 2;
-            position: absolute;
-            left: 0px;
-            margin: 0 0px;
-        }
+    @media (max-width: 950px) {
+        justify-content: space-between;
     }
 `;
 
 const LogoWrapper = styled.div`
-    //background: #222;
     float: left;
     cursor: pointer;
     color: #fff;
@@ -55,50 +42,51 @@ const LogoWrapper = styled.div`
     font-weight: bold;
     font-size: 20px;
     width: 100px;
-    @media (max-width: 768px) {
-        & {
-        }
-    }
 `;
 
-//메뉴 글자 키우기(0)
 const MenuWrapper = styled(Menu)`
     background: #16172b;
     font-size: 18px;
-    // background: #fafafa;
+    /* // background: #fafafa; */
 
     margin: 0 auto;
     height: 64px;
-    @media (max-width: 768px) {
+    @media (max-width: 950px) {
         & {
-            order: 3;
-            position: absolute;
-            right: 0px;
-            margin: 0 0px;
+            display: none;
+            /* order: 3; */
+            /* display: inline-block; */
         }
     }
+    .ant-menu-item-active {
+        a:hover {
+            color: #188fffad;
+        }
+        border-bottom: 2px solid transparent !important;
+    }
+
     .ant-menu-submenu-title > span {
         color: white;
     }
-    .ant-menu-item > a {
-        color: white;
-        font-weight: bold;
+    .ant-menu-item {
+        a {
+            color: white;
+            font-weight: bold;
+            margin: 0 40px;
+        }
     }
-    .ant-menu-item-selected a {
-        color: #1890ff;
+    .ant-menu-item-selected {
+        border-bottom: 2px solid transparent !important;
+        a {
+            color: #1890ff;
+        }
     }
 `;
 
-//메뉴 아이템 공백 넓히기(0)
-const PartialStyle = {
-    margin: "0 40px",
-};
-
 const MenuItemWrapper = styled(Menu.Item)`
-    margin-left: 20%;
     @media (max-width: 768px) {
         & {
-            margin-right: 0px;
+            /* margin-right: 0px; */
         }
     }
 `;
@@ -108,7 +96,6 @@ const ButtonGroup = styled.div`
         .btn-login {
         }
         .btn-register {
-            display: none;
         }
     }
     .btn-login {
@@ -123,6 +110,38 @@ const ButtonGroup = styled.div`
 
 const BadgeWrapper = styled.div`
     margin-right: 60px;
+`;
+
+const MobileMenuWrapper = styled(Menu)`
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin: 0;
+    background: #16172bcc;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    .ant-menu-item-active {
+        a:hover {
+            color: #188fffad;
+        }
+    }
+    .ant-menu-item {
+        a {
+            color: white;
+            font-weight: bold;
+        }
+    }
+    .ant-menu-item-selected {
+        a {
+            color: #1890ff;
+        }
+    }
+    @media (min-width: 950px) {
+        display: none;
+    }
 `;
 
 const Header = ({ router }) => {
@@ -150,7 +169,6 @@ const Header = ({ router }) => {
 
                 <MenuWrapper mode="horizontal" selectedKeys={[currentMenu]}>
                     <MenuItemWrapper
-                        style={PartialStyle}
                         key="/articles/study"
                         className="menu-study"
                     >
@@ -160,7 +178,6 @@ const Header = ({ router }) => {
                     </MenuItemWrapper>
 
                     <MenuItemWrapper
-                        style={PartialStyle}
                         key="/articles/project"
                         className="menu-project"
                     >
@@ -170,7 +187,6 @@ const Header = ({ router }) => {
                     </MenuItemWrapper>
 
                     <MenuItemWrapper
-                        style={PartialStyle}
                         key="/articles/forum"
                         className="menu-forum"
                     >
@@ -226,6 +242,28 @@ const Header = ({ router }) => {
                     </ButtonGroup>
                 )}
             </InnerHeader>
+            <MobileMenuWrapper>
+                <MenuItemWrapper key="/articles/study" className="menu-study">
+                    <Link href="/articles/study">
+                        <a>스터디</a>
+                    </Link>
+                </MenuItemWrapper>
+
+                <MenuItemWrapper
+                    key="/articles/project"
+                    className="menu-project"
+                >
+                    <Link href="/articles/project">
+                        <a>프로젝트</a>
+                    </Link>
+                </MenuItemWrapper>
+
+                <MenuItemWrapper key="/articles/forum" className="menu-forum">
+                    <Link href="/articles/forum">
+                        <a>포럼</a>
+                    </Link>
+                </MenuItemWrapper>
+            </MobileMenuWrapper>
         </HeaderWrapper>
     );
 };

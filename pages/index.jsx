@@ -23,6 +23,11 @@ const ContentWrapper = styled(Content)`
             width: 100%;
         }
     }
+    @media (max-width: 950px) {
+        & {
+            margin: 125px auto;
+        }
+    }
 `;
 
 const ListWrapper = styled.div`

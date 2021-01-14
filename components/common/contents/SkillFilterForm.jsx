@@ -17,6 +17,7 @@ const RadioWrapper = styled.div`
         justify-content: space-between;
         .ant-radio-button-wrapper {
             flex: 1;
+            z-index: 1;
         }
         @media (max-width: 768px) {
             flex-direction: column;

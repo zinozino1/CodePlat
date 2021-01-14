@@ -17,6 +17,9 @@ const ContentWrapper = styled(Content)`
             width: 100%;
         }
     }
+    @media (max-width: 950px) {
+        margin-top: 125px;
+    }
 `;
 
 const ArticleWrapper = styled.div`
