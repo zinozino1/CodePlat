@@ -97,6 +97,9 @@ const ButtonGroup = styled.div`
         }
         .btn-register {
         }
+        .btn-logout {
+            display: none;
+        }
     }
     .btn-login {
     }
