@@ -68,8 +68,8 @@ const Footer = () => {
                             <a style={FooterAnchor}>스터디</a>
                         </Link>
                         <br />
-                        <Link href="/articles/community">
-                            <a style={FooterAnchor}>커뮤니티</a>
+                        <Link href="/articles/forum">
+                            <a style={FooterAnchor}>포럼</a>
                         </Link>
                     </Col>
                 </Row>

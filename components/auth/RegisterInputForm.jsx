@@ -1,9 +1,12 @@
 import React, { useCallback, useState } from "react";
-import { Form, Input, Select, Button, Divider } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Divider, Upload } from "antd";
+import { UserOutlined, LockOutlined, UploadOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
+import SocialTemplate from "../common/auth/SocialTemplate";
+import useInput from "../../hooks/useInput";
+import SkillFilterForm from "../common/contents/SkillFilterForm";
 
 const { Option } = Select;
 
@@ -25,80 +28,55 @@ const formItemLayout = {
         },
     },
 };
-const tailFormItemLayout = {
-    wrapperCol: {
-        xs: {
-            span: 24,
-            offset: 0,
-        },
-        sm: {
-            span: 16,
-            offset: 8,
-        },
-    },
-};
 
-const SocialLoginWrapper = styled.div`
-    display: flex;
-    margin-bottom: 3px;
-    font-weight: 300;
-    .login-google {
-        background: #dd4b39;
+const RegisterFormWrapper = styled(Form)`
+    .register-btn {
+        margin: 20px 0;
+        text-align: center;
     }
-    .login-naver {
-        background: #00c300;
-        margin-left: 3px;
-    }
-    .login-github {
-        background: #333;
-    }
-    .login-facebook {
-        background: #3b5999;
-        margin-left: 3px;
+    .ant-divider {
+        font-size: 12px;
+        margin: 50px 0;
     }
 `;
 
-const SocialLoginButton = styled(Button)`
-    flex: 1;
-    color: #fff;
-    font-size: 12px;
-    &:hover {
-        color: #fff;
+const RegisterInputItemWrapper = styled(Form.Item)`
+    .ant-form-item-label {
+        text-align: left;
+    }
+    .ant-form-item-control {
     }
 `;
+
+const StyledDivider = styled(Divider)``;
+
 const RegisterInputForm = () => {
     const [form] = Form.useForm();
 
-    const onFinish = (values) => {
-        console.log("Received values of form: ", values);
-    };
-    const [nickname, setNickname] = useState("");
-    const [email, setEmail] = useState("");
-    const [confirmEmail, setConfirmEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [nickname, onChangeNickname] = useInput("");
+    const [email, onChangeEmail] = useInput("");
+    const [confirmEmail, onChangeConfirmEmail] = useInput("");
+    const [password, onChangePassword] = useInput("");
+    const [confirmPassword, onChangeConfirmPassword] = useInput("");
 
-    const onChangeNickname = useCallback((e) => {
-        setNickname(e.target.value);
+    const normFile = (e) => {
+        console.log("Upload event:", e);
+
+        // if (Array.isArray(e)) {
+        //     return e;
+        // }
+
+        // return e && e.fileList;
+    };
+
+    const onRegisterSubmit = useCallback((values) => {
+        console.log("Received values of form: ", values);
     }, []);
-    const onChangeEmail = useCallback((e) => {
-        setEmail(e.target.value);
-    }, []);
-    const onChangeConfirmEmail = useCallback((e) => {
-        setConfirmEmail(e.target.value);
-    }, []);
-    const onChangePassword = useCallback((e) => {
-        setPassword(e.target.value);
-    }, []);
-    const onChangeConfirmPassword = useCallback((e) => {
-        setConfirmPassword(e.target.value);
-    }, []);
-    //const [autoCompleteResult, setAutoCompleteResult] = useState([]);
 
     //onSubmitHandler 구현하기
 
     return (
-        <Form
+        <RegisterFormWrapper
             {...formItemLayout}
             form={form}
             name="register"
@@ -111,41 +89,13 @@ const RegisterInputForm = () => {
                     fontWeight: "bold",
                 }}
             >
-                LOGO
+                <Link href="/">
+                    <a>LOGO</a>
+                </Link>
             </div>
-            <Divider style={{ fontSize: "12px", color: "#242120" }}>
-                소셜 로그인
-            </Divider>
-            <SocialLoginWrapper>
-                <SocialLoginButton
-                    className="login-google"
-                    style={{ flex: "1" }}
-                >
-                    Google
-                </SocialLoginButton>
-                <SocialLoginButton
-                    className="login-naver"
-                    style={{ flex: "1", marginLeft: "3px" }}
-                >
-                    Naver
-                </SocialLoginButton>
-            </SocialLoginWrapper>
-            <SocialLoginWrapper>
-                <SocialLoginButton
-                    className="login-github"
-                    style={{ flex: "1" }}
-                >
-                    Github
-                </SocialLoginButton>
-                <SocialLoginButton
-                    className="login-facebook"
-                    style={{ flex: "1", marginLeft: "3px" }}
-                >
-                    Facebook
-                </SocialLoginButton>
-            </SocialLoginWrapper>
-            <Divider style={{ fontSize: "12px", color: "#242120" }}>OR</Divider>
-            <Form.Item
+
+            <StyledDivider>회원가입</StyledDivider>
+            <RegisterInputItemWrapper
                 name="nickname"
                 label={<span>닉네임&nbsp;</span>}
                 rules={[
@@ -157,9 +107,9 @@ const RegisterInputForm = () => {
                 ]}
                 onChange={onChangeNickname}
             >
-                <Input />
-            </Form.Item>
-            <Form.Item
+                <Input placeholder="nickname" />
+            </RegisterInputItemWrapper>
+            <RegisterInputItemWrapper
                 name="email"
                 label="이메일"
                 rules={[
@@ -174,9 +124,9 @@ const RegisterInputForm = () => {
                 ]}
                 onChange={onChangeEmail}
             >
-                <Input />
-            </Form.Item>
-            <Form.Item
+                <Input placeholder="email" />
+            </RegisterInputItemWrapper>
+            <RegisterInputItemWrapper
                 name="confirmEmail"
                 label="이메일 확인"
                 rules={[
@@ -202,9 +152,9 @@ const RegisterInputForm = () => {
                 ]}
                 onChange={onChangeConfirmEmail}
             >
-                <Input />
-            </Form.Item>
-            <Form.Item
+                <Input placeholder="confirm email" />
+            </RegisterInputItemWrapper>
+            <RegisterInputItemWrapper
                 name="password"
                 label="비밀번호"
                 rules={[
@@ -214,12 +164,12 @@ const RegisterInputForm = () => {
                     },
                 ]}
                 hasFeedback
-                onChangeEmail={onChangePassword}
+                onChange={onChangePassword}
             >
-                <Input.Password />
-            </Form.Item>
+                <Input.Password placeholder="password" />
+            </RegisterInputItemWrapper>
 
-            <Form.Item
+            <RegisterInputItemWrapper
                 name="confirmpassword"
                 label="비밀번호 확인"
                 dependencies={["password"]}
@@ -241,16 +191,42 @@ const RegisterInputForm = () => {
                         },
                     }),
                 ]}
-                onChangeEmail={onChangeConfirmPassword}
+                onChange={onChangeConfirmPassword}
             >
-                <Input.Password />
-            </Form.Item>
-            <Form.Item {...tailFormItemLayout}>
+                <Input.Password placeholder="confirm password" />
+            </RegisterInputItemWrapper>
+            <StyledDivider>소셜 로그인</StyledDivider>
+            <SocialTemplate />
+            <StyledDivider>선택 입력 사항</StyledDivider>
+            <SkillFilterForm type="register" />
+            <RegisterInputItemWrapper
+                name="github"
+                label="Github"
+                hasFeedback
+                onChange={onChangePassword}
+            >
+                <Input placeholder="github 닉네임" />
+            </RegisterInputItemWrapper>
+            <RegisterInputItemWrapper
+                name="avatar"
+                label="사용자 이미지 설정"
+                valuePropName="fileList"
+                getValueFromEvent={normFile}
+                onChange={onChangePassword}
+            >
+                {/* action="/upload.do" */}
+                {/* beforeUpload 함수 사용해야함  */}
+                <Upload name="logo" listType="picture">
+                    <Button icon={<UploadOutlined />}>파일 업로드</Button>
+                </Upload>
+            </RegisterInputItemWrapper>
+            <StyledDivider />
+            <div className="register-btn">
                 <Button type="primary" htmlType="submit">
-                    Register
+                    가입하기
                 </Button>
-            </Form.Item>
-        </Form>
+            </div>
+        </RegisterFormWrapper>
     );
 };
 

@@ -7,22 +7,19 @@ import styled, { css } from "styled-components";
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
-    /* background: #fff; */
-    /* width: 400px; */
     margin: 0 auto;
     margin-top: 65px;
     ${(props) =>
         props.type === "register"
             ? css`
                   width: 600px;
+                  @media (max-width: 768px) {
+                      width: 80%;
+                  }
               `
             : css`
                   width: 400px;
-              `}/* @media (max-width: 1368px) {
-        & {
-            width: 100%;
-        }
-    } */
+              `}
 `;
 
 const AuthLayout = ({ children, type }) => {

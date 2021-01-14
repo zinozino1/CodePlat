@@ -1,11 +1,21 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { Select, Radio, Checkbox } from "antd";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { StackList } from "../../../lib/constant/constant";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    skillChangeAction,
+    initializeSkillAction,
+} from "../../../reducers/skill";
 
 const SkillFilterFormWrapper = styled.div`
     margin: 0 auto;
     width: 900px;
+    ${(props) =>
+        props.type === "register" &&
+        css`
+            width: 100%;
+        `}
     @media (max-width: 900px) {
         width: 100%;
     }
@@ -44,7 +54,9 @@ const SelectWrapper = styled.div`
     }
 `;
 
-const SkillFilterForm = () => {
+const SkillFilterForm = ({ type }) => {
+    const dispatch = useDispatch();
+
     const [radioValue, setRadioValue] = useState("language");
     const [checkList, setCheckList] = useState(StackList.language);
     const [checkedValues, setCheckedValues] = useState([]);
@@ -70,8 +82,18 @@ const SkillFilterForm = () => {
         [checkedValues],
     );
 
+    useEffect(() => {
+        dispatch(skillChangeAction(checkedValues));
+    }, [checkedValues]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(initializeSkillAction());
+        };
+    }, []);
+
     return (
-        <SkillFilterFormWrapper>
+        <SkillFilterFormWrapper type={type}>
             <RadioWrapper>
                 <Radio.Group defaultValue="language">
                     <Radio.Button value="language" onClick={onClickRadio}>
@@ -101,7 +123,11 @@ const SkillFilterForm = () => {
             <SelectWrapper>
                 <Select
                     mode="tags"
-                    placeholder="기술을 선택해주세요."
+                    placeholder={
+                        type === "register"
+                            ? "관심 기술을 선택해주세요."
+                            : "기술을 선택해주세요"
+                    }
                     value={checkedValues}
                 />
             </SelectWrapper>

@@ -6,7 +6,7 @@ const RegisterTemplateWrapper = styled.div`
     background: #fff;
     border-radius: 5px;
     padding: 40px;
-    margin: 100px 0;
+    margin: 85px 0;
 `;
 
 const RegisterTemplate = () => {

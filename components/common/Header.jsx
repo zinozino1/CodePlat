@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
 
 const AntHeader = Layout.Header;
-const { SubMenu } = Menu;
 
 const HeaderWrapper = styled(AntHeader)`
     position: fixed;
@@ -25,9 +24,7 @@ const InnerHeader = styled.div`
         border: none;
     }
     @media (max-width: 1368px) {
-        & {
-            width: 100%;
-        }
+        width: 100%;
     }
     @media (max-width: 950px) {
         justify-content: space-between;
@@ -47,17 +44,9 @@ const LogoWrapper = styled.div`
 const MenuWrapper = styled(Menu)`
     background: #16172b;
     font-size: 18px;
-    /* // background: #fafafa; */
-
     margin: 0 auto;
     height: 64px;
-    @media (max-width: 950px) {
-        & {
-            display: none;
-            /* order: 3; */
-            /* display: inline-block; */
-        }
-    }
+
     .ant-menu-item-active {
         a:hover {
             color: #188fffad;
@@ -81,33 +70,24 @@ const MenuWrapper = styled(Menu)`
             color: #1890ff;
         }
     }
-`;
-
-const MenuItemWrapper = styled(Menu.Item)`
-    @media (max-width: 768px) {
-        & {
-            /* margin-right: 0px; */
-        }
+    @media (max-width: 950px) {
+        display: none;
     }
 `;
+
+const MenuItemWrapper = styled(Menu.Item)``;
 
 const ButtonGroup = styled.div`
-    @media (max-width: 768px) {
-        .btn-login {
-        }
-        .btn-register {
-        }
-        .btn-logout {
-            display: none;
-        }
-    }
-    .btn-login {
-    }
     .btn-register {
         margin-left: 10px;
     }
     .btn-logout {
         margin-left: 10px;
+    }
+    @media (max-width: 768px) {
+        .btn-logout {
+            display: none;
+        }
     }
 `;
 
@@ -245,7 +225,7 @@ const Header = ({ router }) => {
                     </ButtonGroup>
                 )}
             </InnerHeader>
-            <MobileMenuWrapper>
+            <MobileMenuWrapper selectedKeys={[currentMenu]}>
                 <MenuItemWrapper key="/articles/study" className="menu-study">
                     <Link href="/articles/study">
                         <a>스터디</a>
