@@ -4,17 +4,25 @@ import { Card } from "antd";
 import styled from "styled-components";
 import { Row, Col } from "antd";
 import Link from "next/link";
+import {
+    InstagramOutlined,
+    YoutubeOutlined,
+    FacebookOutlined,
+} from "@ant-design/icons";
 
 const AntFooter = Layout.Footer;
 
 const FooterWrapper = styled(AntFooter)`
     padding: 30px 50px;
-    background: #222;
+    background: #16172b;
     color: #fff;
 `;
 
 const PartialStyle = {
     margin: "0 auto 24px",
+    fontWeight: "bold",
+
+    //font-weight :bold
 };
 
 const FooterAnchor = {
@@ -68,7 +76,7 @@ const Footer = () => {
             </div>
             <div style={{ border: "0.5px solid gray", margin: "20px" }}></div>
             <div style={{ textAlign: "center" }}>
-                @2021 Copyright all reserverd
+                @2021 Copyright all reserved
             </div>
         </FooterWrapper>
     );
