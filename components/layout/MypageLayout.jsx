@@ -21,7 +21,7 @@ const ContentWrapper = styled(Content)`
 const MypageLayout = ({ children }) => {
     return (
         <Layout>
-            <Header></Header>
+            <Header />
             <ContentWrapper>{children}</ContentWrapper>
             <Footer />
         </Layout>

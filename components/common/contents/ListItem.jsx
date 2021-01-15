@@ -57,13 +57,6 @@ const ListHeader = styled.div`
     }
 `;
 
-const userInfoWindow = (
-    <div>
-        <p>Content</p>
-        <p>Content</p>
-    </div>
-);
-
 const IconText = ({ icon, text }) => (
     <Space>
         {React.createElement(icon)}

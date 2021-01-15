@@ -195,7 +195,7 @@ const RegisterInputForm = () => {
             >
                 <Input.Password placeholder="confirm password" />
             </RegisterInputItemWrapper>
-            <StyledDivider>소셜 로그인</StyledDivider>
+            <StyledDivider>소셜 회원가입</StyledDivider>
             <SocialTemplate />
             <StyledDivider>선택 입력 사항</StyledDivider>
             <SkillFilterForm type="register" />

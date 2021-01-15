@@ -1,13 +1,16 @@
 import { handleActions, createAction } from "redux-actions";
-import shortId from "shortid";
-import faker from "faker";
+import { dummyPostsCreator, dummyPostCreator } from "../lib/util/dummyCreator";
 
 // initial state
 
 const initialState = {
+    post: null,
     studyPosts: [],
     projectPosts: [],
     forumPosts: [],
+    loadPostLoading: false,
+    loadPostDone: false,
+    loadPostError: null,
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
@@ -16,135 +19,38 @@ const initialState = {
     mainLoadPostsError: null,
 };
 
-const dummyPostCreator = (type, number) => {
-    if (type == "study" || type == "project")
-        return Array(number)
-            .fill()
-            .map((v, i) => ({
-                id: shortId.generate(),
-                title: faker.lorem.sentence(),
-                content: faker.lorem.paragraph(),
-                filePath: faker.image.image(),
-                writer: {
-                    id: shortId.generate(),
-                    nickname: faker.name.findName(),
-                    email: faker.random.word(),
-                    password: faker.random.word(),
-                    techStack: Array(3)
-                        .fill()
-                        .map((v, i) => faker.lorem.word()),
-                    githubUrl: faker.random.word(),
-                    filePath: faker.image.image(),
-                    posts: Array(3)
-                        .fill()
-                        .map((v, i) => {
-                            dummy: i;
-                        }),
-                    rating: 4,
-                    registerDate: faker.date.recent(),
-                },
-                createAt: faker.date.recent(),
-                techStack: Array(3)
-                    .fill()
-                    .map((v, i) => faker.lorem.word()),
-                views: parseInt(faker.random.number() / 100),
-                area: "서울",
-                recruitment: 4,
-                type: type === "study" ? "study" : "project",
-                isOnGoing: faker.random.boolean(),
-                likes: parseInt(faker.random.number() / 100),
-                scraped: parseInt(faker.random.number() / 100),
-                comments: Array(3)
-                    .fill()
-                    .map((v, i) => ({
-                        id: shortId.generate(),
-                        writer: 2,
-                        content: "안녕하세요",
-                        postId: 1,
-                        createAt: new Date(),
-                        commentTo: null, // 대댓글이 아님
-                        secret: false,
-                        likes: 30,
-                    })),
-            }));
-    else
-        return Array(number)
-            .fill()
-            .map((v, i) => ({
-                id: shortId.generate(),
-                title: faker.lorem.sentence(),
-                content: faker.lorem.paragraph(),
-                filePath: faker.image.image(),
-                writer: {
-                    id: shortId.generate(),
-                    nickname: faker.name.findName(),
-                    email: faker.random.word(),
-                    password: faker.random.word(),
-                    techStack: Array(3)
-                        .fill()
-                        .map((v, i) => faker.lorem.word()),
-                    githubUrl: faker.random.word(),
-                    filePath: faker.image.image(),
-                    posts: Array(3)
-                        .fill()
-                        .map((v, i) => {
-                            dummy: i;
-                        }),
-                    rating: 4,
-                    registerDate: faker.date.recent(),
-                },
-                createAt: faker.date.recent(),
-                techStack: Array(3)
-                    .fill()
-                    .map((v, i) => faker.lorem.word()),
-                views: parseInt(faker.random.number() / 100),
-                area: "서울",
-                type: "forum",
-                likes: parseInt(faker.random.number() / 100),
-                scraped: parseInt(faker.random.number() / 100),
-                comments: Array(3)
-                    .fill()
-                    .map((v, i) => ({
-                        id: shortId.generate(),
-                        writer: 2,
-                        content: "안녕하세요",
-                        postId: 1,
-                        createAt: new Date(),
-                        commentTo: null, // 대댓글이 아님
-                        secret: false,
-                        likes: 30,
-                    })),
-                filter: "QnA",
-                tags: Array(3)
-                    .fill()
-                    .map((v, i) => faker.random.word()),
-            }));
-};
-
 // action type
 
+export const INITIALIZE_POST = "post/INITIALIZE_POST";
 export const INITIALIZE_POSTS = "post/INITIALIZE_POSTS";
 
-// 10개씩 불러오기
+export const LOAD_POST_REQUEST = "post/LOAD_POST_REQUEST";
+export const LOAD_POST_SUCCESS = "post/LOAD_POST_SUCCESS";
+export const LOAD_POST_FAILURE = "post/LOAD_POST_FAILURE";
+
 export const LOAD_POSTS_REQUEST = "post/LOAD_POSTS_REQUEST";
 export const LOAD_POSTS_SUCCESS = "post/LOAD_POSTS_SUCCESS";
 export const LOAD_POSTS_FAILURE = "post/LOAD_POSTS_FAILURE";
 
-// 5,8개씩 불러오기
 export const MAIN_LOAD_POSTS_REQUEST = "post/MAIN_LOAD_POSTS_REQUEST";
 export const MAIN_LOAD_POSTS_SUCCESS = "post/MAIN_LOAD_POSTS_SUCCESS";
 export const MAIN_LOAD_POSTS_FAILURE = "post/MAIN_LOAD_POSTS_FAILURE";
 
 // action creator
 
+export const initializePostAction = createAction(INITIALIZE_POST);
+export const initializePostsAction = createAction(INITIALIZE_POSTS);
+
+export const loadPostRequestAction = createAction(
+    LOAD_POST_REQUEST,
+    (data) => data, // type, id를 포함한 객체
+);
 export const loadPostsReqeustAction = createAction(
     LOAD_POSTS_REQUEST,
     (data) => data,
 );
 
 export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
-
-export const initializePostsAction = createAction(INITIALIZE_POSTS);
 
 // reducer
 
@@ -155,6 +61,29 @@ const postReducer = handleActions(
             studyPosts: [],
             projectPosts: [],
             forumPosts: [],
+        }),
+        [INITIALIZE_POST]: (state, action) => ({
+            ...state,
+            post: null,
+        }),
+        [LOAD_POST_REQUEST]: (state, action) => ({
+            ...state,
+            loadPostLoading: true,
+            loadPostDone: false,
+            loadPostError: null,
+        }),
+        [LOAD_POST_SUCCESS]: (state, action) => ({
+            ...state,
+            loadPostLoading: false,
+            loadPostDone: true,
+            loadPostError: null,
+            post: action.post,
+        }),
+        [LOAD_POST_FAILURE]: (state, action) => ({
+            ...state,
+            loadPostLoading: false,
+            loadPostDone: false,
+            loadPostError: null,
         }),
         [LOAD_POSTS_REQUEST]: (state, action) => ({
             ...state,
@@ -169,7 +98,7 @@ const postReducer = handleActions(
             loadPostsError: null,
             [action.contentType + "Posts"]: state[
                 action.contentType + "Posts"
-            ].concat(dummyPostCreator(action.contentType, 10)),
+            ].concat(dummyPostsCreator(action.contentType, 10)),
         }),
         [LOAD_POSTS_FAILURE]: (state, action) => ({
             ...state,
@@ -188,12 +117,12 @@ const postReducer = handleActions(
             mainLoadPostsLoading: false,
             mainLoadPostsDone: true,
             mainLoadPostsError: null,
-            studyPosts: [...dummyPostCreator("study", 5), ...state.studyPosts],
+            studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
             projectPosts: [
-                ...dummyPostCreator("project", 5),
+                ...dummyPostsCreator("project", 5),
                 ...state.projectPosts,
             ],
-            forumPosts: [...dummyPostCreator("forum", 8), ...state.forumPosts],
+            forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
         }),
         [MAIN_LOAD_POSTS_FAILURE]: (state, action) => ({
             ...state,
