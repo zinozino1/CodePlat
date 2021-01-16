@@ -1,16 +1,30 @@
 import React from "react";
 import styled from "styled-components";
-import { Tag, Button, List, Comment } from "antd";
+import {
+    List,
+    Avatar,
+    Space,
+    Tag,
+    Popover,
+    Skeleton,
+    Button,
+    Comment,
+    Divider,
+} from "antd";
+import ProfileModal from "../../modal/ProfileModal";
+import { UserOutlined } from "@ant-design/icons";
+import CommentForm from "./CommentForm";
+import { useSelector } from "react-redux";
 
 const PostViewerContentWrapper = styled.div`
     background: #fff;
-    padding: 20px;
-    border: 1px solid red;
+    padding: 20px 40px;
+    /* border: 1px solid red; */
     .post-title {
-        border: 1px solid black;
+        /* border: 1px solid black; */
     }
     .post-summary {
-        border: 1px solid black;
+        /* border: 1px solid black; */
         padding: 20px 0;
         .label {
             color: #888;
@@ -34,20 +48,22 @@ const PostViewerContentWrapper = styled.div`
         }
     }
     .post-content {
-        border: 1px solid black;
+        /* border: 1px solid black; */
         font-weight: 300;
         padding: 20px 0;
     }
-    .comment-btn {
-        text-align: right;
-        border: 1px solid black;
+
+    .comment-list-wrapper {
+        /* border: 1px solid black; */
     }
     .comment-form {
-        border: 1px solid black;
+        /* border: 1px solid black; */
+        padding: 15px 0;
     }
 `;
 
 const PostViewerContent = ({ post, contentType }) => {
+    const { me } = useSelector((state) => state.user);
     return (
         <PostViewerContentWrapper>
             <div className="post-title">
@@ -117,10 +133,8 @@ const PostViewerContent = ({ post, contentType }) => {
             <div className="post-content">
                 <p>{post.content}</p>
             </div>
-            <div className="comment-btn">
-                <Button>댓글 쓰기</Button>
-            </div>
-            <div className="comment-form">
+
+            <div className="comment-list-wrapper">
                 <List
                     className="comment-list"
                     header={`${post.comments.length}개의 댓글이 있습니다.`}
@@ -130,14 +144,71 @@ const PostViewerContent = ({ post, contentType }) => {
                         <li>
                             <Comment
                                 //actions={item.actions}
-                                author={item.writer}
-                                avatar={item.avatar}
+                                author={item.writer.nickname}
+                                avatar={
+                                    <Popover
+                                        content={
+                                            <div
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                }}
+                                            >
+                                                <ProfileModal
+                                                    writer={item.writer}
+                                                ></ProfileModal>
+                                            </div>
+                                        }
+                                    >
+                                        <Avatar
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                            style={{ cursor: "pointer" }}
+                                            size={24}
+                                            icon={<UserOutlined />}
+                                        />{" "}
+                                    </Popover>
+                                }
                                 content={item.content}
-                                datetime={item.createAt.getFullYear()}
+                                datetime={`${item.createAt.getFullYear()}.${
+                                    item.createAt.getMonth() + 1
+                                }.${item.createAt.getDay()}`}
                             />
                         </li>
                     )}
                 />
+                {me && (
+                    <div className="comment-form">
+                        <Divider />
+                        <Comment
+                            post={post}
+                            avatar={
+                                <Popover
+                                    content={
+                                        <div
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
+                                        >
+                                            <ProfileModal
+                                                writer={me}
+                                            ></ProfileModal>
+                                        </div>
+                                    }
+                                >
+                                    <Avatar
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                        }}
+                                        style={{ cursor: "pointer" }}
+                                        icon={<UserOutlined />}
+                                    />{" "}
+                                </Popover>
+                            }
+                            content={<CommentForm />}
+                        />
+                    </div>
+                )}
             </div>
         </PostViewerContentWrapper>
     );

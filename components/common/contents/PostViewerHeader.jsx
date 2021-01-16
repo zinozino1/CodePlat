@@ -18,11 +18,11 @@ const PostViewerHeaderWrapper = styled.div`
     font-size: 18px;
     font-weight: 300;
     background: #fff;
-    padding: 20px;
+    padding: 20px 40px;
 
     .user-profile {
         flex: 1;
-        border: 1px solid black;
+        /* border: 1px solid black; */
         padding: 5px 0;
         .user-nickname {
             margin: 0 5px;
@@ -33,7 +33,7 @@ const PostViewerHeaderWrapper = styled.div`
         color: #888;
         flex: 1;
         text-align: left;
-        border: 1px solid black;
+        /* border: 1px solid black; */
         line-height: 30px;
         .create-date {
             margin-right: 10px;

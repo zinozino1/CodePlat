@@ -1,4 +1,5 @@
 import { handleActions, createAction } from "redux-actions";
+import { dummyMeCreator } from "../lib/util/dummyCreator";
 
 // initial state
 
@@ -10,48 +11,6 @@ const initialState = {
     logoutLoading: false,
     logoutDone: false,
     logoutError: null,
-};
-
-const dummyMeCreator = () => {
-    return {
-        id: 111,
-        nickname: "zinozino",
-        email: "gogod23@naver.com",
-        password: "safmimf3i2@#k9aci",
-        techStack: [],
-        githubUrl: "http://github.com/zinozino1",
-        filePath: "",
-        posts: [
-            {
-                id: 1,
-                title: "포스트1",
-                content: "content1",
-                filePath: "/usr/bin",
-                writer: 1,
-                createAt: new Date(),
-                views: 100,
-                techStack: [],
-                area: "",
-                recruitment: 10,
-                type: "study",
-                isOnGoing: true,
-                likes: 40,
-                scraped: 10,
-                comments: [
-                    {
-                        id: 1,
-                        writer: 2,
-                        content: "안녕하세요",
-                        postId: 1,
-                        createAt: new Date(),
-                        commentTo: null, // 대댓글이 아님
-                        secret: false,
-                        likes: 30,
-                    },
-                ],
-            },
-        ],
-    };
 };
 
 // action type

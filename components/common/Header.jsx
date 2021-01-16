@@ -128,6 +128,7 @@ const MobileMenuWrapper = styled(Menu)`
 `;
 
 const Header = ({ router }) => {
+    console.log(router);
     const dispatch = useDispatch();
     const { me, logoutLoading } = useSelector((state) => state.user);
 
