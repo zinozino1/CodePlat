@@ -28,7 +28,7 @@ const LoginInputForm = () => {
         if (loginError) {
         }
         if (me) {
-            Router.push("/");
+            Router.back();
         }
     }, [me]);
 

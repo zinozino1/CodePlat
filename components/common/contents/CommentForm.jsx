@@ -15,7 +15,6 @@ const CommentForm = ({ post }) => {
         <Form onFinish={onSubmit}>
             <Form.Item>
                 <TextAreaWrapper
-                    style={{ width: "93%" }}
                     rows={3}
                     onChange={onChangeComment}
                     value={comment}

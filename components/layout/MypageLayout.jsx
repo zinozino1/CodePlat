@@ -12,9 +12,7 @@ const ContentWrapper = styled(Content)`
     margin: 0 auto;
     margin-top: 65px;
     @media (max-width: 1368px) {
-        & {
-            width: 100%;
-        }
+        width: 100%;
     }
 `;
 
