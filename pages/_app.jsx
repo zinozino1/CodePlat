@@ -6,19 +6,19 @@ import wrapper from "../store/configureStore";
 import withReduxSaga from "next-redux-saga";
 
 const App = ({ Component }) => {
-    return (
-        <>
-            <Head>
-                <meta charSet="utf-8"></meta>
-                <title>Home</title>
-            </Head>
-            <Component></Component>
-        </>
-    );
+  return (
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>Home</title>
+      </Head>
+      <Component></Component>
+    </>
+  );
 };
 
 App.propTypes = {
-    Component: PropTypes.elementType.isRequired,
+  Component: PropTypes.elementType.isRequired,
 };
 
 export default wrapper.withRedux(withReduxSaga(App));

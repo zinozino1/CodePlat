@@ -6,52 +6,52 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../../reducers/user";
 
 const CardWrapper = styled.div`
-    padding: 20px;
+  padding: 20px;
 `;
 
 const ButtonsWrapper = styled.div`
-    margin-top: 30px;
-    text-align: center;
-    .logout {
-        margin-left: 10px;
-    }
+  margin-top: 30px;
+  text-align: center;
+  .logout {
+    margin-left: 10px;
+  }
 `;
 
 const MyProfile = ({ me }) => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const { logoutLoading } = useSelector((state) => state.user);
+  const { logoutLoading } = useSelector((state) => state.user);
 
-    const onLogout = useCallback(() => {
-        dispatch(logoutRequestAction());
-    }, []);
+  const onLogout = useCallback(() => {
+    dispatch(logoutRequestAction());
+  }, []);
 
-    return (
-        <CardWrapper>
-            <Card>
-                <Card.Meta
-                    title={me.nickname}
-                    avatar={<Avatar>{me.nickname[0]}</Avatar>}
-                ></Card.Meta>
-                <ButtonsWrapper>
-                    <Link href="/mypage">
-                        <a>
-                            <Button className="mypage">마이페이지</Button>
-                        </a>
-                    </Link>
+  return (
+    <CardWrapper>
+      <Card>
+        <Card.Meta
+          title={me.nickname}
+          avatar={<Avatar>{me.nickname[0]}</Avatar>}
+        ></Card.Meta>
+        <ButtonsWrapper>
+          <Link href="/mypage">
+            <a>
+              <Button className="mypage">마이페이지</Button>
+            </a>
+          </Link>
 
-                    <Button
-                        type="primary"
-                        className="logout"
-                        onClick={onLogout}
-                        loading={logoutLoading}
-                    >
-                        로그아웃
-                    </Button>
-                </ButtonsWrapper>
-            </Card>
-        </CardWrapper>
-    );
+          <Button
+            type="primary"
+            className="logout"
+            onClick={onLogout}
+            loading={logoutLoading}
+          >
+            로그아웃
+          </Button>
+        </ButtonsWrapper>
+      </Card>
+    </CardWrapper>
+  );
 };
 
 export default MyProfile;

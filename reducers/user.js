@@ -4,13 +4,13 @@ import { dummyMeCreator } from "../lib/util/dummyCreator";
 // initial state
 
 const initialState = {
-    me: null,
-    loginLoading: false,
-    loginDone: false,
-    loginError: null,
-    logoutLoading: false,
-    logoutDone: false,
-    logoutError: null,
+  me: null,
+  loginLoading: false,
+  loginDone: false,
+  loginError: null,
+  logoutLoading: false,
+  logoutDone: false,
+  logoutError: null,
 };
 
 // action type
@@ -31,47 +31,47 @@ export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
 // reducer
 
 const userReducer = handleActions(
-    {
-        [LOG_IN_REQUEST]: (state, action) => ({
-            ...state,
-            loginLoading: true,
-            loginDone: false,
-            loginError: null,
-        }),
-        [LOG_IN_SUCCESS]: (state, action) => ({
-            ...state,
-            loginLoading: false,
-            loginDone: true,
-            loginError: null,
-            me: dummyMeCreator(),
-        }),
-        [LOG_IN_FAILURE]: (state, action) => ({
-            ...state,
-            loginLoading: false,
-            loginDone: false,
-            loginError: action.error,
-        }),
-        [LOG_OUT_REQUEST]: (state, action) => ({
-            ...state,
-            logoutLoading: true,
-            logoutDone: false,
-            logoutError: null,
-        }),
-        [LOG_OUT_SUCCESS]: (state, action) => ({
-            ...state,
-            logoutLoading: false,
-            logoutDone: true,
-            logoutError: null,
-            me: null,
-        }),
-        [LOG_OUT_FAILURE]: (state, action) => ({
-            ...state,
-            logoutLoading: false,
-            logoutDone: false,
-            logoutError: action.error,
-        }),
-    },
-    initialState,
+  {
+    [LOG_IN_REQUEST]: (state, action) => ({
+      ...state,
+      loginLoading: true,
+      loginDone: false,
+      loginError: null,
+    }),
+    [LOG_IN_SUCCESS]: (state, action) => ({
+      ...state,
+      loginLoading: false,
+      loginDone: true,
+      loginError: null,
+      me: dummyMeCreator(),
+    }),
+    [LOG_IN_FAILURE]: (state, action) => ({
+      ...state,
+      loginLoading: false,
+      loginDone: false,
+      loginError: action.error,
+    }),
+    [LOG_OUT_REQUEST]: (state, action) => ({
+      ...state,
+      logoutLoading: true,
+      logoutDone: false,
+      logoutError: null,
+    }),
+    [LOG_OUT_SUCCESS]: (state, action) => ({
+      ...state,
+      logoutLoading: false,
+      logoutDone: true,
+      logoutError: null,
+      me: null,
+    }),
+    [LOG_OUT_FAILURE]: (state, action) => ({
+      ...state,
+      logoutLoading: false,
+      logoutDone: false,
+      logoutError: action.error,
+    }),
+  },
+  initialState,
 );
 
 export default userReducer;

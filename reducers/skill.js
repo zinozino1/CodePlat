@@ -3,7 +3,7 @@ import { handleActions, createAction } from "redux-actions";
 // initial state
 
 const initialState = {
-    skill: [],
+  skill: [],
 };
 
 // action type
@@ -21,17 +21,17 @@ export const skillChangeAction = createAction(CHANGE_SKILL, (data) => data);
 // reducer
 
 const skillReducer = handleActions(
-    {
-        [INITIALIZE_SKILL]: (state, action) => ({
-            ...state,
-            skill: [],
-        }),
-        [CHANGE_SKILL]: (state, action) => ({
-            ...state,
-            skill: action.payload,
-        }),
-    },
-    initialState,
+  {
+    [INITIALIZE_SKILL]: (state, action) => ({
+      ...state,
+      skill: [],
+    }),
+    [CHANGE_SKILL]: (state, action) => ({
+      ...state,
+      skill: action.payload,
+    }),
+  },
+  initialState,
 );
 
 export default skillReducer;

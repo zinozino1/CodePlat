@@ -4,19 +4,19 @@ import { dummyPostsCreator, dummyPostCreator } from "../lib/util/dummyCreator";
 // initial state
 
 const initialState = {
-    post: null,
-    studyPosts: [],
-    projectPosts: [],
-    forumPosts: [],
-    loadPostLoading: false,
-    loadPostDone: false,
-    loadPostError: null,
-    loadPostsLoading: false,
-    loadPostsDone: false,
-    loadPostsError: null,
-    mainLoadPostsLoading: false,
-    mainLoadPostsDone: false,
-    mainLoadPostsError: null,
+  post: null,
+  studyPosts: [],
+  projectPosts: [],
+  forumPosts: [],
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+  mainLoadPostsLoading: false,
+  mainLoadPostsDone: false,
+  mainLoadPostsError: null,
 };
 
 // action type
@@ -42,12 +42,12 @@ export const initializePostAction = createAction(INITIALIZE_POST);
 export const initializePostsAction = createAction(INITIALIZE_POSTS);
 
 export const loadPostRequestAction = createAction(
-    LOAD_POST_REQUEST,
-    (data) => data, // type, id를 포함한 객체
+  LOAD_POST_REQUEST,
+  (data) => data, // type, id를 포함한 객체
 );
 export const loadPostsReqeustAction = createAction(
-    LOAD_POSTS_REQUEST,
-    (data) => data,
+  LOAD_POSTS_REQUEST,
+  (data) => data,
 );
 
 export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
@@ -55,83 +55,80 @@ export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
 // reducer
 
 const postReducer = handleActions(
-    {
-        [INITIALIZE_POSTS]: (state, action) => ({
-            ...state,
-            studyPosts: [],
-            projectPosts: [],
-            forumPosts: [],
-        }),
-        [INITIALIZE_POST]: (state, action) => ({
-            ...state,
-            post: null,
-        }),
-        [LOAD_POST_REQUEST]: (state, action) => ({
-            ...state,
-            loadPostLoading: true,
-            loadPostDone: false,
-            loadPostError: null,
-        }),
-        [LOAD_POST_SUCCESS]: (state, action) => ({
-            ...state,
-            loadPostLoading: false,
-            loadPostDone: true,
-            loadPostError: null,
-            post: action.post,
-        }),
-        [LOAD_POST_FAILURE]: (state, action) => ({
-            ...state,
-            loadPostLoading: false,
-            loadPostDone: false,
-            loadPostError: null,
-        }),
-        [LOAD_POSTS_REQUEST]: (state, action) => ({
-            ...state,
-            loadPostsLoading: true,
-            loadPostsDone: false,
-            loadPostsError: null,
-        }),
-        [LOAD_POSTS_SUCCESS]: (state, action) => ({
-            ...state,
-            loadPostsLoading: false,
-            loadPostsDone: true,
-            loadPostsError: null,
-            [action.contentType + "Posts"]: state[
-                action.contentType + "Posts"
-            ].concat(dummyPostsCreator(action.contentType, 10)),
-        }),
-        [LOAD_POSTS_FAILURE]: (state, action) => ({
-            ...state,
-            loadPostsLoading: false,
-            loadPostsDone: false,
-            loadPostsError: action.error,
-        }),
-        [MAIN_LOAD_POSTS_REQUEST]: (state, action) => ({
-            ...state,
-            mainLoadPostsLoading: true,
-            mainLoadPostsDone: false,
-            mainLoadPostsError: null,
-        }),
-        [MAIN_LOAD_POSTS_SUCCESS]: (state, action) => ({
-            ...state,
-            mainLoadPostsLoading: false,
-            mainLoadPostsDone: true,
-            mainLoadPostsError: null,
-            studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
-            projectPosts: [
-                ...dummyPostsCreator("project", 5),
-                ...state.projectPosts,
-            ],
-            forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
-        }),
-        [MAIN_LOAD_POSTS_FAILURE]: (state, action) => ({
-            ...state,
-            mainLoadPostsLoading: false,
-            mainLoadPostsDone: false,
-            mainLoadPostsError: action.error,
-        }),
-    },
-    initialState,
+  {
+    [INITIALIZE_POSTS]: (state, action) => ({
+      ...state,
+      studyPosts: [],
+      projectPosts: [],
+      forumPosts: [],
+    }),
+    [INITIALIZE_POST]: (state, action) => ({
+      ...state,
+      post: null,
+    }),
+    [LOAD_POST_REQUEST]: (state, action) => ({
+      ...state,
+      loadPostLoading: true,
+      loadPostDone: false,
+      loadPostError: null,
+    }),
+    [LOAD_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      loadPostLoading: false,
+      loadPostDone: true,
+      loadPostError: null,
+      post: action.post,
+    }),
+    [LOAD_POST_FAILURE]: (state, action) => ({
+      ...state,
+      loadPostLoading: false,
+      loadPostDone: false,
+      loadPostError: null,
+    }),
+    [LOAD_POSTS_REQUEST]: (state, action) => ({
+      ...state,
+      loadPostsLoading: true,
+      loadPostsDone: false,
+      loadPostsError: null,
+    }),
+    [LOAD_POSTS_SUCCESS]: (state, action) => ({
+      ...state,
+      loadPostsLoading: false,
+      loadPostsDone: true,
+      loadPostsError: null,
+      [action.contentType + "Posts"]: state[
+        action.contentType + "Posts"
+      ].concat(dummyPostsCreator(action.contentType, 10)),
+    }),
+    [LOAD_POSTS_FAILURE]: (state, action) => ({
+      ...state,
+      loadPostsLoading: false,
+      loadPostsDone: false,
+      loadPostsError: action.error,
+    }),
+    [MAIN_LOAD_POSTS_REQUEST]: (state, action) => ({
+      ...state,
+      mainLoadPostsLoading: true,
+      mainLoadPostsDone: false,
+      mainLoadPostsError: null,
+    }),
+    [MAIN_LOAD_POSTS_SUCCESS]: (state, action) => ({
+      ...state,
+      mainLoadPostsLoading: false,
+      mainLoadPostsDone: true,
+      mainLoadPostsError: null,
+      studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
+      projectPosts: [...dummyPostsCreator("project", 5), ...state.projectPosts],
+      forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
+    }),
+    [MAIN_LOAD_POSTS_FAILURE]: (state, action) => ({
+      ...state,
+      mainLoadPostsLoading: false,
+      mainLoadPostsDone: false,
+      mainLoadPostsError: action.error,
+    }),
+  },
+  initialState,
 );
 
 export default postReducer;

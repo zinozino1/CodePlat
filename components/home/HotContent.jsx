@@ -7,11 +7,11 @@ import { Skeleton } from "antd";
 const HotContentWrapper = styled.div``;
 
 const HotContent = ({ forumData }) => {
-    return (
-        <HotContentWrapper>
-            <List data={forumData} type="forum"></List>
-        </HotContentWrapper>
-    );
+  return (
+    <HotContentWrapper>
+      <List data={forumData} type="forum"></List>
+    </HotContentWrapper>
+  );
 };
 
 export default HotContent;
