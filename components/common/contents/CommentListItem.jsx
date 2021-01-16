@@ -21,6 +21,10 @@ import useToggle from "../../../hooks/useToggle";
 const ReApplyFormWrapper = styled.div`
   width: 600px;
   display: flex;
+  @media (max-width: 768px) {
+    width: 200px;
+    display: block;
+  }
 `;
 
 const ReApplyInput = styled(Input.TextArea)`
@@ -74,7 +78,7 @@ const CommentListItem = ({ item, post }) => {
                       </span>
                       <span
                         className="cancel-btn"
-                        key="comment-list-reply-to-0"
+                        key="comment-list-reply-to-1"
                         onClick={onChangeApplyToggle}
                       >
                         취소
@@ -139,7 +143,7 @@ const CommentListItem = ({ item, post }) => {
                         }}
                         size={24}
                         icon={<UserOutlined />}
-                      />{" "}
+                      />
                     </Popover>
                   }
                   content={v.content}
