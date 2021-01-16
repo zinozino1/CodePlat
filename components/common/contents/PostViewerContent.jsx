@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import {
   List,
@@ -15,6 +15,8 @@ import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector } from "react-redux";
+import useToggle from "../../../hooks/useToggle";
+import CommentListItem from "./CommentListItem";
 
 const PostViewerContentWrapper = styled.div`
   background: #fff;
@@ -64,6 +66,7 @@ const PostViewerContentWrapper = styled.div`
 
 const PostViewerContent = ({ post, contentType }) => {
   const { me } = useSelector((state) => state.user);
+
   return (
     <PostViewerContentWrapper>
       <div className="post-title">
@@ -135,90 +138,17 @@ const PostViewerContent = ({ post, contentType }) => {
       </div>
 
       <div className="comment-list-wrapper">
-        <List
-          className="comment-list"
-          header={`${post.comments.length}개의 댓글이 있습니다.`}
-          itemLayout="horizontal"
-          dataSource={post.comments}
-          renderItem={(item) =>
-            !item.commentTo && (
-              <li>
-                <Comment
-                  //actions={item.actions}
-                  author={item.writer.nickname}
-                  avatar={
-                    <Popover
-                      content={
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          <ProfileModal writer={item.writer}></ProfileModal>
-                        </div>
-                      }
-                    >
-                      <Avatar
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        style={{ cursor: "pointer" }}
-                        size={24}
-                        icon={<UserOutlined />}
-                      />{" "}
-                    </Popover>
-                  }
-                  content={item.content}
-                  datetime={`${item.createAt.getFullYear()}.${
-                    item.createAt.getMonth() + 1
-                  }.${item.createAt.getDay()}`}
-                >
-                  {post.comments.map((v, i) => {
-                    if (v.commentTo === item.id) {
-                      return (
-                        <li>
-                          <Comment
-                            author={v.writer.nickname}
-                            avatar={
-                              <Popover
-                                content={
-                                  <div
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                    }}
-                                  >
-                                    <ProfileModal
-                                      writer={v.writer}
-                                    ></ProfileModal>
-                                  </div>
-                                }
-                              >
-                                <Avatar
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                  }}
-                                  style={{
-                                    cursor: "pointer",
-                                  }}
-                                  size={24}
-                                  icon={<UserOutlined />}
-                                />{" "}
-                              </Popover>
-                            }
-                            content={v.content}
-                            datetime={`${v.createAt.getFullYear()}.${
-                              v.createAt.getMonth() + 1
-                            }.${v.createAt.getDay()}`}
-                          />
-                        </li>
-                      );
-                    }
-                  })}
-                </Comment>
-              </li>
-            )
-          }
-        />
+        {post && (
+          <List
+            className="comment-list"
+            header={`${post.comments.length}개의 댓글이 있습니다.`}
+            itemLayout="horizontal"
+            dataSource={post.comments}
+            renderItem={(item) =>
+              !item.commentTo && <CommentListItem item={item} post={post} />
+            }
+          />
+        )}
         {me && (
           <div className="comment-form">
             <Divider />
