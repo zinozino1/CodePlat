@@ -33,7 +33,7 @@ const ArticleLayout = ({ children, contentType }) => {
     <Layout>
       <Header />
       <ContentWrapper>
-        <SearchContentForm />
+        <SearchContentForm contentType={contentType} />
         {contentType !== "forum" && <SkillFilterForm />}
         <ArticleWrapper>{children}</ArticleWrapper>
       </ContentWrapper>

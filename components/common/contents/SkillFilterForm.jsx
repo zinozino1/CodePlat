@@ -12,7 +12,7 @@ const SkillFilterFormWrapper = styled.div`
   margin: 0 auto;
   width: 900px;
   ${(props) =>
-    props.type === "register" &&
+    (props.type === "register" || props.type === "write") &&
     css`
       width: 100%;
     `}

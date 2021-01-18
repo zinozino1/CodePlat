@@ -127,7 +127,6 @@ const RegisterInputForm = () => {
   //onSubmitHandler 구현하기
 
   useEffect(() => {
-    console.log(formError);
     if (
       nickname.length !== 0 &&
       email.length !== 0 &&

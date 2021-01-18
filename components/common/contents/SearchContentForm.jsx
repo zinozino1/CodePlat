@@ -1,9 +1,10 @@
 import React from "react";
 import styled from "styled-components";
 import { Input, Button } from "antd";
+import Link from "next/link";
 
 const SearchContentFormWrapper = styled.div`
-  margin: 20px auto;
+  margin: 30px auto;
   width: 900px;
   display: flex;
   justify-content: flex-end;
@@ -16,7 +17,7 @@ const SearchContentFormWrapper = styled.div`
   }
 `;
 
-const SearchContentForm = () => {
+const SearchContentForm = ({ contentType }) => {
   return (
     <SearchContentFormWrapper>
       <Input.Search
@@ -27,7 +28,11 @@ const SearchContentForm = () => {
 
         //onSearch={onSearch}
       />
-      <Button>글쓰기</Button>
+      <Link href={`/articles/${contentType}/write`}>
+        <a>
+          <Button>글쓰기</Button>
+        </a>
+      </Link>
     </SearchContentFormWrapper>
   );
 };
