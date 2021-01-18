@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequestAction } from "../../reducers/user";
-import Router from "next/router";
+import Router, { withRouter } from "next/router";
 import SocialTemplate from "../common/auth/SocialTemplate";
 import useInput from "../../hooks/useInput";
 
@@ -29,7 +29,7 @@ const LoginInputForm = () => {
     }
     if (me) {
       localStorage.setItem("user", JSON.stringify(me));
-      Router.back();
+      Router.push("/");
     }
   }, [me]);
 
@@ -97,7 +97,7 @@ const LoginInputForm = () => {
         </Divider>
         <SocialTemplate />
         <Form.Item style={{ textAlign: "center" }}>
-          계정이 없으신가요?{" "}
+          계정이 없으신가요?
           <Link href="/auth/register">
             <a style={{ textDecoration: "underline" }}>회원가입</a>
           </Link>

@@ -1,6 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { Form, Input, Select, Button, Divider, Upload } from "antd";
-import { UserOutlined, LockOutlined, UploadOutlined } from "@ant-design/icons";
+import { Form, Input, Select, Button, Divider, Upload, Steps } from "antd";
+import {
+  UserOutlined,
+  LockOutlined,
+  UploadOutlined,
+  SolutionOutlined,
+  LoadingOutlined,
+  SmileOutlined,
+} from "@ant-design/icons";
 import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
@@ -44,8 +51,18 @@ const RegisterInputItemWrapper = styled(Form.Item)`
   .ant-form-item-label {
     text-align: left;
   }
+  .email-code {
+    width: 200px;
+  }
   .ant-form-item-control {
   }
+`;
+
+const PushBackButton = styled.span`
+  color: #888;
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 const StyledDivider = styled(Divider)``;
@@ -53,11 +70,34 @@ const StyledDivider = styled(Divider)``;
 const RegisterInputForm = () => {
   const [form] = Form.useForm();
 
+  const [registerType, setRegisterType] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [remainTime, setRemainTime] = useState(5);
+
   const [nickname, onChangeNickname] = useInput("");
   const [email, onChangeEmail] = useInput("");
   const [confirmEmail, onChangeConfirmEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [confirmPassword, onChangeConfirmPassword] = useInput("");
+
+  const onClickEmailVerify = useCallback(() => {
+    setProgress(2);
+  }, []);
+
+  const onClickLocalButton = useCallback(() => {
+    setRegisterType("local");
+    setProgress(1);
+  }, []);
+
+  const onClickSocialButton = useCallback(() => {
+    setRegisterType("social");
+    setProgress(1);
+  }, []);
+
+  const onPushBack = useCallback(() => {
+    setRegisterType(null);
+    setProgress(0);
+  }, []);
 
   const normFile = (e) => {
     console.log("Upload event:", e);
@@ -87,141 +127,267 @@ const RegisterInputForm = () => {
           textAlign: "center",
           fontSize: "18px",
           fontWeight: "bold",
+          marginBottom: "40px",
         }}
       >
         <Link href="/">
           <a>LOGO</a>
         </Link>
       </div>
+      <Steps
+        current={progress}
+        onChange={setProgress}
+        style={{ marginBottom: "70px" }}
+      >
+        <Steps.Step title="회원가입" icon={<UserOutlined />} disabled />
+        <Steps.Step title="추가정보" icon={<SolutionOutlined />} disabled />
+        <Steps.Step title="완료" icon={<SmileOutlined />} disabled />
+      </Steps>
+      {progress == 0 && (
+        <>
+          <RegisterInputItemWrapper
+            name="nickname"
+            label="닉네임"
+            rules={[
+              {
+                required: true,
+                message: "닉네임을 입력해주세요!",
+                whitespace: true,
+              },
+            ]}
+            onChange={onChangeNickname}
+          >
+            <Input placeholder="nickname" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="email"
+            label="이메일"
+            rules={[
+              {
+                type: "email",
+                message: "이메일 형식으로 입력해 주세요!",
+              },
+              {
+                required: true,
+                message: "이메일을 입력해주세요!",
+              },
+            ]}
+            onChange={onChangeEmail}
+          >
+            <Input placeholder="email" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="confirmEmail"
+            label="이메일 확인"
+            rules={[
+              // {
+              // type: 'email',
+              // message :''
+              //},
+              {
+                required: true,
+                message: "이메일을 입력해주세요!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("email") === value) {
+                    return Promise.resolve();
+                  }
 
-      <StyledDivider>회원가입</StyledDivider>
-      <RegisterInputItemWrapper
-        name="nickname"
-        label={<span>닉네임&nbsp;</span>}
-        rules={[
-          {
-            required: true,
-            message: "닉네임을 입력해주세요!",
-            whitespace: true,
-          },
-        ]}
-        onChange={onChangeNickname}
-      >
-        <Input placeholder="nickname" />
-      </RegisterInputItemWrapper>
-      <RegisterInputItemWrapper
-        name="email"
-        label="이메일"
-        rules={[
-          {
-            type: "email",
-            message: "이메일 형식으로 입력해 주세요!",
-          },
-          {
-            required: true,
-            message: "이메일을 입력해주세요!",
-          },
-        ]}
-        onChange={onChangeEmail}
-      >
-        <Input placeholder="email" />
-      </RegisterInputItemWrapper>
-      <RegisterInputItemWrapper
-        name="confirmEmail"
-        label="이메일 확인"
-        rules={[
-          // {
-          // type: 'email',
-          // message :''
-          //},
-          {
-            required: true,
-            message: "이메일을 입력해주세요!",
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue("email") === value) {
-                return Promise.resolve();
-              }
+                  return Promise.reject("이메일이 일치하지 않습니다!");
+                },
+              }),
+            ]}
+            onChange={onChangeConfirmEmail}
+          >
+            <Input placeholder="confirm email" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="password"
+            label="비밀번호"
+            rules={[
+              {
+                required: true,
+                message: "비밀번호를 입력해주세요!",
+              },
+            ]}
+            hasFeedback
+            onChange={onChangePassword}
+          >
+            <Input.Password placeholder="password" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="confirmpassword"
+            label="비밀번호 확인"
+            dependencies={["password"]}
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "비밀번호를 입력해주세요!",
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue("password") === value) {
+                    return Promise.resolve();
+                  }
 
-              return Promise.reject("이메일이 일치하지 않습니다!");
-            },
-          }),
-        ]}
-        onChange={onChangeConfirmEmail}
-      >
-        <Input placeholder="confirm email" />
-      </RegisterInputItemWrapper>
-      <RegisterInputItemWrapper
-        name="password"
-        label="비밀번호"
-        rules={[
-          {
-            required: true,
-            message: "비밀번호를 입력해주세요!",
-          },
-        ]}
-        hasFeedback
-        onChange={onChangePassword}
-      >
-        <Input.Password placeholder="password" />
-      </RegisterInputItemWrapper>
+                  return Promise.reject("비밀번호가 일치하지 않습니다!");
+                },
+              }),
+            ]}
+            onChange={onChangeConfirmPassword}
+          >
+            <Input.Password placeholder="confirm password" />
+          </RegisterInputItemWrapper>
+          <div className="register-btn">
+            <Button
+              type="primary"
+              htmlType="submit"
+              onClick={onClickLocalButton}
+            >
+              확인
+            </Button>
+          </div>
+          <StyledDivider>소셜 회원가입</StyledDivider>
+          <SocialTemplate onClickSocialButton={onClickSocialButton} />
+        </>
+      )}
+      {progress == 1 && registerType == "local" && (
+        <>
+          <StyledDivider>선택 입력 사항</StyledDivider>
+          <SkillFilterForm type="register" />
+          <RegisterInputItemWrapper
+            name="github"
+            label="Github"
+            hasFeedback
+            onChange={onChangePassword}
+          >
+            <Input placeholder="github 닉네임" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="avatar"
+            label="사용자 이미지 설정"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            onChange={onChangePassword}
+          >
+            {/* action="/upload.do" */}
+            {/* beforeUpload 함수 사용해야함  */}
+            <Upload name="logo" listType="picture">
+              <Button icon={<UploadOutlined />}>파일 업로드</Button>
+            </Upload>
+          </RegisterInputItemWrapper>
+          <StyledDivider />
+          <div className="email-btn" style={{ textAlign: "center" }}>
+            <Button
+              type="primary"
+              // htmlType="submit"
+              onClick={onClickEmailVerify}
+            >
+              이메일 인증
+            </Button>
+          </div>
+          <PushBackButton onClick={onPushBack}>뒤로가기</PushBackButton>
+        </>
+      )}
+      {progress == 1 && registerType == "social" && (
+        <>
+          <RegisterInputItemWrapper
+            name="nickname"
+            label="닉네임"
+            hasFeedback
+            rules={[
+              {
+                required: true,
+                message: "닉네임을 입력해주세요!",
+                whitespace: true,
+              },
+            ]}
+            //onChange={onChangePassword}
+          >
+            <Input placeholder="nickname" />
+          </RegisterInputItemWrapper>
+          <StyledDivider>선택 입력 사항</StyledDivider>
 
-      <RegisterInputItemWrapper
-        name="confirmpassword"
-        label="비밀번호 확인"
-        dependencies={["password"]}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: "비밀번호를 입력해주세요!",
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue("password") === value) {
-                return Promise.resolve();
-              }
+          <SkillFilterForm type="register" />
+          <RegisterInputItemWrapper
+            name="github"
+            label="Github"
+            hasFeedback
+            onChange={onChangePassword}
+          >
+            <Input placeholder="github 닉네임" />
+          </RegisterInputItemWrapper>
+          <RegisterInputItemWrapper
+            name="avatar"
+            label="사용자 이미지 설정"
+            valuePropName="fileList"
+            getValueFromEvent={normFile}
+            onChange={onChangePassword}
+          >
+            {/* action="/upload.do" */}
+            {/* beforeUpload 함수 사용해야함  */}
+            <Upload name="logo" listType="picture">
+              <Button icon={<UploadOutlined />}>파일 업로드</Button>
+            </Upload>
+          </RegisterInputItemWrapper>
+          <StyledDivider />
+          <div className="email-btn" style={{ textAlign: "center" }}>
+            <Button
+              type="primary"
+              // htmlType="submit"
+              //onClick={onClickEmailVerify}
+            >
+              가입하기
+            </Button>
+          </div>
 
-              return Promise.reject("비밀번호가 일치하지 않습니다!");
-            },
-          }),
-        ]}
-        onChange={onChangeConfirmPassword}
-      >
-        <Input.Password placeholder="confirm password" />
-      </RegisterInputItemWrapper>
-      <StyledDivider>소셜 회원가입</StyledDivider>
-      <SocialTemplate />
-      <StyledDivider>선택 입력 사항</StyledDivider>
-      <SkillFilterForm type="register" />
-      <RegisterInputItemWrapper
-        name="github"
-        label="Github"
-        hasFeedback
-        onChange={onChangePassword}
-      >
-        <Input placeholder="github 닉네임" />
-      </RegisterInputItemWrapper>
-      <RegisterInputItemWrapper
-        name="avatar"
-        label="사용자 이미지 설정"
-        valuePropName="fileList"
-        getValueFromEvent={normFile}
-        onChange={onChangePassword}
-      >
-        {/* action="/upload.do" */}
-        {/* beforeUpload 함수 사용해야함  */}
-        <Upload name="logo" listType="picture">
-          <Button icon={<UploadOutlined />}>파일 업로드</Button>
-        </Upload>
-      </RegisterInputItemWrapper>
-      <StyledDivider />
-      <div className="register-btn">
-        <Button type="primary" htmlType="submit">
-          가입하기
-        </Button>
-      </div>
+          <PushBackButton onClick={onPushBack}>뒤로가기</PushBackButton>
+        </>
+      )}
+      {progress == 2 && (
+        <div>
+          <div
+            style={{ fontSize: "20px", textAlign: "center" }}
+          >{`${email}로 인증 요청 메일을 보냈습니다. 해당 이메일을 확인
+            하시고, 인증 확인 링크를 눌러 주시기 바랍니다. `}</div>
+          <div
+            style={{
+              fontSize: "13px",
+              textAlign: "center",
+              margin: "20px 0",
+              color: "#888",
+            }}
+          >
+            이메일 인증이 완료 되지 않을 경우 사이트 이용에 제한이 있습니다.
+          </div>
+          <div
+            style={{
+              fontSize: "13px",
+              textAlign: "center",
+              margin: "20px 0",
+              textDecoration: "underline",
+            }}
+          >
+            <span style={{ color: "red" }}>*</span>서비스에 따라 스팸으로 분류
+            되있을 수도 있습니다. 스팸함도 꼭 확인해 주시기 바랍니다.
+            <span style={{ color: "red" }}>*</span>
+          </div>
+          <div
+            style={{
+              fontSize: "13px",
+              textAlign: "center",
+              margin: "20px 0",
+              textDecoration: "underline",
+            }}
+          >
+            <Link href="/auth/login">
+              <a style={{ color: "#888" }}>로그인</a>
+            </Link>
+          </div>
+        </div>
+      )}
     </RegisterFormWrapper>
   );
 };

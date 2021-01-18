@@ -3,5 +3,7 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/articles/forum": "pages/articles/forum.js",
-  "/articles/forum/[id]": "pages/articles/forum/[id].js"
+  "/auth/register": "pages/auth/register.js",
+  "/articles/project": "pages/articles/project.js",
+  "/mypage": "pages/mypage.js"
 }

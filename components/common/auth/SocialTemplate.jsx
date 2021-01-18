@@ -31,27 +31,37 @@ const SocialLoginButton = styled(Button)`
   }
 `;
 
-const SocialTemplate = () => {
+const SocialTemplate = ({ onClickSocialButton }) => {
   return (
     <>
       <SocialLoginWrapper>
-        <SocialLoginButton className="login-google" style={{ flex: "1" }}>
+        <SocialLoginButton
+          className="login-google"
+          style={{ flex: "1" }}
+          onClick={onClickSocialButton}
+        >
           Google
         </SocialLoginButton>
         <SocialLoginButton
           className="login-naver"
           style={{ flex: "1", marginLeft: "3px" }}
+          onClick={onClickSocialButton}
         >
           Naver
         </SocialLoginButton>
       </SocialLoginWrapper>
       <SocialLoginWrapper>
-        <SocialLoginButton className="login-github" style={{ flex: "1" }}>
+        <SocialLoginButton
+          className="login-github"
+          style={{ flex: "1" }}
+          onClick={onClickSocialButton}
+        >
           Github
         </SocialLoginButton>
         <SocialLoginButton
           className="login-facebook"
           style={{ flex: "1", marginLeft: "3px" }}
+          onClick={onClickSocialButton}
         >
           Facebook
         </SocialLoginButton>
