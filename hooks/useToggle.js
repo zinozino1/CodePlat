@@ -5,6 +5,7 @@ const useToggle = (initialValue = false) => {
   const handler = useCallback(() => {
     setToggle(!toggle);
   }, [toggle]);
+
   return [toggle, handler];
 };
 
