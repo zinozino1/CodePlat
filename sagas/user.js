@@ -22,6 +22,7 @@ function* loginSaga(action) {
 
 function* logoutSaga(action) {
   try {
+    localStorage.removeItem("user");
     yield delay(1000);
     yield put({ type: LOG_OUT_SUCCESS });
   } catch (error) {

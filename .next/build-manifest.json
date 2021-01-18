@@ -39,15 +39,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/articles/forum/[id].js"
     ],
-    "/articles/study/[id]": [
+    "/articles/project": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/study/[id].js"
+      "static/chunks/pages/articles/project.js"
     ],
-    "/auth/register": [
+    "/auth/login": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/auth/register.js"
+      "static/chunks/pages/auth/login.js"
     ]
   },
   "ampFirstPages": []

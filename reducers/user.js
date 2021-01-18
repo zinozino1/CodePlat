@@ -15,6 +15,8 @@ const initialState = {
 
 // action type
 
+export const SET_USER = "user/SET_USER";
+
 export const LOG_IN_REQUEST = "user/LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "user/LOG_IN_SUCCESS";
 export const LOG_IN_FAILURE = "user/LOG_IN_FAILURE";
@@ -25,6 +27,8 @@ export const LOG_OUT_FAILURE = "user/LOG_OUT_FAILURE";
 
 // action creator
 
+export const setUser = createAction(SET_USER, (data) => data);
+
 export const loginRequestAction = createAction(LOG_IN_REQUEST, (data) => data);
 export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
 
@@ -32,6 +36,10 @@ export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
 
 const userReducer = handleActions(
   {
+    [SET_USER]: (state, action) => ({
+      ...state,
+      me: action.payload,
+    }),
     [LOG_IN_REQUEST]: (state, action) => ({
       ...state,
       loginLoading: true,

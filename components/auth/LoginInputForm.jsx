@@ -28,6 +28,7 @@ const LoginInputForm = () => {
     if (loginError) {
     }
     if (me) {
+      localStorage.setItem("user", JSON.stringify(me));
       Router.back();
     }
   }, [me]);
