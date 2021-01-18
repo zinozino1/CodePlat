@@ -1,5 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { Form, Input, Select, Button, Divider, Upload, Steps } from "antd";
+import React, { useCallback, useState, useEffect } from "react";
+import {
+  Form,
+  Input,
+  Select,
+  Button,
+  Divider,
+  Upload,
+  Steps,
+  Result,
+} from "antd";
 import {
   UserOutlined,
   LockOutlined,
@@ -14,6 +23,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SocialTemplate from "../common/auth/SocialTemplate";
 import useInput from "../../hooks/useInput";
 import SkillFilterForm from "../common/contents/SkillFilterForm";
+import { EmailRegex } from "../../lib/constant/constant";
 
 const { Option } = Select;
 
@@ -72,7 +82,7 @@ const RegisterInputForm = () => {
 
   const [registerType, setRegisterType] = useState(null);
   const [progress, setProgress] = useState(0);
-  const [remainTime, setRemainTime] = useState(5);
+  const [formError, setFormError] = useState(true);
 
   const [nickname, onChangeNickname] = useInput("");
   const [email, onChangeEmail] = useInput("");
@@ -85,9 +95,10 @@ const RegisterInputForm = () => {
   }, []);
 
   const onClickLocalButton = useCallback(() => {
+    if (formError) return;
     setRegisterType("local");
     setProgress(1);
-  }, []);
+  }, [formError]);
 
   const onClickSocialButton = useCallback(() => {
     setRegisterType("social");
@@ -114,6 +125,25 @@ const RegisterInputForm = () => {
   }, []);
 
   //onSubmitHandler 구현하기
+
+  useEffect(() => {
+    console.log(formError);
+    if (
+      nickname.length !== 0 &&
+      email.length !== 0 &&
+      confirmEmail.length !== 0 &&
+      password.length !== 0 &&
+      password.length >= 8 &&
+      confirmPassword.length !== 0 &&
+      password === confirmPassword &&
+      email === confirmEmail &&
+      email.match(EmailRegex)
+    ) {
+      setFormError(false);
+    } else {
+      setFormError(true);
+    }
+  }, [nickname, email, confirmEmail, password, confirmPassword]);
 
   return (
     <RegisterFormWrapper
@@ -151,7 +181,7 @@ const RegisterInputForm = () => {
             rules={[
               {
                 required: true,
-                message: "닉네임을 입력해주세요!",
+                message: "닉네임을 입력해주세요.",
                 whitespace: true,
               },
             ]}
@@ -165,11 +195,11 @@ const RegisterInputForm = () => {
             rules={[
               {
                 type: "email",
-                message: "이메일 형식으로 입력해 주세요!",
+                message: "이메일 형식으로 입력해 주세요.",
               },
               {
                 required: true,
-                message: "이메일을 입력해주세요!",
+                message: "이메일을 입력해주세요.",
               },
             ]}
             onChange={onChangeEmail}
@@ -186,7 +216,7 @@ const RegisterInputForm = () => {
               //},
               {
                 required: true,
-                message: "이메일을 입력해주세요!",
+                message: "이메일을 입력해주세요.",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -194,7 +224,7 @@ const RegisterInputForm = () => {
                     return Promise.resolve();
                   }
 
-                  return Promise.reject("이메일이 일치하지 않습니다!");
+                  return Promise.reject("이메일이 일치하지 않습니다.");
                 },
               }),
             ]}
@@ -208,7 +238,11 @@ const RegisterInputForm = () => {
             rules={[
               {
                 required: true,
-                message: "비밀번호를 입력해주세요!",
+                message: "비밀번호를 입력해주세요.",
+              },
+              {
+                min: 8,
+                message: "8자리 이상 비밀번호를 입력해주세요.",
               },
             ]}
             hasFeedback
@@ -224,7 +258,7 @@ const RegisterInputForm = () => {
             rules={[
               {
                 required: true,
-                message: "비밀번호를 입력해주세요!",
+                message: "비밀번호를 입력해주세요.",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -232,7 +266,7 @@ const RegisterInputForm = () => {
                     return Promise.resolve();
                   }
 
-                  return Promise.reject("비밀번호가 일치하지 않습니다!");
+                  return Promise.reject("비밀번호가 일치하지 않습니다.");
                 },
               }),
             ]}
@@ -240,6 +274,7 @@ const RegisterInputForm = () => {
           >
             <Input.Password placeholder="confirm password" />
           </RegisterInputItemWrapper>
+
           <div className="register-btn">
             <Button
               type="primary"
@@ -249,6 +284,7 @@ const RegisterInputForm = () => {
               확인
             </Button>
           </div>
+
           <StyledDivider>소셜 회원가입</StyledDivider>
           <SocialTemplate onClickSocialButton={onClickSocialButton} />
         </>
@@ -300,7 +336,7 @@ const RegisterInputForm = () => {
             rules={[
               {
                 required: true,
-                message: "닉네임을 입력해주세요!",
+                message: "닉네임을 입력해주세요.",
                 whitespace: true,
               },
             ]}
@@ -348,10 +384,23 @@ const RegisterInputForm = () => {
       )}
       {progress == 2 && (
         <div>
-          <div
-            style={{ fontSize: "20px", textAlign: "center" }}
-          >{`${email}로 인증 요청 메일을 보냈습니다. 해당 이메일을 확인
-            하시고, 인증 확인 링크를 눌러 주시기 바랍니다. `}</div>
+          <div>
+            <Result
+              status="success"
+              title={`${email} 으로 인증 요청
+              메일을 보냈습니다. `}
+              //subTitle="해당 이메일을 확인 하시고, 인증 확인 링크를 눌러 주시기 바랍니다."
+              // extra={[
+              //   <Button type="primary" key="console">
+              //     Go Console
+              //   </Button>,
+              //   <Button key="buy">Buy Again</Button>,
+              // ]}
+            />
+          </div>
+          <div style={{ fontSize: "16px", textAlign: "center" }}>
+            해당 이메일을 확인 하시고, 인증 확인 링크를 눌러 주시기 바랍니다.{" "}
+          </div>
           <div
             style={{
               fontSize: "13px",
@@ -360,20 +409,12 @@ const RegisterInputForm = () => {
               color: "#888",
             }}
           >
-            이메일 인증이 완료 되지 않을 경우 사이트 이용에 제한이 있습니다.
-          </div>
-          <div
-            style={{
-              fontSize: "13px",
-              textAlign: "center",
-              margin: "20px 0",
-              textDecoration: "underline",
-            }}
-          >
-            <span style={{ color: "red" }}>*</span>서비스에 따라 스팸으로 분류
-            되있을 수도 있습니다. 스팸함도 꼭 확인해 주시기 바랍니다.
+            <span style={{ color: "red" }}>*</span>
+            이메일 인증이 완료 되지 않을 경우 사이트 이용에 제한이 있을 수
+            있습니다.
             <span style={{ color: "red" }}>*</span>
           </div>
+
           <div
             style={{
               fontSize: "13px",
