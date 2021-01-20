@@ -33,11 +33,6 @@
       "static/chunks/main.js",
       "static/chunks/webpack.js",
       "static/chunks/pages/articles/forum/write.js"
-    ],
-    "/articles/project/write": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/articles/project/write.js"
     ]
   },
   "ampFirstPages": []

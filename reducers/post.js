@@ -17,6 +17,9 @@ const initialState = {
   mainLoadPostsLoading: false,
   mainLoadPostsDone: false,
   mainLoadPostsError: null,
+  writePostLoading: false,
+  writePostDone: false,
+  writePostError: null,
 };
 
 // action type
@@ -36,6 +39,10 @@ export const MAIN_LOAD_POSTS_REQUEST = "post/MAIN_LOAD_POSTS_REQUEST";
 export const MAIN_LOAD_POSTS_SUCCESS = "post/MAIN_LOAD_POSTS_SUCCESS";
 export const MAIN_LOAD_POSTS_FAILURE = "post/MAIN_LOAD_POSTS_FAILURE";
 
+export const WRITE_POST_REQUEST = "post/c";
+export const WRITE_POST_SUCCESS = "post/WRITE_POST_SUCCESS";
+export const WRITE_POST_FAILURE = "post/WRITE_POST_FAILURE";
+
 // action creator
 
 export const initializePostAction = createAction(INITIALIZE_POST);
@@ -51,6 +58,11 @@ export const loadPostsReqeustAction = createAction(
 );
 
 export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
+
+export const writePostRequestAction = createAction(
+  WRITE_POST_REQUEST,
+  (data) => data, // saga에서 타입에 따라 분기해야함
+);
 
 // reducer
 
@@ -126,6 +138,24 @@ const postReducer = handleActions(
       mainLoadPostsLoading: false,
       mainLoadPostsDone: false,
       mainLoadPostsError: action.error,
+    }),
+    [WRITE_POST_REQUEST]: (state, action) => ({
+      ...state,
+      writePostLoading: true,
+      writePostDone: false,
+      writePostError: null,
+    }),
+    [WRITE_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      writePostLoading: false,
+      writePostDone: true,
+      writePostError: null,
+    }),
+    [WRITE_POST_FAILURE]: (state, action) => ({
+      ...state,
+      writePostLoading: false,
+      writePostDone: false,
+      writePostError: null,
     }),
   },
   initialState,
