@@ -135,4 +135,4 @@ const SkillFilterForm = ({ type }) => {
   );
 };
 
-export default SkillFilterForm;
+export default React.memo(SkillFilterForm);

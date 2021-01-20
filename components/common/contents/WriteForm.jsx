@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import Form from "antd/lib/form/Form";
 import SkillFilterForm from "./SkillFilterForm";
-import { Select, Input, Upload, Button } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Select, Input, Upload, Button, Tag, Tooltip } from "antd";
+import { UploadOutlined, SlidersFilled } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import { Locations } from "../../../lib/constant/constant";
 import useInput from "../../../hooks/useInput";
+import TagBox from "./TagBox";
 
 const WriteFormWrapper = styled.div`
   margin: 40px 0;
@@ -28,6 +29,10 @@ const Label = styled.span`
 
 const LocationSelectChildren = [];
 const PeopleSelectChildren = [];
+const ForumSelectChildren = [
+  <Select.Option key="free">자유</Select.Option>,
+  <Select.Option key="qna">QnA</Select.Option>,
+];
 Locations.forEach((v, i) => {
   LocationSelectChildren.push(
     <Select.Option key={v.key}>{v.value}</Select.Option>,
@@ -38,12 +43,55 @@ for (let i = 0; i < 10; i++) {
 }
 
 const WriteForm = ({ contentType }) => {
-  const skills = useSelector((state) => state.skill);
+  const { skill } = useSelector((state) => state.skill);
 
-  const [peopleNumber, setPeopleNumber] = useState(1);
-  const [location, setLocation] = useState("서울");
+  // 공통
   const [title, onChangeTitle] = useInput("");
   const [description, onChangeDescription] = useInput("");
+
+  // 스터디, 프로젝트
+  const [peopleNumber, setPeopleNumber] = useState(1);
+  const [location, setLocation] = useState("서울");
+
+  const onChangePeopleNumber = useCallback((value) => {
+    setPeopleNumber(value);
+  }, []);
+  const onChangeLocation = useCallback((value) => {
+    setLocation(value);
+  }, []);
+
+  const onStudyAndProjectSubmit = useCallback(() => {
+    if (skill.length === 0) {
+      alert("활용기술을 하나 이상 선택해주세요.");
+    }
+    if (title === "") {
+      alert("제목을 채워주세요.");
+    }
+    if (description === "") {
+      alert("내용을 채워주세요.");
+    }
+  }, [skill, title, description]);
+
+  // 포럼
+  const [filter, setFilter] = useState("자유");
+  const [tags, setTags] = useState([]);
+  const [inputVisible, setInputVisible] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [editInputIndex, setEditInputIndex] = useState(-1);
+  const [editInputValue, setEditInputValue] = useState("");
+
+  const onChangeFilter = useCallback((value) => {
+    setFilter(value);
+  }, []);
+
+  const onForumSubmit = useCallback(() => {
+    if (title === "") {
+      alert("제목을 채워주세요.");
+    }
+    if (description === "") {
+      alert("내용을 채워주세요.");
+    }
+  }, [title, description]);
 
   return (
     <>
@@ -58,12 +106,16 @@ const WriteForm = ({ contentType }) => {
             <div style={{ marginBottom: "7px" }}>
               <Label>활용기술</Label>
             </div>
-
             <SkillFilterForm type="write" />
           </FormItemWrapper>
           <FormItemWrapper style={{ display: "flex" }}>
             <Label style={{ lineHeight: "32px" }}>모집인원</Label>
-            <Select defaultValue="1" bordered={false} style={{ color: "#999" }}>
+            <Select
+              defaultValue="1"
+              bordered={false}
+              style={{ color: "#999" }}
+              onChange={onChangePeopleNumber}
+            >
               {PeopleSelectChildren}
             </Select>
             <Label style={{ lineHeight: "32px" }}>지역</Label>
@@ -71,6 +123,7 @@ const WriteForm = ({ contentType }) => {
               defaultValue="서울"
               bordered={false}
               style={{ color: "#999" }}
+              onChange={onChangeLocation}
             >
               {LocationSelectChildren}
             </Select>
@@ -79,13 +132,20 @@ const WriteForm = ({ contentType }) => {
             <div style={{ marginBottom: "7px" }}>
               <Label>제목</Label>
             </div>
-            <Input.TextArea placeholder="제목을 입력해주세요." />
+            <Input.TextArea
+              placeholder="제목을 입력해주세요."
+              onChange={onChangeTitle}
+            />
           </FormItemWrapper>
           <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>내용</Label>
             </div>
-            <Input.TextArea rows={6} placeholder="내용을 입력해주세요." />
+            <Input.TextArea
+              rows={6}
+              placeholder="내용을 입력해주세요."
+              onChange={onChangeDescription}
+            />
           </FormItemWrapper>
           <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
@@ -96,11 +156,70 @@ const WriteForm = ({ contentType }) => {
             </Upload>
           </FormItemWrapper>
           <div style={{ textAlign: "center", margin: "50px 0" }}>
-            <Button style={{ width: "100px" }}>등록</Button>
+            <Button
+              style={{ width: "100px" }}
+              onClick={onStudyAndProjectSubmit}
+            >
+              등록
+            </Button>
           </div>
         </WriteFormWrapper>
       ) : (
-        <div>forum write</div>
+        <WriteFormWrapper>
+          <TitleWrapper>글쓰기</TitleWrapper>
+          <FormItemWrapper>
+            <Label style={{ lineHeight: "32px" }}>분류</Label>
+            <Select
+              defaultValue={filter}
+              bordered={false}
+              style={{ color: "#999" }}
+              onChange={onChangeFilter}
+            >
+              {ForumSelectChildren}
+            </Select>
+          </FormItemWrapper>
+          <FormItemWrapper>
+            <div style={{ marginBottom: "7px" }}>
+              <Label>제목</Label>
+            </div>
+            <Input.TextArea
+              placeholder="제목을 입력해주세요."
+              onChange={onChangeTitle}
+            />
+          </FormItemWrapper>
+          <FormItemWrapper>
+            <div style={{ marginBottom: "7px" }}>
+              <Label>태그</Label>
+            </div>
+            <TagBox
+              tags={tags}
+              setTags={setTags}
+              inputVisible={inputVisible}
+              setInputVisible={setInputVisible}
+              inputValue={inputValue}
+              setInputValue={setInputValue}
+              editInputIndex={editInputIndex}
+              setEditInputIndex={setEditInputIndex}
+              editInputValue={editInputValue}
+              setEditInputValue={setEditInputValue}
+            />
+          </FormItemWrapper>
+          <FormItemWrapper>
+            <div style={{ marginBottom: "7px" }}>
+              <Label>내용</Label>
+            </div>
+            <Input.TextArea
+              rows={6}
+              placeholder="내용을 입력해주세요."
+              onChange={onChangeDescription}
+            />
+          </FormItemWrapper>
+          <div style={{ textAlign: "center", margin: "50px 0" }}>
+            <Button style={{ width: "100px" }} onClick={onForumSubmit}>
+              등록
+            </Button>
+          </div>
+        </WriteFormWrapper>
       )}
     </>
   );
