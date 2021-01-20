@@ -29,10 +29,10 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/articles/forum.js"
     ],
-    "/articles/forum/write": [
+    "/articles/project": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum/write.js"
+      "static/chunks/pages/articles/project.js"
     ]
   },
   "ampFirstPages": []

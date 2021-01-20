@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { Input, Button } from "antd";
 import Link from "next/link";
+import useInput from "../../../hooks/useInput";
+import Router, { withRouter } from "next/router";
 
 const SearchContentFormWrapper = styled.div`
   margin: 30px auto;
@@ -17,7 +19,21 @@ const SearchContentFormWrapper = styled.div`
   }
 `;
 
-const SearchContentForm = ({ contentType }) => {
+const SearchContentForm = ({ contentType, router }) => {
+  const [content, onChangeContent] = useInput("");
+
+  const onSubmit = useCallback(
+    // post 조작해야함.
+    (value) => {
+      if (value === "") {
+        Router.push(`${router.route}`);
+      } else {
+        Router.push(`${router.route}/?term=${value}`);
+      }
+    },
+    [router.route, content],
+  );
+
   return (
     <SearchContentFormWrapper>
       <Input.Search
@@ -25,6 +41,8 @@ const SearchContentForm = ({ contentType }) => {
         placeholder="검색"
         allowClear
         enterButton
+        onChange={onChangeContent}
+        onSearch={onSubmit}
 
         //onSearch={onSearch}
       />
@@ -37,4 +55,4 @@ const SearchContentForm = ({ contentType }) => {
   );
 };
 
-export default SearchContentForm;
+export default withRouter(SearchContentForm);
