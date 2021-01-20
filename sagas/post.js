@@ -38,9 +38,12 @@ function* loadPostSaga(action) {
 }
 
 function* loadPostsSaga(action) {
+  // 쿼리값에 따라 요청
   try {
     yield delay(1000);
     // 수정 필요
+    // action.payload.contentType, action.payload.query가 필요
+    // forum일 경우 sortingBy 쿼리 필요
     yield put({ type: LOAD_POSTS_SUCCESS, contentType: action.payload });
   } catch (error) {
     console.log(error);

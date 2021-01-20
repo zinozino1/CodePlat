@@ -8,6 +8,7 @@ import {
 import List from "../../../components/common/contents/List";
 import { Spin, Radio, Select } from "antd";
 import styled from "styled-components";
+import Router, { withRouter } from "next/router";
 
 const SpinWrapper = styled.div`
   text-align: center;
@@ -43,10 +44,14 @@ const ForumFilterWrapper = styled.div`
   }
 `;
 
-const Forum = () => {
+const Forum = ({ router }) => {
   const [radioValue, setRadioValue] = useState("latest");
   const onClickRadio = useCallback((e) => {
     setRadioValue(e.target.value);
+  }, []);
+
+  const onClickSort = useCallback((e) => {
+    Router.push(`/articles/forum?sortingBy=${e.target.value}`);
   }, []);
 
   const dispatch = useDispatch();
@@ -62,11 +67,13 @@ const Forum = () => {
   };
 
   useEffect(() => {
+    // 쿼리값에 따라 다르게 요청해야함.
+
     dispatch(loadPostsReqeustAction("forum"));
     return () => {
       dispatch(initializePostsAction());
     };
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -83,11 +90,26 @@ const Forum = () => {
           <Select.Option value="free">자유</Select.Option>
         </Select>
         <Radio.Group onChange={onClickRadio} defaultValue="latest">
-          <Radio.Button value="latest">최신순</Radio.Button>
-          <Radio.Button value="recommend">추천순</Radio.Button>
-          <Radio.Button value="comment">댓글순</Radio.Button>
-          <Radio.Button value="scrap">스크랩순</Radio.Button>
-          <Radio.Button value="view">조회순</Radio.Button>
+          <Radio.Button
+            value="latest"
+            onClick={() => {
+              Router.push("/articles/forum");
+            }}
+          >
+            최신순
+          </Radio.Button>
+          <Radio.Button value="recommend" onClick={onClickSort}>
+            추천순
+          </Radio.Button>
+          <Radio.Button value="comment" onClick={onClickSort}>
+            댓글순
+          </Radio.Button>
+          <Radio.Button value="scrap" onClick={onClickSort}>
+            스크랩순
+          </Radio.Button>
+          <Radio.Button value="view" onClick={onClickSort}>
+            조회순
+          </Radio.Button>
         </Radio.Group>
       </ForumFilterWrapper>
       <List data={forumPosts} type="forum" />
@@ -100,4 +122,4 @@ const Forum = () => {
   );
 };
 
-export default Forum;
+export default withRouter(Forum);
