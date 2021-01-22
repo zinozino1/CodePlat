@@ -48,11 +48,11 @@ const WriteForm = ({ contentType, router }) => {
   const dispatch = useDispatch();
   const { skill } = useSelector((state) => state.skill);
 
-  // 공통
+  // 공통 state
   const [title, onChangeTitle] = useInput("");
   const [description, onChangeDescription] = useInput("");
 
-  // 스터디, 프로젝트
+  // 스터디, 프로젝트 state
   const [peopleNumber, setPeopleNumber] = useState(1);
   const [location, setLocation] = useState("서울");
 
@@ -89,7 +89,7 @@ const WriteForm = ({ contentType, router }) => {
     );
   }, [skill, title, description, peopleNumber, location]);
 
-  // 포럼
+  // 포럼 state
   const [filter, setFilter] = useState("자유");
   const [tags, setTags] = useState([]);
   const [inputVisible, setInputVisible] = useState(false);

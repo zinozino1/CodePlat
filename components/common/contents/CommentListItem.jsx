@@ -47,6 +47,7 @@ const ButtonWrapper = styled.div`
 
 const CommentListItem = ({ item, post }) => {
   const { me } = useSelector((state) => state.user);
+  console.log(item);
 
   const [applyToggle, onChangeApplyToggle] = useToggle(false);
 

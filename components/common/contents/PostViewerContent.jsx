@@ -175,7 +175,7 @@ const PostViewerContent = ({ post, contentType }) => {
                   />{" "}
                 </Popover>
               }
-              content={<CommentForm />}
+              content={<CommentForm post={post} />}
             />
           </div>
         )}

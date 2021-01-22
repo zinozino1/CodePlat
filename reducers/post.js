@@ -1,5 +1,11 @@
 import { handleActions, createAction } from "redux-actions";
-import { dummyPostsCreator, dummyPostCreator } from "../lib/util/dummyCreator";
+import {
+  dummyPostsCreator,
+  dummyPostCreator,
+  dummyMeCreator,
+} from "../lib/util/dummyCreator";
+import shortid from "shortid";
+import { getMe } from "./user";
 
 // initial state
 
@@ -20,6 +26,12 @@ const initialState = {
   writePostLoading: false,
   writePostDone: false,
   writePostError: null,
+  postScrapLoading: false,
+  postScrapDone: false,
+  postScrapError: null,
+  addCommentLoading: false,
+  addCommentDone: false,
+  addCommentError: null,
 };
 
 // action type
@@ -43,6 +55,14 @@ export const WRITE_POST_REQUEST = "post/WRITE_POST_REQUEST";
 export const WRITE_POST_SUCCESS = "post/WRITE_POST_SUCCESS";
 export const WRITE_POST_FAILURE = "post/WRITE_POST_FAILURE";
 
+export const POST_SCRAP_REQUEST = "post/POST_SCRAP_REQUEST";
+export const POST_SCRAP_SUCCESS = "post/POST_SCRAP_SUCCESS";
+export const POST_SCRAP_FAILURE = "post/POST_SCRAP_FAILURE";
+
+export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
+export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
+export const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
+
 // action creator
 
 export const initializePostAction = createAction(INITIALIZE_POST);
@@ -62,6 +82,16 @@ export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
 export const writePostRequestAction = createAction(
   WRITE_POST_REQUEST,
   (data) => data, // saga에서 타입에 따라 분기해야함
+);
+
+export const postScrapRequestAction = createAction(
+  POST_SCRAP_REQUEST,
+  (data) => data,
+);
+
+export const addCommentRequestAction = createAction(
+  ADD_COMMENT_REQUEST,
+  (data) => data,
 );
 
 // reducer
@@ -156,6 +186,55 @@ const postReducer = handleActions(
       writePostLoading: false,
       writePostDone: false,
       writePostError: null,
+    }),
+    [POST_SCRAP_REQUEST]: (state, action) => ({
+      ...state,
+      postScrapLoading: true,
+      postScrapDone: false,
+      postScrapError: null,
+    }),
+    [POST_SCRAP_SUCCESS]: (state, action) => ({
+      ...state,
+      postScrapLoading: false,
+      postScrapDone: true,
+      postScrapError: null,
+    }),
+    [POST_SCRAP_FAILURE]: (state, action) => ({
+      ...state,
+      postScrapLoading: false,
+      postScrapDone: false,
+      postScrapError: null,
+    }),
+    [ADD_COMMENT_REQUEST]: (state, action) => ({
+      ...state,
+      addCommentLoading: true,
+      addCommentDone: false,
+      addCommentError: null,
+    }),
+    [ADD_COMMENT_SUCCESS]: (state, action) => ({
+      ...state,
+      addCommentLoading: false,
+      addCommentDone: true,
+      addCommentError: null,
+      post: {
+        ...state.post,
+        comments: state.post.comments.concat({
+          id: shortid.generate(),
+          writer: { ...getMe() },
+          content: action.content,
+          postId: action.postId,
+          createAt: new Date(),
+          commentTo: null,
+          likes: 0,
+          secretComment: false,
+        }),
+      },
+    }),
+    [ADD_COMMENT_FAILURE]: (state, action) => ({
+      ...state,
+      addCommentLoading: false,
+      addCommentDone: false,
+      addCommentError: null,
     }),
   },
   initialState,

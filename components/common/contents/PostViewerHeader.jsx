@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import {
   MessageOutlined,
@@ -11,6 +11,8 @@ import {
 } from "@ant-design/icons";
 import { List, Avatar, Space, Tag, Popover, Skeleton, Button } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
+import { postScrapRequestAction } from "../../../reducers/post";
+import { useDispatch } from "react-redux";
 
 const PostViewerHeaderWrapper = styled.div`
   /* display: flex; */
@@ -54,6 +56,12 @@ const PostViewerHeaderWrapper = styled.div`
 `;
 
 const PostViewerHeader = ({ post, contentType }) => {
+  const dispatch = useDispatch();
+
+  const onScrap = useCallback((id) => {
+    dispatch(postScrapRequestAction(id));
+  }, []);
+
   return (
     <PostViewerHeaderWrapper>
       <div className="user-profile">
@@ -88,7 +96,12 @@ const PostViewerHeader = ({ post, contentType }) => {
         <MessageOutlined />
         <span className="post-comments">{post.comments.length}</span>
         {contentType == "forum" && (
-          <Button className="scrap-btn">
+          <Button
+            className="scrap-btn"
+            onClick={() => {
+              onScrap(post.id);
+            }}
+          >
             <TagsOutlined />
           </Button>
         )}

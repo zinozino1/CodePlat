@@ -24,6 +24,7 @@ import SocialTemplate from "../common/auth/SocialTemplate";
 import useInput from "../../hooks/useInput";
 import SkillFilterForm from "../common/contents/SkillFilterForm";
 import { EmailRegex } from "../../lib/constant/constant";
+import axios from "axios";
 
 const { Option } = Select;
 
@@ -78,31 +79,89 @@ const PushBackButton = styled.span`
 const StyledDivider = styled(Divider)``;
 
 const RegisterInputForm = () => {
+  const { skill } = useSelector((state) => state.skill);
   const [form] = Form.useForm();
+
+  const [userId, setUserId] = useState(null);
 
   const [registerType, setRegisterType] = useState(null);
   const [progress, setProgress] = useState(0);
+  const [socialType, setSocialType] = useState("");
   const [formError, setFormError] = useState(true);
+  const [nicknameExistError, setNicknameExistError] = useState(false);
+  const [emailExistError, setEmailExistError] = useState(false);
 
-  const [nickname, onChangeNickname] = useInput("");
-  const [email, onChangeEmail] = useInput("");
+  const [nickname, setNickname] = useState("");
+  const onChangeNickname = useCallback((e) => {
+    setNickname(e.target.value);
+    setNicknameExistError(false);
+  }, []);
+
+  const [email, setEmail] = useState("");
+  const onChangeEmail = useCallback((e) => {
+    setEmail(e.target.value);
+    setEmailExistError(false);
+  }, []);
+
   const [confirmEmail, onChangeConfirmEmail] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [confirmPassword, onChangeConfirmPassword] = useInput("");
+  const [githubUrl, onChangeGithubUrl] = useInput("");
 
   const onClickEmailVerify = useCallback(() => {
     setProgress(2);
-  }, []);
+    axios.post("/api/join/optionForm", {
+      type: "local",
+      id: userId,
+      techStack: skill,
+      githubUrl,
+      avatarUrl: "",
+    });
+  }, [userId, skill]);
 
   const onClickLocalButton = useCallback(() => {
     if (formError) return;
-    setRegisterType("local");
-    setProgress(1);
-  }, [formError]);
+    axios
+      .post("/api/join", { email, nickname, password })
+      .then((res) => {
+        setUserId(res.data.userId);
+        setEmailExistError(false);
+        setNicknameExistError(false);
+        setRegisterType("local");
+        setProgress(1);
+      })
+      .catch((err) => {
+        if (err.response.data.error.name === "UserExistsError") {
+          setEmailExistError(true);
+        } else {
+          setNicknameExistError(true);
+        }
+      });
+  }, [formError, email, nickname, password]);
 
-  const onClickSocialButton = useCallback(() => {
-    setRegisterType("social");
-    setProgress(1);
+  const onClickSocialButton = useCallback((e) => {
+    switch (e.target.innerText) {
+      case "Naver":
+        setSocialType("naver");
+        axios.get(`/api/naver`);
+        break;
+      case "Google":
+        setSocialType("google");
+        axios.get(`/api/google`);
+        break;
+      case "Github":
+        setSocialType("github");
+        axios.get(`/api/github`);
+        break;
+      case "Kakao":
+        setSocialType("kakao");
+        axios.get(`/api/kakao`);
+        break;
+      default:
+        break;
+    }
+    // setRegisterType("social");
+    // setProgress(1);
   }, []);
 
   const onPushBack = useCallback(() => {
@@ -112,19 +171,14 @@ const RegisterInputForm = () => {
 
   const normFile = (e) => {
     console.log("Upload event:", e);
-
-    // if (Array.isArray(e)) {
-    //     return e;
-    // }
-
-    // return e && e.fileList;
   };
 
-  const onRegisterSubmit = useCallback((values) => {
-    console.log("Received values of form: ", values);
-  }, []);
-
-  //onSubmitHandler 구현하기
+  const onSocialRegisterSubmit = useCallback(
+    (e) => {
+      axios.get(`/api/${socialType}`);
+    },
+    [socialType],
+  );
 
   useEffect(() => {
     if (
@@ -145,12 +199,7 @@ const RegisterInputForm = () => {
   }, [nickname, email, confirmEmail, password, confirmPassword]);
 
   return (
-    <RegisterFormWrapper
-      {...formItemLayout}
-      form={form}
-      name="register"
-      // onSubmit ={onSubmitHandler}
-    >
+    <RegisterFormWrapper {...formItemLayout} form={form} name="register">
       <div
         style={{
           textAlign: "center",
@@ -174,37 +223,88 @@ const RegisterInputForm = () => {
       </Steps>
       {progress == 0 && (
         <>
-          <RegisterInputItemWrapper
-            name="nickname"
-            label="닉네임"
-            rules={[
-              {
-                required: true,
-                message: "닉네임을 입력해주세요.",
-                whitespace: true,
-              },
-            ]}
-            onChange={onChangeNickname}
-          >
-            <Input placeholder="nickname" />
-          </RegisterInputItemWrapper>
-          <RegisterInputItemWrapper
-            name="email"
-            label="이메일"
-            rules={[
-              {
-                type: "email",
-                message: "이메일 형식으로 입력해 주세요.",
-              },
-              {
-                required: true,
-                message: "이메일을 입력해주세요.",
-              },
-            ]}
-            onChange={onChangeEmail}
-          >
-            <Input placeholder="email" />
-          </RegisterInputItemWrapper>
+          {nicknameExistError ? (
+            <RegisterInputItemWrapper
+              name="nickname"
+              label="닉네임"
+              validateStatus="error"
+              help="이미 존재하는 닉네임입니다."
+              rules={[
+                {
+                  required: true,
+                  message: "닉네임을 입력해주세요.",
+                  whitespace: true,
+                },
+              ]}
+              onChange={onChangeNickname}
+            >
+              <Input placeholder="nickname" />
+            </RegisterInputItemWrapper>
+          ) : (
+            <RegisterInputItemWrapper
+              name="nickname"
+              label="닉네임"
+              rules={[
+                {
+                  required: true,
+                  message: "닉네임을 입력해주세요.",
+                  whitespace: true,
+                },
+              ]}
+              onChange={onChangeNickname}
+            >
+              <Input placeholder="nickname" />
+            </RegisterInputItemWrapper>
+          )}
+
+          {emailExistError ? (
+            <RegisterInputItemWrapper
+              name="email"
+              label="이메일"
+              validateStatus="error"
+              help="이미 존재하는 이메일입니다."
+              rules={[
+                {
+                  type: "email",
+                  message: "이메일 형식으로 입력해 주세요.",
+                },
+                {
+                  required: true,
+                  message: "이메일을 입력해주세요.",
+                },
+              ]}
+              onChange={onChangeEmail}
+            >
+              <Input placeholder="email" />
+            </RegisterInputItemWrapper>
+          ) : (
+            <RegisterInputItemWrapper
+              name="email"
+              label="이메일"
+              rules={[
+                {
+                  type: "email",
+                  message: "이메일 형식으로 입력해 주세요.",
+                },
+                {
+                  required: true,
+                  message: "이메일을 입력해주세요.",
+                },
+                // ({ getFieldValue }) => ({
+                //   validator(_, value) {
+                //     if (!emailExistError) {
+                //       return Promise.resolve();
+                //     } else {
+                //       return Promise.reject("이미 존재하는 이메일입니다.");
+                //     }
+                //   },
+                // }),
+              ]}
+              onChange={onChangeEmail}
+            >
+              <Input placeholder="email" />
+            </RegisterInputItemWrapper>
+          )}
           <RegisterInputItemWrapper
             name="confirmEmail"
             label="이메일 확인"
@@ -215,7 +315,7 @@ const RegisterInputForm = () => {
               //},
               {
                 required: true,
-                message: "이메일을 입력해주세요.",
+                message: "이메일 확인을 입력해주세요.",
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
@@ -296,7 +396,7 @@ const RegisterInputForm = () => {
             name="github"
             label="Github"
             hasFeedback
-            onChange={onChangePassword}
+            onChange={onChangeGithubUrl}
           >
             <Input placeholder="github 닉네임" />
           </RegisterInputItemWrapper>
@@ -305,7 +405,7 @@ const RegisterInputForm = () => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            onChange={onChangePassword}
+            //onChange={onChangePassword}
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
@@ -372,7 +472,7 @@ const RegisterInputForm = () => {
             <Button
               type="primary"
               // htmlType="submit"
-              //onClick={onClickEmailVerify}
+              onClick={onSocialRegisterSubmit}
             >
               가입하기
             </Button>

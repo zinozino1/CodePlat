@@ -22,7 +22,7 @@ const ProjectDetail = ({ router }) => {
     return () => {
       dispatch(initializePostAction());
     };
-  }, []);
+  }, [router]);
 
   return (
     <PostViewerLayout contentType="project">

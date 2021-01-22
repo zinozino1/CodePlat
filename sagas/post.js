@@ -12,6 +12,12 @@ import {
   WRITE_POST_REQUEST,
   WRITE_POST_SUCCESS,
   WRITE_POST_FAILURE,
+  POST_SCRAP_REQUEST,
+  POST_SCRAP_SUCCESS,
+  POST_SCRAP_FAILURE,
+  ADD_COMMENT_REQUEST,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_FAILURE,
 } from "../reducers/post";
 import { dummyPostCreator } from "../lib/util/dummyCreator";
 
@@ -107,6 +113,40 @@ function* writePostSaga(action) {
   }
 }
 
+function* postScrapSaga(action) {
+  try {
+    console.log(action.payload);
+    yield delay(1000);
+    yield put({ type: POST_SCRAP_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: POST_SCRAP_FAILURE,
+      error: error.response.data,
+    });
+  }
+}
+
+function* addCommentSaga(action) {
+  try {
+    // action.payload = postID
+
+    console.log(action.payload);
+    yield delay(1000);
+    yield put({
+      type: ADD_COMMENT_SUCCESS,
+      content: action.payload.content,
+      postId: action.payload.post.id,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: ADD_COMMENT_FAILURE,
+      //error: error.response.data,
+    });
+  }
+}
+
 // watcher
 
 export function* watchPost() {
@@ -114,4 +154,6 @@ export function* watchPost() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPostsSaga);
   yield takeLatest(LOAD_POST_REQUEST, loadPostSaga);
   yield takeLatest(WRITE_POST_REQUEST, writePostSaga);
+  yield takeLatest(POST_SCRAP_REQUEST, postScrapSaga);
+  yield takeLatest(ADD_COMMENT_REQUEST, addCommentSaga);
 }

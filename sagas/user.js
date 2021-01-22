@@ -6,7 +6,11 @@ import {
   LOG_OUT_REQUEST,
   LOG_OUT_SUCCESS,
   LOG_OUT_FAILURE,
+  REGISTER_REQUEST,
+  REGISTER_SUCCESS,
+  REGISTER_FAILURE,
 } from "../reducers/user";
+import { register } from "../lib/api/user";
 
 // saga
 
@@ -31,9 +35,20 @@ function* logoutSaga(action) {
   }
 }
 
+function* registerSaga(action) {
+  // 제거예정
+  try {
+    yield call(register, action.data);
+    yield put({ type: REGISTER_SUCCESS });
+  } catch (error) {
+    yield put({ type: REGISTER_FAILURE, error: error.response.data });
+  }
+}
+
 // watcher
 
 export function* watchUser() {
   yield takeLatest(LOG_IN_REQUEST, loginSaga);
   yield takeLatest(LOG_OUT_REQUEST, logoutSaga);
+  yield takeLatest(REGISTER_REQUEST, registerSaga);
 }

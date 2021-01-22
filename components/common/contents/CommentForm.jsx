@@ -2,19 +2,26 @@ import React, { useCallback } from "react";
 import { Form, Button, Input } from "antd";
 import useInput from "../../../hooks/useInput";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { addCommentRequestAction } from "../../../reducers/post";
 
 const TextAreaWrapper = styled(Input.TextArea)`
   width: 94%;
 `;
 
 const CommentForm = ({ post }) => {
+  const dispatch = useDispatch();
   const [comment, onChangeComment] = useInput("");
 
   const onSubmit = useCallback(() => {
-    // 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
-  }, []);
+    // 1) 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
+    // 2) 일부러 새로고침시킨다
+
+    dispatch(addCommentRequestAction({ post, content: comment }));
+  }, [comment, post]);
+
   return (
-    <Form onFinish={onSubmit}>
+    <Form>
       <Form.Item>
         <TextAreaWrapper
           rows={3}
@@ -27,7 +34,7 @@ const CommentForm = ({ post }) => {
         <Button
           htmlType="submit"
           //loading={submitting}
-          //onClick={onSubmit}
+          onClick={onSubmit}
           type="primary"
         >
           등록

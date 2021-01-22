@@ -22,7 +22,7 @@ const StudyDetail = ({ router }) => {
     return () => {
       dispatch(initializePostAction());
     };
-  }, []);
+  }, [router]);
 
   return (
     <PostViewerLayout contentType="study">

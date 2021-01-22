@@ -22,7 +22,7 @@ const ForumDetail = ({ router }) => {
     return () => {
       dispatch(initializePostAction());
     };
-  }, []);
+  }, [router]);
 
   return (
     <PostViewerLayout contentType="forum">

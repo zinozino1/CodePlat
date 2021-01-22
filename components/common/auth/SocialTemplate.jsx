@@ -16,7 +16,7 @@ const SocialLoginWrapper = styled.div`
   .login-github {
     background: #333;
   }
-  .login-facebook {
+  .login-kakao {
     background: #3b5999;
     margin-left: 3px;
   }
@@ -59,11 +59,11 @@ const SocialTemplate = ({ onClickSocialButton }) => {
           Github
         </SocialLoginButton>
         <SocialLoginButton
-          className="login-facebook"
+          className="login-kakao"
           style={{ flex: "1", marginLeft: "3px" }}
           onClick={onClickSocialButton}
         >
-          Facebook
+          Kakao
         </SocialLoginButton>
       </SocialLoginWrapper>
     </>
