@@ -93,6 +93,10 @@ const Forum = ({ router }) => {
 
   useEffect(() => {
     // 쿼리값에 따라 다르게 요청해야함.
+    // {
+    //   contentType:"forum",
+    //   query:"asdf"
+    // }
 
     dispatch(loadPostsReqeustAction("forum"));
     return () => {

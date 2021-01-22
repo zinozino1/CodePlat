@@ -29,6 +29,10 @@ const Study = ({ router }) => {
   };
 
   useEffect(() => {
+    // {
+    //   contentType:"project",
+    //   query:"asdf"
+    // }
     dispatch(loadPostsReqeustAction("study"));
     return () => {
       dispatch(initializePostsAction());

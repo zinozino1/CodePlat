@@ -43,7 +43,8 @@ function* loadPostsSaga(action) {
     yield delay(1000);
     // 수정 필요
     // action.payload.contentType, action.payload.query가 필요
-    // forum일 경우 sortingBy 쿼리 필요
+    // term도 필요
+    // forum일 경우 sortingBy 쿼리 필요 -> study, project와 분기 필요
     yield put({ type: LOAD_POSTS_SUCCESS, contentType: action.payload });
   } catch (error) {
     console.log(error);
@@ -82,6 +83,7 @@ function* writePostSaga(action) {
       location: action.payload.location,
       file: null, // 처리 필요
     };
+    console.log(data);
   } else {
     data = {
       type,
@@ -90,6 +92,7 @@ function* writePostSaga(action) {
       filter: action.payload.filter,
       tags: action.payload.tags,
     };
+    console.log(data);
   }
   try {
     yield delay(1000);

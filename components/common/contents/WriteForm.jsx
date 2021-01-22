@@ -4,10 +4,12 @@ import Form from "antd/lib/form/Form";
 import SkillFilterForm from "./SkillFilterForm";
 import { Select, Input, Upload, Button, Tag, Tooltip } from "antd";
 import { UploadOutlined, SlidersFilled } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Locations } from "../../../lib/constant/constant";
 import useInput from "../../../hooks/useInput";
 import TagBox from "./TagBox";
+import { writePostRequestAction } from "../../../reducers/post";
+import { withRouter } from "next/router";
 
 const WriteFormWrapper = styled.div`
   margin: 40px 0;
@@ -42,7 +44,8 @@ for (let i = 0; i < 10; i++) {
   PeopleSelectChildren.push(<Select.Option key={i + 1}>{i + 1}</Select.Option>);
 }
 
-const WriteForm = ({ contentType }) => {
+const WriteForm = ({ contentType, router }) => {
+  const dispatch = useDispatch();
   const { skill } = useSelector((state) => state.skill);
 
   // 공통
@@ -63,14 +66,28 @@ const WriteForm = ({ contentType }) => {
   const onStudyAndProjectSubmit = useCallback(() => {
     if (skill.length === 0) {
       alert("활용기술을 하나 이상 선택해주세요.");
+      return;
     }
     if (title === "") {
       alert("제목을 채워주세요.");
+      return;
     }
     if (description === "") {
       alert("내용을 채워주세요.");
+      return;
     }
-  }, [skill, title, description]);
+
+    dispatch(
+      writePostRequestAction({
+        type: router.route.split("/")[2],
+        title,
+        description,
+        peopleNumber,
+        location,
+        skill,
+      }),
+    );
+  }, [skill, title, description, peopleNumber, location]);
 
   // 포럼
   const [filter, setFilter] = useState("자유");
@@ -87,11 +104,22 @@ const WriteForm = ({ contentType }) => {
   const onForumSubmit = useCallback(() => {
     if (title === "") {
       alert("제목을 채워주세요.");
+      return;
     }
     if (description === "") {
       alert("내용을 채워주세요.");
+      return;
     }
-  }, [title, description]);
+    dispatch(
+      writePostRequestAction({
+        type: router.route.split("/")[2],
+        title,
+        description,
+        filter,
+        tags,
+      }),
+    );
+  }, [title, description, filter, tags]);
 
   return (
     <>
@@ -225,4 +253,4 @@ const WriteForm = ({ contentType }) => {
   );
 };
 
-export default WriteForm;
+export default withRouter(WriteForm);

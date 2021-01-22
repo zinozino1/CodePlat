@@ -2,7 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/articles/project/write": "pages/articles/project/write.js",
   "/articles/study": "pages/articles/study.js",
-  "/articles/study/write": "pages/articles/study/write.js",
+  "/articles/forum": "pages/articles/forum.js",
+  "/articles/forum/write": "pages/articles/forum/write.js",
+  "/articles/project": "pages/articles/project.js",
   "/": "pages/index.js"
 }
