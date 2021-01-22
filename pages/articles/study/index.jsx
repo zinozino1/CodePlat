@@ -8,13 +8,14 @@ import {
 import List from "../../../components/common/contents/List";
 import { Spin } from "antd";
 import styled from "styled-components";
+import { withRouter } from "next/router";
 
 const SpinWrapper = styled.div`
   text-align: center;
   margin: 100px 0;
 `;
 
-const Study = () => {
+const Study = ({ router }) => {
   const dispatch = useDispatch();
   const { studyPosts, loadPostsLoading } = useSelector((state) => state.post);
 
@@ -32,7 +33,7 @@ const Study = () => {
     return () => {
       dispatch(initializePostsAction());
     };
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -53,4 +54,4 @@ const Study = () => {
   );
 };
 
-export default Study;
+export default withRouter(Study);

@@ -46,13 +46,38 @@ const ForumFilterWrapper = styled.div`
 
 const Forum = ({ router }) => {
   const [radioValue, setRadioValue] = useState("latest");
+  const [field, setField] = useState("free");
+
+  const onChangeField = useCallback(
+    (e) => {
+      setField(e);
+      if (radioValue) {
+        Router.push(
+          `/articles/forum?sortingField=${e}&sortingBy=${radioValue}`,
+        );
+      } else {
+        Router.push(`/articles/forum?sortingField=${e}`);
+      }
+    },
+    [radioValue],
+  );
+
   const onClickRadio = useCallback((e) => {
     setRadioValue(e.target.value);
   }, []);
 
-  const onClickSort = useCallback((e) => {
-    Router.push(`/articles/forum?sortingBy=${e.target.value}`);
-  }, []);
+  const onClickSort = useCallback(
+    (e) => {
+      if (field) {
+        Router.push(
+          `/articles/forum?sortingField=${field}&sortingBy=${e.target.value}`,
+        );
+      } else {
+        Router.push(`/articles/forum?sortingBy=${e.target.value}`);
+      }
+    },
+    [field],
+  );
 
   const dispatch = useDispatch();
   const { forumPosts, loadPostsLoading } = useSelector((state) => state.post);
@@ -85,17 +110,12 @@ const Forum = ({ router }) => {
   return (
     <ArticleLayout contentType="forum">
       <ForumFilterWrapper>
-        <Select defaultValue="QnA">
-          <Select.Option value="QnA">QnA</Select.Option>
+        <Select defaultValue="free" onChange={onChangeField}>
           <Select.Option value="free">자유</Select.Option>
+          <Select.Option value="QnA">QnA</Select.Option>
         </Select>
         <Radio.Group onChange={onClickRadio} defaultValue="latest">
-          <Radio.Button
-            value="latest"
-            onClick={() => {
-              Router.push("/articles/forum");
-            }}
-          >
+          <Radio.Button value="latest" onClick={onClickSort}>
             최신순
           </Radio.Button>
           <Radio.Button value="recommend" onClick={onClickSort}>
