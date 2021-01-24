@@ -31,7 +31,7 @@ const LoginInputForm = () => {
       return;
     }
     if (me) {
-      localStorage.setItem("user", JSON.stringify(me));
+      //localStorage.setItem("user", JSON.stringify(me));
       Router.push("/");
     }
   }, [me, loginError]);

@@ -9,10 +9,24 @@ import {
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
+  SET_USER_REQUEST,
+  SET_USER_SUCCESS,
+  SET_USER_FAILURE,
 } from "../reducers/user";
-import { register, login } from "../lib/api/user";
+import { register, login, setUser } from "../lib/api/user";
 
 // saga
+
+function* setUserSaga(action) {
+  try {
+    const res = yield call(setUser);
+    console.log(res);
+    yield put({ type: SET_USER_SUCCESS, user: res.data.user });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: SET_USER_FAILURE });
+  }
+}
 
 function* loginSaga(action) {
   try {
@@ -26,7 +40,6 @@ function* loginSaga(action) {
 
 function* logoutSaga(action) {
   try {
-    localStorage.removeItem("user");
     yield delay(1000);
     yield put({ type: LOG_OUT_SUCCESS });
   } catch (error) {
@@ -48,6 +61,7 @@ function* registerSaga(action) {
 // watcher
 
 export function* watchUser() {
+  yield takeLatest(SET_USER_REQUEST, setUserSaga);
   yield takeLatest(LOG_IN_REQUEST, loginSaga);
   yield takeLatest(LOG_OUT_REQUEST, logoutSaga);
   yield takeLatest(REGISTER_REQUEST, registerSaga);

@@ -5,6 +5,9 @@ import { dummyMeCreator } from "../lib/util/dummyCreator";
 
 const initialState = {
   me: null,
+  setUserLoading: false,
+  setUserDone: false,
+  setUserFalse: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -29,7 +32,9 @@ export const getMe = () => {
 
 // action type
 
-export const SET_USER = "user/SET_USER";
+export const SET_USER_REQUEST = "user/SET_USER_REQUEST";
+export const SET_USER_SUCCESS = "user/SET_USER_SUCCESS";
+export const SET_USER_FAILURE = "user/SET_USER_FAILURE";
 
 export const LOG_IN_REQUEST = "user/LOG_IN_REQUEST";
 export const LOG_IN_SUCCESS = "user/LOG_IN_SUCCESS";
@@ -45,7 +50,10 @@ export const REGISTER_FAILURE = "user/REGISTER_FAILURE";
 
 // action creator
 
-export const setUser = createAction(SET_USER, (data) => data);
+export const setUserRequestAction = createAction(
+  SET_USER_REQUEST,
+  (data) => data,
+);
 
 export const loginRequestAction = createAction(LOG_IN_REQUEST, (data) => data);
 export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
@@ -59,9 +67,24 @@ export const registerRequestAction = createAction(
 
 const userReducer = handleActions(
   {
-    [SET_USER]: (state, action) => ({
+    [SET_USER_REQUEST]: (state, action) => ({
       ...state,
-      me: action.payload,
+      setUserLoading: true,
+      setUserDone: false,
+      setUserFalse: null,
+    }),
+    [SET_USER_SUCCESS]: (state, action) => ({
+      ...state,
+      setUserLoading: false,
+      setUserDone: true,
+      setUserFalse: null,
+      me: action.user,
+    }),
+    [SET_USER_FAILURE]: (state, action) => ({
+      ...state,
+      setUserLoading: false,
+      setUserDone: false,
+      setUserFalse: null,
     }),
     [LOG_IN_REQUEST]: (state, action) => ({
       ...state,
