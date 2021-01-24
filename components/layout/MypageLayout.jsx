@@ -14,6 +14,9 @@ const ContentWrapper = styled(Content)`
   @media (max-width: 1368px) {
     width: 100%;
   }
+  @media (max-width: 950px) {
+    margin-top: 120px;
+  }
 `;
 
 const MypageLayout = ({ children }) => {

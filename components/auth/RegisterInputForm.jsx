@@ -80,10 +80,10 @@ const StyledDivider = styled(Divider)``;
 
 const RegisterInputForm = () => {
   const { skill } = useSelector((state) => state.skill);
+
   const [form] = Form.useForm();
 
   const [userId, setUserId] = useState(null);
-
   const [registerType, setRegisterType] = useState(null);
   const [progress, setProgress] = useState(0);
   const [socialType, setSocialType] = useState("");
@@ -109,6 +109,7 @@ const RegisterInputForm = () => {
   const [githubUrl, onChangeGithubUrl] = useInput("");
 
   const onClickEmailVerify = useCallback(() => {
+    console.log(userId);
     setProgress(2);
     axios.post("/api/join/optionForm", {
       type: "local",
@@ -117,7 +118,7 @@ const RegisterInputForm = () => {
       githubUrl,
       avatarUrl: "",
     });
-  }, [userId, skill]);
+  }, [userId, skill, githubUrl]);
 
   const onClickLocalButton = useCallback(() => {
     if (formError) return;
@@ -143,7 +144,16 @@ const RegisterInputForm = () => {
     switch (e.target.innerText) {
       case "Naver":
         setSocialType("naver");
-        axios.get(`/api/naver`);
+        axios({
+          method: "get",
+          url: "/api/naver",
+          headers: {
+            "X-Naver-Client-Id": "vSO6qFAcJj7eL4ijQQAK",
+            "X-Naver-Client-Secret": "soZXaSk9uC",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Credentials": "true",
+          },
+        });
         break;
       case "Google":
         setSocialType("google");

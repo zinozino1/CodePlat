@@ -17,8 +17,9 @@ const SocialLoginWrapper = styled.div`
     background: #333;
   }
   .login-kakao {
-    background: #3b5999;
+    background: #fee500;
     margin-left: 3px;
+    color: black;
   }
 `;
 

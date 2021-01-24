@@ -10,14 +10,14 @@ import {
   REGISTER_SUCCESS,
   REGISTER_FAILURE,
 } from "../reducers/user";
-import { register } from "../lib/api/user";
+import { register, login } from "../lib/api/user";
 
 // saga
 
 function* loginSaga(action) {
   try {
-    yield delay(1000);
-    yield put({ type: LOG_IN_SUCCESS });
+    const res = yield call(login, action.payload);
+    yield put({ type: LOG_IN_SUCCESS, user: res.data.user });
   } catch (error) {
     console.log(error);
     yield put({ type: LOG_IN_FAILURE, error: error.response.data });

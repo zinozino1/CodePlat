@@ -74,7 +74,7 @@ const userReducer = handleActions(
       loginLoading: false,
       loginDone: true,
       loginError: null,
-      me: dummyMeCreator(),
+      me: action.user,
     }),
     [LOG_IN_FAILURE]: (state, action) => ({
       ...state,

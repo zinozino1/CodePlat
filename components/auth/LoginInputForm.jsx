@@ -21,17 +21,20 @@ const LoginInputForm = () => {
     if (email == "" || password == "") {
       return;
     }
-    dispatch(loginRequestAction());
+    dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
 
   useEffect(() => {
     if (loginError) {
+      // 로그인 에러에 따라 분기 필요
+      alert("이메일 인증이 완료되지 않았습니다!");
+      return;
     }
     if (me) {
       localStorage.setItem("user", JSON.stringify(me));
       Router.push("/");
     }
-  }, [me]);
+  }, [me, loginError]);
 
   return (
     <>
