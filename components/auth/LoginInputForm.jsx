@@ -13,9 +13,20 @@ const LoginInputForm = () => {
   const dispatch = useDispatch();
   const { loginLoading, me, loginError } = useSelector((state) => state.user);
 
-  // hook 필요
-  const [email, onChangeEmail] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+
+  const onChangeEmail = useCallback((e) => {
+    setEmail(e.target.value);
+    setEmailError(false);
+  }, []);
+
+  const onChangePassword = useCallback((e) => {
+    setPassword(e.target.value);
+    setPasswordError(false);
+  }, []);
 
   const onLogin = useCallback(() => {
     if (email == "" || password == "") {
@@ -25,13 +36,14 @@ const LoginInputForm = () => {
   }, [email, password]);
 
   useEffect(() => {
-    if (loginError) {
-      // 로그인 에러에 따라 분기 필요
-      alert("이메일 인증이 완료되지 않았습니다!");
+    if (loginError == "Incorrect email") {
+      setEmailError(true);
+      return;
+    } else if (loginError == "Incorrect password.") {
+      setPasswordError(true);
       return;
     }
     if (me) {
-      //localStorage.setItem("user", JSON.stringify(me));
       Router.push("/");
     }
   }, [me, loginError]);
@@ -46,37 +58,79 @@ const LoginInputForm = () => {
         }}
         //onFinish={onFinish}
       >
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "이메일을 입력해주세요.",
-            },
-          ]}
-          onChange={onChangeEmail}
-        >
-          <Input
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "비밀번호를 입력해주세요.",
-            },
-          ]}
-          onChange={onChangePassword}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
+        {emailError ? (
+          <Form.Item
+            name="email"
+            validateStatus="error"
+            help="존재하지 않는 이메일입니다."
+            rules={[
+              {
+                required: true,
+                message: "이메일을 입력해주세요.",
+              },
+            ]}
+            onChange={onChangeEmail}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "이메일을 입력해주세요.",
+              },
+            ]}
+            onChange={onChangeEmail}
+          >
+            <Input
+              prefix={<UserOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+        )}
+        {passwordError ? (
+          <Form.Item
+            name="password"
+            validateStatus="error"
+            help="비밀번호가 다릅니다."
+            rules={[
+              {
+                required: true,
+                message: "비밀번호를 입력해주세요.",
+              },
+            ]}
+            onChange={onChangePassword}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+        ) : (
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "비밀번호를 입력해주세요.",
+              },
+            ]}
+            onChange={onChangePassword}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+        )}
+
         <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
             <Checkbox>Remember me</Checkbox>

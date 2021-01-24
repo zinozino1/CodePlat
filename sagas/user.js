@@ -13,7 +13,7 @@ import {
   SET_USER_SUCCESS,
   SET_USER_FAILURE,
 } from "../reducers/user";
-import { register, login, setUser } from "../lib/api/user";
+import { register, login, setUser, logout } from "../lib/api/user";
 
 // saga
 
@@ -33,14 +33,13 @@ function* loginSaga(action) {
     const res = yield call(login, action.payload);
     yield put({ type: LOG_IN_SUCCESS, user: res.data.user });
   } catch (error) {
-    console.log(error);
     yield put({ type: LOG_IN_FAILURE, error: error.response.data });
   }
 }
 
 function* logoutSaga(action) {
   try {
-    yield delay(1000);
+    yield call(logout);
     yield put({ type: LOG_OUT_SUCCESS });
   } catch (error) {
     console.log(error);

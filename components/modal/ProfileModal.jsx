@@ -30,11 +30,15 @@ const ProfileModal = ({ writer }) => {
             관심기술
           </Tag>
         </span>
-        {writer.techStack.map((v, i) => (
-          <Tag color="blue" key={v}>
-            {v}
-          </Tag>
-        ))}
+        {writer.techStack.map((v, i) => {
+          if (i < 3) {
+            return (
+              <Tag color="blue" key={v}>
+                {v}
+              </Tag>
+            );
+          }
+        })}
       </RowWrapper>
       <RowWrapper>
         <span>
@@ -42,7 +46,9 @@ const ProfileModal = ({ writer }) => {
             가입일
           </Tag>
         </span>
-        <span>{writer.registerDate.getFullYear()}</span>
+        <span>{`${new Date(writer.createdAt).getFullYear()}.${
+          new Date(writer.createdAt).getMonth() + 1
+        }.${new Date(writer.createdAt).getDate()}`}</span>
       </RowWrapper>
       <RowWrapper>
         <span>
@@ -59,7 +65,7 @@ const ProfileModal = ({ writer }) => {
           </Tag>
         </span>
         <span>
-          <Rate allowHalf disabled defaultValue={writer.rating} />
+          <Rate allowHalf disabled defaultValue={(writer.rating = 0)} />
         </span>
       </RowWrapper>
       <RowWrapper className="btn-wrapper">

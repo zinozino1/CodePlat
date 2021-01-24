@@ -11,19 +11,6 @@ const App = ({ Component }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // 렌더링중에 상태바뀌면 안되므로 useEffect
-    // SSR때 바꿔줘야한다 지금은 임시로 localstorage사용 -> passport에서 넘겨주는 쿠키 사용해야함
-    // try {
-    //   const user = localStorage.getItem("user");
-    //   if (!user) {
-    //     dispatch(setUserRequestAction(null));
-    //   } else {
-    //     dispatch(setUserRequestAction(JSON.parse(user)));
-    //   }
-    // } catch (error) {
-    //   dispatch(setUserRequestAction(null));
-    //   console.log(error);
-    // }
     dispatch(setUserRequestAction());
   }, []);
 
