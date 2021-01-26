@@ -40,6 +40,9 @@ const PostViewerHeaderWrapper = styled.div`
     .create-date {
       margin-right: 10px;
     }
+    .create-time {
+      margin-right: 10px;
+    }
     .post-views {
       margin: 0 5px;
       margin-right: 10px;
@@ -88,9 +91,16 @@ const PostViewerHeader = ({ post, contentType }) => {
         <span className="user-nickname">{post.writer.nickname}</span>
       </div>
       <div className="post-desc">
-        <span className="create-date">{`${post.createAt.getFullYear()}.${
-          post.createAt.getMonth() + 1
-        }.${post.createAt.getDay()}`}</span>
+        <span className="create-date">
+          {`${new Date(post.writer.createdAt).getFullYear()}.${
+            new Date(post.writer.createdAt).getMonth() + 1
+          }.${new Date(post.writer.createdAt).getDate()}`}
+        </span>
+        <span className="create-time">
+          {`${new Date(post.writer.createdAt).getHours()}:${new Date(
+            post.writer.createdAt,
+          ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
+        </span>
         <EyeOutlined />
         <span className="post-views">{post.views}</span>
         <MessageOutlined />

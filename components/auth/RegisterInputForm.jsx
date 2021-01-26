@@ -25,6 +25,8 @@ import useInput from "../../hooks/useInput";
 import SkillFilterForm from "../common/contents/SkillFilterForm";
 import { EmailRegex } from "../../lib/constant/constant";
 import axios from "axios";
+import { withRouter } from "next/router";
+import { setUserRequestAction } from "../../reducers/user";
 
 const { Option } = Select;
 
@@ -78,8 +80,10 @@ const PushBackButton = styled.span`
 
 const StyledDivider = styled(Divider)``;
 
-const RegisterInputForm = () => {
+const RegisterInputForm = ({ router }) => {
   const { skill } = useSelector((state) => state.skill);
+
+  const dispatch = useDispatch();
 
   const [form] = Form.useForm();
 
@@ -109,7 +113,6 @@ const RegisterInputForm = () => {
   const [githubUrl, onChangeGithubUrl] = useInput("");
 
   const onClickEmailVerify = useCallback(() => {
-    console.log(userId);
     setProgress(2);
     axios.post("/api/join/optionForm", {
       type: "local",
@@ -140,39 +143,29 @@ const RegisterInputForm = () => {
       });
   }, [formError, email, nickname, password]);
 
-  const onClickSocialButton = useCallback((e) => {
-    switch (e.target.innerText) {
-      case "Naver":
-        setSocialType("naver");
-        axios({
-          method: "get",
-          url: "/api/naver",
-          headers: {
-            "X-Naver-Client-Id": "vSO6qFAcJj7eL4ijQQAK",
-            "X-Naver-Client-Secret": "soZXaSk9uC",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Credentials": "true",
-          },
-        });
-        break;
-      case "Google":
-        setSocialType("google");
-        axios.get(`/api/google`);
-        break;
-      case "Github":
-        setSocialType("github");
-        axios.get(`/api/github`);
-        break;
-      case "Kakao":
-        setSocialType("kakao");
-        axios.get(`/api/kakao`);
-        break;
-      default:
-        break;
-    }
-    // setRegisterType("social");
-    // setProgress(1);
-  }, []);
+  // const onClickSocialButton = useCallback((e) => {
+  //   switch (e.target.innerText) {
+  //     case "Naver":
+  //       setSocialType("naver");
+  //       break;
+  //     case "Google":
+  //       setSocialType("google");
+  //       //axios.get(`/api/google`);
+  //       break;
+  //     case "Github":
+  //       setSocialType("github");
+  //       //axios.get(`/api/github`);
+  //       break;
+  //     case "Kakao":
+  //       setSocialType("kakao");
+  //       //axios.get(`/api/kakao`);
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  //   setRegisterType("social");
+  //   // setProgress(1);
+  // }, []);
 
   const onPushBack = useCallback(() => {
     setRegisterType(null);
@@ -185,9 +178,19 @@ const RegisterInputForm = () => {
 
   const onSocialRegisterSubmit = useCallback(
     (e) => {
-      axios.get(`/api/${socialType}`);
+      axios
+        .post(`/api/join/optionForm`, {
+          nickname,
+          techStack: skill,
+          githubUrl,
+          type: "sns",
+        })
+        .then((res) => {
+          dispatch(setUserRequestAction());
+          router.push("/");
+        });
     },
-    [socialType],
+    [nickname, skill, githubUrl],
   );
 
   useEffect(() => {
@@ -207,6 +210,13 @@ const RegisterInputForm = () => {
       setFormError(true);
     }
   }, [nickname, email, confirmEmail, password, confirmPassword]);
+
+  useEffect(() => {
+    if (router.query.type === "sns") {
+      setProgress(1);
+      setRegisterType("social");
+    }
+  }, [router]);
 
   return (
     <RegisterFormWrapper {...formItemLayout} form={form} name="register">
@@ -395,7 +405,7 @@ const RegisterInputForm = () => {
           </div>
 
           <StyledDivider>소셜 회원가입</StyledDivider>
-          <SocialTemplate onClickSocialButton={onClickSocialButton} />
+          <SocialTemplate />
         </>
       )}
       {progress == 1 && registerType == "local" && (
@@ -449,7 +459,7 @@ const RegisterInputForm = () => {
                 whitespace: true,
               },
             ]}
-            //onChange={onChangePassword}
+            onChange={onChangeNickname}
           >
             <Input placeholder="nickname" />
           </RegisterInputItemWrapper>
@@ -460,7 +470,7 @@ const RegisterInputForm = () => {
             name="github"
             label="Github"
             hasFeedback
-            onChange={onChangePassword}
+            onChange={onChangeGithubUrl}
           >
             <Input placeholder="github 닉네임" />
           </RegisterInputItemWrapper>
@@ -469,7 +479,7 @@ const RegisterInputForm = () => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            onChange={onChangePassword}
+            //onChange={onChangePassword}
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
@@ -542,4 +552,4 @@ const RegisterInputForm = () => {
   );
 };
 
-export default RegisterInputForm;
+export default withRouter(RegisterInputForm);

@@ -20,6 +20,7 @@ import {
   ADD_COMMENT_FAILURE,
 } from "../reducers/post";
 import { dummyPostCreator } from "../lib/util/dummyCreator";
+import { mainLoadPosts } from "../lib/api/post";
 
 // saga
 
@@ -64,8 +65,18 @@ function* loadPostsSaga(action) {
 
 function* mainLoadPostsSaga(action) {
   try {
-    yield delay(1000);
-    yield put({ type: MAIN_LOAD_POSTS_SUCCESS });
+    if (action.payload === "forum") {
+      const forumPosts = yield call(mainLoadPosts, action.payload);
+      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: forumPosts });
+    } else if (action.payload === "study") {
+      const studyPosts = yield call(mainLoadPosts, action.payload);
+      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: studyPosts });
+    } else {
+      const projectPosts = yield call(mainLoadPosts, action.payload);
+      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: projectPosts });
+    }
+
+    //yield delay(1000);
   } catch (error) {
     console.log(error);
     yield put({

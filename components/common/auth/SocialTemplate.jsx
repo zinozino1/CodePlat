@@ -1,6 +1,8 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { Button } from "antd";
+import Link from "next/link";
+import { SERVER_URL } from "../../../lib/constant/constant";
 
 const SocialLoginWrapper = styled.div`
   display: flex;
@@ -32,40 +34,37 @@ const SocialLoginButton = styled(Button)`
   }
 `;
 
-const SocialTemplate = ({ onClickSocialButton }) => {
+const SocialTemplate = () => {
   return (
     <>
       <SocialLoginWrapper>
-        <SocialLoginButton
-          className="login-google"
-          style={{ flex: "1" }}
-          onClick={onClickSocialButton}
-        >
-          Google
-        </SocialLoginButton>
-        <SocialLoginButton
-          className="login-naver"
-          style={{ flex: "1", marginLeft: "3px" }}
-          onClick={onClickSocialButton}
-        >
-          Naver
-        </SocialLoginButton>
+        <Link href={`${SERVER_URL}/api/google`}>
+          <a>
+            <SocialLoginButton className="login-google">
+              Google
+            </SocialLoginButton>
+          </a>
+        </Link>
+
+        <Link href={`${SERVER_URL}/api/naver`}>
+          <a>
+            <SocialLoginButton className="login-naver">Naver</SocialLoginButton>
+          </a>
+        </Link>
       </SocialLoginWrapper>
       <SocialLoginWrapper>
-        <SocialLoginButton
-          className="login-github"
-          style={{ flex: "1" }}
-          onClick={onClickSocialButton}
-        >
-          Github
-        </SocialLoginButton>
-        <SocialLoginButton
-          className="login-kakao"
-          style={{ flex: "1", marginLeft: "3px" }}
-          onClick={onClickSocialButton}
-        >
-          Kakao
-        </SocialLoginButton>
+        <Link href={`${SERVER_URL}/api/github`}>
+          <a>
+            <SocialLoginButton className="login-github">
+              Github
+            </SocialLoginButton>
+          </a>
+        </Link>
+        <Link href={`${SERVER_URL}/api/kakao`}>
+          <a>
+            <SocialLoginButton className="login-kakao">Kakao</SocialLoginButton>
+          </a>
+        </Link>
       </SocialLoginWrapper>
     </>
   );
