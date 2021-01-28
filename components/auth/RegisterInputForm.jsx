@@ -125,16 +125,20 @@ const RegisterInputForm = ({ router }) => {
         enctype: "multipart/form-data",
       },
     };
-    formData.append(
-      "data",
-      JSON.stringify({
-        type: "local",
-        id: userId,
-        techStack: skill,
-        githubUrl,
-        //avatar: imageFile,
-      }),
-    );
+    // formData.append(
+    //   "data",
+    //   JSON.stringify({
+    //     type: "local",
+    //     id: userId,
+    //     techStack: skill,
+    //     githubUrl,
+    //     //avatar: imageFile,
+    //   }),
+    // );
+    formData.append("type", "local");
+    formData.append("id", userId);
+    formData.append("techStack", skill);
+    formData.append("githubUrl", githubUrl);
     axios.post("/api/join/optionForm", formData, config);
   }, [userId, skill, githubUrl, imageFile]);
 
