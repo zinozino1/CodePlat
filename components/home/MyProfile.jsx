@@ -1,10 +1,11 @@
 import React, { useCallback } from "react";
-import { Card, Avatar, Button, Image } from "antd";
+import { Card, Avatar, Button, Image, Popover } from "antd";
 import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../../reducers/user";
 import { SERVER_URL } from "../../lib/constant/constant";
+import ProfileModal from "../modal/ProfileModal";
 
 const CardWrapper = styled.div`
   padding: 20px;
@@ -33,11 +34,23 @@ const MyProfile = ({ me }) => {
         <Card.Meta
           title={me.nickname}
           avatar={
-            <Avatar
-              src={
-                me.avatarUrl && <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+            <Popover
+              content={
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                >
+                  <ProfileModal writer={me}></ProfileModal>
+                </div>
               }
-            ></Avatar>
+            >
+              <Avatar
+                src={
+                  me.avatarUrl && <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+                }
+              ></Avatar>
+            </Popover>
           }
         ></Card.Meta>
         <ButtonsWrapper>

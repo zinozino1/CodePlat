@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
+import { useSelector } from "react-redux";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -22,6 +23,14 @@ const RowWrapper = styled.div`
 `;
 
 const ProfileModal = ({ writer }) => {
+  const { me } = useSelector((state) => state.user);
+
+  const onSendLetter = useCallback(() => {
+    // if (!me) {
+    //   alert("로그인이 필요한 서비스입니다.");
+    // }
+  }, []);
+
   return (
     <ProfileWrapper>
       <RowWrapper>
@@ -69,9 +78,11 @@ const ProfileModal = ({ writer }) => {
         </span>
       </RowWrapper>
       <RowWrapper className="btn-wrapper">
-        <Button type="primary" className="note-btn">
-          쪽지 보내기
-        </Button>
+        {me && me.id !== writer.id && (
+          <Button type="primary" className="note-btn" onClick={onSendLetter}>
+            쪽지 보내기
+          </Button>
+        )}
       </RowWrapper>
     </ProfileWrapper>
   );

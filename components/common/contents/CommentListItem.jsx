@@ -17,6 +17,7 @@ import { UserOutlined } from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
+import { SERVER_URL } from "../../../lib/constant/constant";
 
 const ReApplyFormWrapper = styled.div`
   width: 600px;
@@ -109,6 +110,11 @@ const CommentListItem = ({ item, post }) => {
               style={{ cursor: "pointer" }}
               size={24}
               icon={<UserOutlined />}
+              src={
+                item.writer.avatarUrl && (
+                  <img src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                )
+              }
             />{" "}
           </Popover>
         }

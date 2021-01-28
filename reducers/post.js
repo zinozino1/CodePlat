@@ -221,7 +221,7 @@ const postReducer = handleActions(
         ...state.post,
         comments: state.post.comments.concat({
           id: shortid.generate(),
-          writer: { ...getMe() },
+          writer: action.writer,
           content: action.content,
           postId: action.postId,
           createAt: new Date(),

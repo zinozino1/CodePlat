@@ -212,6 +212,7 @@ const RegisterInputForm = ({ router }) => {
     return e && fileList;
   };
 
+  // social login 중복처리 필요
   const onSocialRegisterSubmit = useCallback(
     (e) => {
       if (nickname === "") {

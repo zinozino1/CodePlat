@@ -29,15 +29,20 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/articles/study/[id]": [
+    "/articles/project": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/study/[id].js"
+      "static/chunks/pages/articles/project.js"
     ],
-    "/auth/login": [
+    "/articles/project/[id]": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/auth/login.js"
+      "static/chunks/pages/articles/project/[id].js"
+    ],
+    "/auth/register": [
+      "static/chunks/main.js",
+      "static/chunks/webpack.js",
+      "static/chunks/pages/auth/register.js"
     ]
   },
   "ampFirstPages": []

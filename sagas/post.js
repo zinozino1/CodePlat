@@ -148,6 +148,7 @@ function* addCommentSaga(action) {
       type: ADD_COMMENT_SUCCESS,
       content: action.payload.content,
       postId: action.payload.post.id,
+      writer: action.payload.writer,
     });
   } catch (error) {
     console.log(error);
