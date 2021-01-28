@@ -27,6 +27,7 @@ import { EmailRegex } from "../../lib/constant/constant";
 import axios from "axios";
 import { withRouter } from "next/router";
 import { setUserRequestAction } from "../../reducers/user";
+import FormData from "form-data";
 
 const { Option } = Select;
 
@@ -80,6 +81,7 @@ const PushBackButton = styled.span`
 
 const StyledDivider = styled(Divider)``;
 
+const formData = new FormData();
 const RegisterInputForm = ({ router }) => {
   const { skill } = useSelector((state) => state.skill);
 
@@ -94,6 +96,9 @@ const RegisterInputForm = ({ router }) => {
   const [formError, setFormError] = useState(true);
   const [nicknameExistError, setNicknameExistError] = useState(false);
   const [emailExistError, setEmailExistError] = useState(false);
+
+  const [imageFile, setImageFile] = useState(null);
+  console.log(imageFile);
 
   const [nickname, setNickname] = useState("");
   const onChangeNickname = useCallback((e) => {
@@ -114,14 +119,24 @@ const RegisterInputForm = ({ router }) => {
 
   const onClickEmailVerify = useCallback(() => {
     setProgress(2);
-    axios.post("/api/join/optionForm", {
-      type: "local",
-      id: userId,
-      techStack: skill,
-      githubUrl,
-      avatarUrl: "",
-    });
-  }, [userId, skill, githubUrl]);
+    const config = {
+      headers: {
+        Accept: "application/json",
+        enctype: "multipart/form-data",
+      },
+    };
+    formData.append(
+      "data",
+      JSON.stringify({
+        type: "local",
+        id: userId,
+        techStack: skill,
+        githubUrl,
+        //avatar: imageFile,
+      }),
+    );
+    axios.post("/api/join/optionForm", formData, config);
+  }, [userId, skill, githubUrl, imageFile]);
 
   const onClickLocalButton = useCallback(() => {
     if (formError) return;
@@ -173,11 +188,27 @@ const RegisterInputForm = ({ router }) => {
   }, []);
 
   const normFile = (e) => {
-    console.log("Upload event:", e);
+    console.log(e.fileList[0].originFileObj);
+    if (e.fileList[0].status === "done") {
+      formData.append("avatar", e.fileList[0].originFileObj);
+      console.log(e.fileList[0].originFileObj);
+      setImageFile(formData);
+      let fileList = e.fileList;
+      fileList = fileList.slice(-1);
+
+      if (Array.isArray(e)) {
+        return e;
+      }
+      return e && fileList;
+    }
   };
 
   const onSocialRegisterSubmit = useCallback(
     (e) => {
+      if (nickname === "") {
+        alert("닉네임을 입력해주세요.");
+        return;
+      }
       axios
         .post(`/api/join/optionForm`, {
           nickname,
@@ -425,7 +456,7 @@ const RegisterInputForm = ({ router }) => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            //onChange={onChangePassword}
+            //onChange={onChangeImageFile}
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
@@ -479,7 +510,7 @@ const RegisterInputForm = ({ router }) => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            //onChange={onChangePassword}
+            //onChange={onChangeImageFile}
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}

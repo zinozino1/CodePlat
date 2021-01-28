@@ -65,17 +65,17 @@ function* loadPostsSaga(action) {
 
 function* mainLoadPostsSaga(action) {
   try {
-    if (action.payload === "forum") {
-      const forumPosts = yield call(mainLoadPosts, action.payload);
-      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: forumPosts });
-    } else if (action.payload === "study") {
-      const studyPosts = yield call(mainLoadPosts, action.payload);
-      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: studyPosts });
-    } else {
-      const projectPosts = yield call(mainLoadPosts, action.payload);
-      yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: projectPosts });
-    }
-
+    // if (action.payload === "forum") {
+    //   const forumPosts = yield call(mainLoadPosts, action.payload);
+    //   yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: forumPosts });
+    // } else if (action.payload === "study") {
+    //   const studyPosts = yield call(mainLoadPosts, action.payload);
+    //   yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: studyPosts });
+    // } else {
+    //   const projectPosts = yield call(mainLoadPosts, action.payload);
+    //   yield put({ type: MAIN_LOAD_POSTS_SUCCESS, data: projectPosts });
+    // }
+    yield put({ type: MAIN_LOAD_POSTS_SUCCESS });
     //yield delay(1000);
   } catch (error) {
     console.log(error);
