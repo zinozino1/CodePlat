@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, Button, Input } from "antd";
 import useInput from "../../../hooks/useInput";
 import styled from "styled-components";
@@ -12,12 +12,16 @@ const TextAreaWrapper = styled(Input.TextArea)`
 const CommentForm = ({ post }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const [comment, onChangeComment] = useInput("");
+  const [comment, setComment] = useState("");
+  const onChangeComment = useCallback((e) => {
+    setComment(e.target.value);
+  }, []);
+  //const [comment, onChangeComment] = useInput("");
 
   const onSubmit = useCallback(() => {
     // 1) 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
     // 2) 일부러 새로고침시킨다
-
+    setComment("");
     dispatch(addCommentRequestAction({ post, content: comment, writer: me }));
   }, [comment, post]);
 

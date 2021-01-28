@@ -9,7 +9,16 @@ import {
   UserOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
-import { List, Avatar, Space, Tag, Popover, Skeleton, Button } from "antd";
+import {
+  List,
+  Avatar,
+  Space,
+  Tag,
+  Popover,
+  Skeleton,
+  Button,
+  Image,
+} from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { postScrapRequestAction } from "../../../reducers/post";
 import { useDispatch } from "react-redux";
@@ -86,6 +95,11 @@ const PostViewerHeader = ({ post, contentType }) => {
             style={{ cursor: "pointer" }}
             size={24}
             icon={<UserOutlined />}
+            src={
+              post.writer.avatarUrl && (
+                <Image src={`${SERVER_URL}/${post.writer.avatarUrl}`} />
+              )
+            }
           />{" "}
         </Popover>
         <span className="user-nickname">{post.writer.nickname}</span>

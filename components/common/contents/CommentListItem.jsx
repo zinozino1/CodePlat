@@ -11,6 +11,7 @@ import {
   Comment,
   Divider,
   Input,
+  Image,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
@@ -48,7 +49,7 @@ const ButtonWrapper = styled.div`
 
 const CommentListItem = ({ item, post }) => {
   const { me } = useSelector((state) => state.user);
-  console.log(item);
+  //console.log(item);
 
   const [applyToggle, onChangeApplyToggle] = useToggle(false);
 
