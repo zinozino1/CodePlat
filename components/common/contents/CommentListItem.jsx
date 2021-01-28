@@ -112,7 +112,7 @@ const CommentListItem = ({ item, post }) => {
               icon={<UserOutlined />}
               src={
                 item.writer.avatarUrl && (
-                  <img src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                  <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
                 )
               }
             />{" "}

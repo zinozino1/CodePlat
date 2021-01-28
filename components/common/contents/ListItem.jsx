@@ -111,11 +111,17 @@ const ListItem = ({ item, type }) => {
                 >
                   <Avatar
                     onClick={(e) => {
-                      e.stopPropagation();
+                      e.preventDefault();
+                      //console.log("아바타 클릭했음");
                     }}
                     style={{ cursor: "pointer" }}
                     size={24}
                     icon={<UserOutlined />}
+                    src={
+                      item.writer.avatarUrl && (
+                        <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                      )
+                    }
                   />{" "}
                 </Popover>
                 <span className="user-nickname">{item.writer.nickname}</span>
@@ -177,17 +183,26 @@ const ListItem = ({ item, type }) => {
                     >
                       <ProfileModal
                         writer={item.writer}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
+                        // onClick={(e) => {
+                        //   e.stopPropagation();
+                        // }}
                       ></ProfileModal>
                     </div>
                   }
                 >
                   <Avatar
+                    onClick={(e) => {
+                      e.preventDefault();
+                      //console.log("아바타 클릭했음");
+                    }}
                     style={{ cursor: "pointer" }}
                     size={24}
                     icon={<UserOutlined />}
+                    src={
+                      item.writer.avatarUrl && (
+                        <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                      )
+                    }
                   />{" "}
                 </Popover>
                 <span className="user-nickname">{item.writer.nickname}</span>

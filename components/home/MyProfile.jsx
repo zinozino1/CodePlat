@@ -47,7 +47,9 @@ const MyProfile = ({ me }) => {
             >
               <Avatar
                 src={
-                  me.avatarUrl && <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+                  me.avatarUrl && (
+                    <Image src={`${SERVER_URL}/${me.avatarUrl}`} />
+                  )
                 }
               ></Avatar>
             </Popover>
