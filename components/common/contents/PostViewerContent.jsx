@@ -17,6 +17,7 @@ import CommentForm from "./CommentForm";
 import { useSelector } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
 import CommentListItem from "./CommentListItem";
+import { SERVER_URL } from "../../../lib/constant/constant";
 
 const PostViewerContentWrapper = styled.div`
   background: #fff;
@@ -172,6 +173,11 @@ const PostViewerContent = ({ post, contentType }) => {
                     }}
                     style={{ cursor: "pointer" }}
                     icon={<UserOutlined />}
+                    src={
+                      me.avatarUrl && (
+                        <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+                      )
+                    }
                   />{" "}
                 </Popover>
               }

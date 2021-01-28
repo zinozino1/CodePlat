@@ -98,7 +98,6 @@ const RegisterInputForm = ({ router }) => {
   const [emailExistError, setEmailExistError] = useState(false);
 
   const [imageFile, setImageFile] = useState(null);
-  console.log(imageFile);
 
   const [nickname, setNickname] = useState("");
   const onChangeNickname = useCallback((e) => {
@@ -137,10 +136,10 @@ const RegisterInputForm = ({ router }) => {
     // );
     formData.append("type", "local");
     formData.append("id", userId);
-    formData.append("techStack", skill);
+    formData.append("techStack", JSON.stringify(skill));
     formData.append("githubUrl", githubUrl);
     axios.post("/api/join/optionForm", formData, config);
-  }, [userId, skill, githubUrl, imageFile]);
+  }, [userId, skill, githubUrl]);
 
   const onClickLocalButton = useCallback(() => {
     if (formError) return;
@@ -192,19 +191,25 @@ const RegisterInputForm = ({ router }) => {
   }, []);
 
   const normFile = (e) => {
-    console.log(e.fileList[0].originFileObj);
-    if (e.fileList[0].status === "done") {
+    //console.log(e.fileList[0].originFileObj);
+    if (e.file.status === "done") {
       formData.append("avatar", e.fileList[0].originFileObj);
-      console.log(e.fileList[0].originFileObj);
-      setImageFile(formData);
-      let fileList = e.fileList;
-      fileList = fileList.slice(-1);
 
-      if (Array.isArray(e)) {
-        return e;
-      }
-      return e && fileList;
+      // console.log(e.fileList[0].originFileObj);
+      // setImageFile(formData);
+      // console.log("done");
+    } else if (e.file.status === "removed") {
+      formData.delete("avatar");
+      // console.log("removed");
     }
+
+    let fileList = e.fileList;
+    fileList = fileList.slice(-1);
+
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && fileList;
   };
 
   const onSocialRegisterSubmit = useCallback(
@@ -213,17 +218,41 @@ const RegisterInputForm = ({ router }) => {
         alert("닉네임을 입력해주세요.");
         return;
       }
-      axios
-        .post(`/api/join/optionForm`, {
-          nickname,
-          techStack: skill,
-          githubUrl,
-          type: "sns",
-        })
-        .then((res) => {
-          dispatch(setUserRequestAction());
-          router.push("/");
-        });
+      const config = {
+        headers: {
+          Accept: "application/json",
+          enctype: "multipart/form-data",
+        },
+      };
+      // formData.append(
+      //   "data",
+      //   JSON.stringify({
+      //     type: "local",
+      //     id: userId,
+      //     techStack: skill,
+      //     githubUrl,
+      //     //avatar: imageFile,
+      //   }),
+      // );
+      formData.append("type", "sns");
+      formData.append("nickname", nickname);
+      formData.append("techStack", JSON.stringify(skill));
+      formData.append("githubUrl", githubUrl);
+      axios.post("/api/join/optionForm", formData, config).then((res) => {
+        dispatch(setUserRequestAction());
+        router.push("/");
+      });
+      // axios
+      //   .post(`/api/join/optionForm`, {
+      //     nickname,
+      //     techStack: skill,
+      //     githubUrl,
+      //     type: "sns",
+      //   })
+      //   .then((res) => {
+      //     dispatch(setUserRequestAction());
+      //     router.push("/");
+      //   });
     },
     [nickname, skill, githubUrl],
   );
@@ -460,6 +489,7 @@ const RegisterInputForm = ({ router }) => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
+            //onRemove={console.log("fuck")}
             //onChange={onChangeImageFile}
           >
             {/* action="/upload.do" */}

@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
-import { Card, Avatar, Button } from "antd";
+import { Card, Avatar, Button, Image } from "antd";
 import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../../reducers/user";
+import { SERVER_URL } from "../../lib/constant/constant";
 
 const CardWrapper = styled.div`
   padding: 20px;
@@ -31,7 +32,13 @@ const MyProfile = ({ me }) => {
       <Card>
         <Card.Meta
           title={me.nickname}
-          avatar={<Avatar>{me.nickname[0]}</Avatar>}
+          avatar={
+            <Avatar
+              src={
+                me.avatarUrl && <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+              }
+            ></Avatar>
+          }
         ></Card.Meta>
         <ButtonsWrapper>
           <Link href="/mypage">
