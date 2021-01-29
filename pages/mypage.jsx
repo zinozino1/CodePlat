@@ -6,21 +6,16 @@ import MyActivityTemplate from "../components/mypage/MyActivityTemplate";
 import SkillFilterForm from "../components/common/contents/SkillFilterForm";
 import styled from "styled-components";
 
-const contentStyle = {
-  //  background :"#fff",
-  margin: "40px 40px 20px 40px",
-};
-
 const ProfileReviseFormWrapper = styled.div`
   display: flex;
   .edit-profile-form {
     flex: 2;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 20px;
   }
   .skill-filter-form {
     flex: 3;
-    border: 1px solid black;
+    /* //  border: 1px solid black; */
     padding: 20px;
   }
   @media (max-width: 768px) {
@@ -42,13 +37,14 @@ const mypage = () => {
       <div
         style={{
           textAlign: "center",
-          padding: "20px",
-          border: "1px solid red",
+          //padding: "10px",
+          // border: "1px solid red",
         }}
       >
-        <Button type="primary">Primary Button</Button>
+        <Button type="primary">저장하기</Button>
       </div>
-      {/* 여기서부터 /components/mypage/MyActivityTemplate 사용 */}
+      <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
+      <MyActivityTemplate></MyActivityTemplate>
     </MypageLayout>
   );
 };
