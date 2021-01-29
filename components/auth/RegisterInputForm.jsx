@@ -239,10 +239,20 @@ const RegisterInputForm = ({ router }) => {
       formData.append("nickname", nickname);
       formData.append("techStack", JSON.stringify(skill));
       formData.append("githubUrl", githubUrl);
-      axios.post("/api/join/optionForm", formData, config).then((res) => {
-        dispatch(setUserRequestAction());
-        router.push("/");
-      });
+      axios
+        .post("/api/join/optionForm", formData, config)
+        .then((res) => {
+          dispatch(setUserRequestAction());
+          setNicknameExistError(false);
+          router.push("/");
+        })
+        .catch((error) => {
+          setNicknameExistError(true);
+          formData.delete("type");
+          formData.delete("nickname");
+          formData.delete("techStack");
+          formData.delete("githubUrl");
+        });
       // axios
       //   .post(`/api/join/optionForm`, {
       //     nickname,
@@ -514,21 +524,42 @@ const RegisterInputForm = ({ router }) => {
       )}
       {progress == 1 && registerType == "social" && (
         <>
-          <RegisterInputItemWrapper
-            name="nickname"
-            label="닉네임"
-            hasFeedback
-            rules={[
-              {
-                required: true,
-                message: "닉네임을 입력해주세요.",
-                whitespace: true,
-              },
-            ]}
-            onChange={onChangeNickname}
-          >
-            <Input placeholder="nickname" />
-          </RegisterInputItemWrapper>
+          {nicknameExistError ? (
+            <RegisterInputItemWrapper
+              name="nickname"
+              label="닉네임"
+              validateStatus="error"
+              help="이미 존재하는 닉네임입니다."
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "닉네임을 입력해주세요.",
+                  whitespace: true,
+                },
+              ]}
+              onChange={onChangeNickname}
+            >
+              <Input placeholder="nickname" />
+            </RegisterInputItemWrapper>
+          ) : (
+            <RegisterInputItemWrapper
+              name="nickname"
+              label="닉네임"
+              hasFeedback
+              rules={[
+                {
+                  required: true,
+                  message: "닉네임을 입력해주세요.",
+                  whitespace: true,
+                },
+              ]}
+              onChange={onChangeNickname}
+            >
+              <Input placeholder="nickname" />
+            </RegisterInputItemWrapper>
+          )}
+
           <StyledDivider>선택 입력 사항</StyledDivider>
 
           <SkillFilterForm type="register" />
