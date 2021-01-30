@@ -7,6 +7,7 @@ import {
 } from "../../../reducers/post";
 import { withRouter } from "next/router";
 import PostViewer from "../../../components/common/contents/PostViewer";
+import Head from "next/head";
 
 const ForumDetail = ({ router }) => {
   const dispatch = useDispatch();
@@ -25,9 +26,15 @@ const ForumDetail = ({ router }) => {
   }, [router]);
 
   return (
-    <PostViewerLayout contentType="forum">
-      {post && <PostViewer post={post} contentType="forum" />}
-    </PostViewerLayout>
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>포럼</title>
+      </Head>
+      <PostViewerLayout contentType="forum">
+        {post && <PostViewer post={post} contentType="forum" />}
+      </PostViewerLayout>
+    </>
   );
 };
 

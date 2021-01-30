@@ -18,7 +18,7 @@ const App = ({ Component }) => {
     <>
       <Head>
         <meta charSet="utf-8"></meta>
-        <title>Home</title>
+        <title>Logo</title>
       </Head>
       <Component></Component>
     </>

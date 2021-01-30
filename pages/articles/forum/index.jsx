@@ -9,6 +9,7 @@ import List from "../../../components/common/contents/List";
 import { Spin, Radio, Select } from "antd";
 import styled from "styled-components";
 import Router, { withRouter } from "next/router";
+import Head from "next/head";
 
 const SpinWrapper = styled.div`
   text-align: center;
@@ -112,37 +113,43 @@ const Forum = ({ router }) => {
   }, []);
 
   return (
-    <ArticleLayout contentType="forum">
-      <ForumFilterWrapper>
-        <Select defaultValue="free" onChange={onChangeField}>
-          <Select.Option value="free">자유</Select.Option>
-          <Select.Option value="QnA">QnA</Select.Option>
-        </Select>
-        <Radio.Group onChange={onClickRadio} defaultValue="latest">
-          <Radio.Button value="latest" onClick={onClickSort}>
-            최신순
-          </Radio.Button>
-          <Radio.Button value="recommend" onClick={onClickSort}>
-            추천순
-          </Radio.Button>
-          <Radio.Button value="comment" onClick={onClickSort}>
-            댓글순
-          </Radio.Button>
-          <Radio.Button value="scrap" onClick={onClickSort}>
-            스크랩순
-          </Radio.Button>
-          <Radio.Button value="view" onClick={onClickSort}>
-            조회순
-          </Radio.Button>
-        </Radio.Group>
-      </ForumFilterWrapper>
-      <List data={forumPosts} type="forum" />
-      {loadPostsLoading && (
-        <SpinWrapper>
-          <Spin tip="불러오는중..." />
-        </SpinWrapper>
-      )}
-    </ArticleLayout>
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>포럼</title>
+      </Head>
+      <ArticleLayout contentType="forum">
+        <ForumFilterWrapper>
+          <Select defaultValue="free" onChange={onChangeField}>
+            <Select.Option value="free">자유</Select.Option>
+            <Select.Option value="QnA">QnA</Select.Option>
+          </Select>
+          <Radio.Group onChange={onClickRadio} defaultValue="latest">
+            <Radio.Button value="latest" onClick={onClickSort}>
+              최신순
+            </Radio.Button>
+            <Radio.Button value="recommend" onClick={onClickSort}>
+              추천순
+            </Radio.Button>
+            <Radio.Button value="comment" onClick={onClickSort}>
+              댓글순
+            </Radio.Button>
+            <Radio.Button value="scrap" onClick={onClickSort}>
+              스크랩순
+            </Radio.Button>
+            <Radio.Button value="view" onClick={onClickSort}>
+              조회순
+            </Radio.Button>
+          </Radio.Group>
+        </ForumFilterWrapper>
+        <List data={forumPosts} type="forum" />
+        {loadPostsLoading && (
+          <SpinWrapper>
+            <Spin tip="불러오는중..." />
+          </SpinWrapper>
+        )}
+      </ArticleLayout>
+    </>
   );
 };
 

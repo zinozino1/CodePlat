@@ -9,6 +9,7 @@ import List from "../../../components/common/contents/List";
 import { Spin } from "antd";
 import styled from "styled-components";
 import { withRouter } from "next/router";
+import Head from "next/head";
 
 const SpinWrapper = styled.div`
   text-align: center;
@@ -47,14 +48,20 @@ const Study = ({ router }) => {
   }, []);
 
   return (
-    <ArticleLayout contentType="study">
-      <List data={studyPosts} type="study" />
-      {loadPostsLoading && (
-        <SpinWrapper>
-          <Spin tip="불러오는중..." />
-        </SpinWrapper>
-      )}
-    </ArticleLayout>
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>스터디</title>
+      </Head>
+      <ArticleLayout contentType="study">
+        <List data={studyPosts} type="study" />
+        {loadPostsLoading && (
+          <SpinWrapper>
+            <Spin tip="불러오는중..." />
+          </SpinWrapper>
+        )}
+      </ArticleLayout>
+    </>
   );
 };
 

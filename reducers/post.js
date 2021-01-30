@@ -159,10 +159,12 @@ const postReducer = handleActions(
       mainLoadPostsLoading: false,
       mainLoadPostsDone: true,
       mainLoadPostsError: null,
-      // 바꿔야함 실제 포스트로
-      studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
-      projectPosts: [...dummyPostsCreator("project", 5), ...state.projectPosts],
-      forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
+      studyPosts: action.study,
+      projectPosts: action.project,
+      forumPosts: action.forum,
+      // studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
+      // projectPosts: [...dummyPostsCreator("project", 5), ...state.projectPosts],
+      // forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
     }),
     [MAIN_LOAD_POSTS_FAILURE]: (state, action) => ({
       ...state,

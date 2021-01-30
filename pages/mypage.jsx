@@ -5,6 +5,7 @@ import EditProfileForm from "../components/mypage/EditProfileForm";
 import MyActivityTemplate from "../components/mypage/MyActivityTemplate";
 import SkillFilterForm from "../components/common/contents/SkillFilterForm";
 import styled from "styled-components";
+import Head from "next/head";
 
 const ProfileReviseFormWrapper = styled.div`
   display: flex;
@@ -25,27 +26,33 @@ const ProfileReviseFormWrapper = styled.div`
 
 const mypage = () => {
   return (
-    <MypageLayout>
-      <ProfileReviseFormWrapper>
-        <div className="edit-profile-form">
-          <EditProfileForm />
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>마이페이지</title>
+      </Head>
+      <MypageLayout>
+        <ProfileReviseFormWrapper>
+          <div className="edit-profile-form">
+            <EditProfileForm />
+          </div>
+          <div className="skill-filter-form">
+            <SkillFilterForm />
+          </div>
+        </ProfileReviseFormWrapper>
+        <div
+          style={{
+            textAlign: "center",
+            //padding: "10px",
+            // border: "1px solid red",
+          }}
+        >
+          <Button type="primary">저장하기</Button>
         </div>
-        <div className="skill-filter-form">
-          <SkillFilterForm />
-        </div>
-      </ProfileReviseFormWrapper>
-      <div
-        style={{
-          textAlign: "center",
-          //padding: "10px",
-          // border: "1px solid red",
-        }}
-      >
-        <Button type="primary">저장하기</Button>
-      </div>
-      <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
-      <MyActivityTemplate></MyActivityTemplate>
-    </MypageLayout>
+        <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
+        <MyActivityTemplate></MyActivityTemplate>
+      </MypageLayout>
+    </>
   );
 };
 

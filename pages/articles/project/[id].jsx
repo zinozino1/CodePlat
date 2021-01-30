@@ -7,6 +7,7 @@ import {
 } from "../../../reducers/post";
 import { withRouter } from "next/router";
 import PostViewer from "../../../components/common/contents/PostViewer";
+import Head from "next/head";
 
 const ProjectDetail = ({ router }) => {
   const dispatch = useDispatch();
@@ -25,9 +26,15 @@ const ProjectDetail = ({ router }) => {
   }, [router]);
 
   return (
-    <PostViewerLayout contentType="project">
-      {post && <PostViewer post={post} contentType="project" />}
-    </PostViewerLayout>
+    <>
+      <Head>
+        <meta charSet="utf-8"></meta>
+        <title>프로젝트</title>
+      </Head>
+      <PostViewerLayout contentType="project">
+        {post && <PostViewer post={post} contentType="project" />}
+      </PostViewerLayout>
+    </>
   );
 };
 

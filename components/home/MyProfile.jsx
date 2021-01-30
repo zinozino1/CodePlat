@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction } from "../../reducers/user";
 import { SERVER_URL } from "../../lib/constant/constant";
 import ProfileModal from "../modal/ProfileModal";
+import { UserOutlined } from "@ant-design/icons";
 
 const CardWrapper = styled.div`
   padding: 20px;
@@ -46,11 +47,13 @@ const MyProfile = ({ me }) => {
               }
             >
               <Avatar
+                style={{ cursor: "pointer" }}
                 src={
                   me.avatarUrl && (
                     <Image src={`${SERVER_URL}/${me.avatarUrl}`} />
                   )
                 }
+                icon={<UserOutlined />}
               ></Avatar>
             </Popover>
           }
