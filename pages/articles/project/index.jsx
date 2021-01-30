@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ArticleLayout from "../../../components/layout/ArticleLayout";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,13 +19,15 @@ const SpinWrapper = styled.div`
 const Project = ({ router }) => {
   const dispatch = useDispatch();
   const { projectPosts, loadPostsLoading } = useSelector((state) => state.post);
+  const [skip, setSkip] = useState(0);
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      dispatch(loadPostsReqeustAction("project"));
+      dispatch(loadPostsReqeustAction({ type: "project", skip }));
+      setSkip(skip + 10);
     }
   };
 
@@ -34,7 +36,8 @@ const Project = ({ router }) => {
     //   contentType:"project",
     //   query:"asdf"
     // }
-    dispatch(loadPostsReqeustAction("project"));
+
+    dispatch(loadPostsReqeustAction({ type: "project", skip }));
     return () => {
       dispatch(initializePostsAction());
     };

@@ -49,9 +49,9 @@ const index = () => {
   } = useSelector((state) => state.post);
 
   useEffect(() => {
-    dispatch(mainLoadPostsReqeustAction({ type: "forum" }));
-    dispatch(mainLoadPostsReqeustAction({ type: "study" }));
-    dispatch(mainLoadPostsReqeustAction({ type: "project" }));
+    dispatch(mainLoadPostsReqeustAction());
+    // dispatch(mainLoadPostsReqeustAction({ type: "study" }));
+    // dispatch(mainLoadPostsReqeustAction({ type: "project" }));
     return () => {
       dispatch(initializePostsAction());
     };

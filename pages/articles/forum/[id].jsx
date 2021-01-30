@@ -16,8 +16,7 @@ const ForumDetail = ({ router }) => {
   useEffect(() => {
     dispatch(
       loadPostRequestAction({
-        id: router.query.id,
-        contentType: "forum",
+        postId: router.query.id,
       }),
     );
     return () => {

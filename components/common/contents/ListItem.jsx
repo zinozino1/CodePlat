@@ -67,7 +67,7 @@ const IconText = ({ icon, text }) => (
 const ListItem = ({ item, type }) => {
   if (type == "study" || type == "project") {
     return (
-      <Link href={`/articles/${type}/${item.id}`}>
+      <Link href={`/articles/${type}/${item._id}`}>
         <a>
           <ListItemWrapper
             actions={[
@@ -91,7 +91,7 @@ const ListItem = ({ item, type }) => {
                   </Tag>
                 ))}
                 <Tag color="geekblue">{item.location}</Tag>
-                {item.isOnGoing ? (
+                {item.isOngoing ? (
                   <Tag color="volcano">모집중</Tag>
                 ) : (
                   <Tag color="green">모집완료</Tag>
@@ -125,9 +125,11 @@ const ListItem = ({ item, type }) => {
                   />{" "}
                 </Popover>
                 <span className="user-nickname">{item.writer.nickname}</span>
-                <span className="create-date">{`${item.createAt.getFullYear()}.${
-                  item.createAt.getMonth() + 1
-                }.${item.createAt.getDay()}`}</span>
+                <span className="create-date">{`${new Date(
+                  item.createAt,
+                ).getFullYear()}.${
+                  new Date(item.createAt).getMonth() + 1
+                }.${new Date(item.createAt).getDay()}`}</span>
               </div>
             </ListHeader>
             <List.Item.Meta
@@ -141,7 +143,7 @@ const ListItem = ({ item, type }) => {
     );
   } else {
     return (
-      <Link href={`/articles/forum/${item.id}`}>
+      <Link href={`/articles/forum/${item._id}`}>
         <a>
           <ListItemWrapper
             actions={[
@@ -170,7 +172,7 @@ const ListItem = ({ item, type }) => {
             <ListHeader>
               <div className="tag-wrapper">
                 <Tag color="red" key={item}>
-                  {item.tag}
+                  {item.filter}
                 </Tag>
               </div>
               <div className="user-date-wrapper">
@@ -206,9 +208,11 @@ const ListItem = ({ item, type }) => {
                   />{" "}
                 </Popover>
                 <span className="user-nickname">{item.writer.nickname}</span>
-                <span className="create-date">{`${item.createAt.getFullYear()}.${
-                  item.createAt.getMonth() + 1
-                }.${item.createAt.getDay()}`}</span>
+                <span className="create-date">{`${new Date(
+                  item.createAt,
+                ).getFullYear()}.${
+                  new Date(item.createAt).getMonth() + 1
+                }.${new Date(item.createAt).getDay()}`}</span>
               </div>
             </ListHeader>
             <List.Item.Meta

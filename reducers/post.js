@@ -11,6 +11,7 @@ import { getMe } from "./user";
 
 const initialState = {
   post: null,
+  temporalPostsLength: 0,
   studyPosts: [],
   projectPosts: [],
   forumPosts: [],
@@ -138,9 +139,10 @@ const postReducer = handleActions(
       loadPostsLoading: false,
       loadPostsDone: true,
       loadPostsError: null,
+      temporalPostsLength: action.temporalPostsLength,
       [action.contentType + "Posts"]: state[
         action.contentType + "Posts"
-      ].concat(dummyPostsCreator(action.contentType, 10)),
+      ].concat(action.data),
     }),
     [LOAD_POSTS_FAILURE]: (state, action) => ({
       ...state,

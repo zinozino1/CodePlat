@@ -47,6 +47,7 @@ for (let i = 0; i < 10; i++) {
 const WriteForm = ({ contentType, router }) => {
   const dispatch = useDispatch();
   const { skill } = useSelector((state) => state.skill);
+  const { me } = useSelector((state) => state.user);
 
   // 공통 state
   const [title, onChangeTitle] = useInput("");
@@ -64,6 +65,10 @@ const WriteForm = ({ contentType, router }) => {
   }, []);
 
   const onStudyAndProjectSubmit = useCallback(() => {
+    if (!me) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
     if (skill.length === 0) {
       alert("활용기술을 하나 이상 선택해주세요.");
       return;
@@ -76,18 +81,24 @@ const WriteForm = ({ contentType, router }) => {
       alert("내용을 채워주세요.");
       return;
     }
+    if (description.length < 5) {
+      alert("5글자 이상 써주세요.");
+      return;
+    }
 
     dispatch(
       writePostRequestAction({
         type: router.route.split("/")[2],
+        writer: me._id,
         title,
-        description,
-        peopleNumber,
+        content: description,
+        recruitment: peopleNumber,
         location,
-        skill,
+        techStack: skill,
+        field: router.route.split("/")[2],
       }),
     );
-  }, [skill, title, description, peopleNumber, location]);
+  }, [skill, title, description, peopleNumber, location, me, router]);
 
   // 포럼 state
   const [filter, setFilter] = useState("자유");
@@ -102,6 +113,10 @@ const WriteForm = ({ contentType, router }) => {
   }, []);
 
   const onForumSubmit = useCallback(() => {
+    if (!me) {
+      alert("로그인이 필요한 서비스입니다.");
+      return;
+    }
     if (title === "") {
       alert("제목을 채워주세요.");
       return;
@@ -113,13 +128,15 @@ const WriteForm = ({ contentType, router }) => {
     dispatch(
       writePostRequestAction({
         type: router.route.split("/")[2],
+        writer: me._id,
         title,
-        description,
+        content: description,
         filter,
-        tags,
+        tag: tags,
+        field: router.route.split("/")[2],
       }),
     );
-  }, [title, description, filter, tags]);
+  }, [title, description, filter, tags, router, me]);
 
   return (
     <>

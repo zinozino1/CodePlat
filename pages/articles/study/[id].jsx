@@ -16,8 +16,7 @@ const StudyDetail = ({ router }) => {
   useEffect(() => {
     dispatch(
       loadPostRequestAction({
-        id: router.query.id,
-        contentType: "study",
+        postId: router.query.id,
       }),
     );
     return () => {

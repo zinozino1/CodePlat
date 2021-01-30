@@ -16,8 +16,7 @@ const ProjectDetail = ({ router }) => {
   useEffect(() => {
     dispatch(
       loadPostRequestAction({
-        id: router.query.id,
-        contentType: "project",
+        postId: router.query.id,
       }),
     );
     return () => {

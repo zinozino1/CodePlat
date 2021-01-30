@@ -20,20 +20,18 @@ import {
   ADD_COMMENT_FAILURE,
 } from "../reducers/post";
 import { dummyPostCreator } from "../lib/util/dummyCreator";
-import { mainLoadPosts } from "../lib/api/post";
+import { mainLoadPosts, writePost, loadPost, loadPosts } from "../lib/api/post";
 
 // saga
 
 function* loadPostSaga(action) {
   try {
-    // 서버에서 post하나 받아오면 post에 데이터 바로 넣기
-    const { id, contentType } = action.payload;
-    // yield call({id,...})
-    // data
-    yield delay(1000);
+    const { postId } = action.payload;
+
+    const res = yield call(loadPost, postId);
     yield put({
       type: LOAD_POST_SUCCESS,
-      post: dummyPostCreator(contentType),
+      post: res.data.post,
     });
   } catch (error) {
     console.log(error);
@@ -47,12 +45,19 @@ function* loadPostSaga(action) {
 function* loadPostsSaga(action) {
   // 쿼리값에 따라 요청
   try {
-    yield delay(1000);
+    // yield delay(1000);
     // 수정 필요
     // action.payload.contentType, action.payload.query가 필요
     // term도 필요
     // forum일 경우 sortingBy 쿼리 필요 -> study, project와 분기 필요
-    yield put({ type: LOAD_POSTS_SUCCESS, contentType: action.payload });
+    const res = yield call(loadPosts, { ...action.payload });
+    console.log(res);
+    yield put({
+      type: LOAD_POSTS_SUCCESS,
+      contentType: action.payload.type,
+      data: res.data.posts,
+      temporalPostsLength: res.data.postSize,
+    });
   } catch (error) {
     console.log(error);
     yield put({
@@ -66,7 +71,7 @@ function* loadPostsSaga(action) {
 function* mainLoadPostsSaga(action) {
   try {
     const res = yield call(mainLoadPosts);
-    //console.log(res);
+    console.log(res);
     const { study, project, forum } = res.data.posts;
     yield put({
       type: MAIN_LOAD_POSTS_SUCCESS,
@@ -86,34 +91,13 @@ function* mainLoadPostsSaga(action) {
 }
 
 function* writePostSaga(action) {
-  const { type } = action.payload;
-  // type에 따라 call 다르게 처리
-  let data;
-  if (type === "study" || type === "project") {
-    data = {
-      type,
-      title: action.payload.title,
-      description: action.payload.description,
-      skill: action.payload.skill,
-      peopleNumber: action.payload.peopleNumber,
-      location: action.payload.location,
-      file: null, // 처리 필요
-    };
-    console.log(data);
-  } else {
-    data = {
-      type,
-      title: action.payload.title,
-      description: action.payload.description,
-      filter: action.payload.filter,
-      tags: action.payload.tags,
-    };
-    console.log(data);
-  }
   try {
-    yield delay(1000);
-    // yield call(...data)
+    //yield delay(1000);
+    const res = yield call(writePost, action.payload);
+    console.log(res);
     yield put({ type: WRITE_POST_SUCCESS });
+    const post = res.data.post;
+    window.location.href = `http://localhost:3000/articles/${post.type}/${post._id}`;
   } catch (error) {
     console.log(error);
     yield put({

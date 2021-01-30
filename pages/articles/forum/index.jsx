@@ -45,9 +45,13 @@ const ForumFilterWrapper = styled.div`
   }
 `;
 
+let skip = 0;
+
 const Forum = ({ router }) => {
   const [radioValue, setRadioValue] = useState("latest");
   const [field, setField] = useState("free");
+
+  const [tmp, setTmp] = useState(0);
 
   const onChangeField = useCallback(
     (e) => {
@@ -82,15 +86,27 @@ const Forum = ({ router }) => {
 
   const dispatch = useDispatch();
   const { forumPosts, loadPostsLoading } = useSelector((state) => state.post);
+  const { temporalPostsLength } = useSelector((state) => state.post);
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      dispatch(loadPostsReqeustAction("forum"));
+      console.log(temporalPostsLength);
+      if (temporalPostsLength >= 10) {
+        dispatch(loadPostsReqeustAction({ type: "forum", skip: skip + 10 }));
+      }
     }
   };
+  // console.log(temporalPostsLength);
+  // console.log(forumPosts);
+  // if (temporalPostsLength >= 10) {
+  //   console.log("Asdfasf");
+  // }
+  useEffect(() => {
+    console.log(temporalPostsLength);
+  }, [temporalPostsLength]);
 
   useEffect(() => {
     // 쿼리값에 따라 다르게 요청해야함.
@@ -99,7 +115,8 @@ const Forum = ({ router }) => {
     //   query:"asdf"
     // }
 
-    dispatch(loadPostsReqeustAction("forum"));
+    dispatch(loadPostsReqeustAction({ type: "forum", skip }));
+
     return () => {
       dispatch(initializePostsAction());
     };
@@ -110,7 +127,14 @@ const Forum = ({ router }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [temporalPostsLength]);
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     console.log(1);
+  //     setTmp(tmp + 1);
+  //   }, 1000);
+  // }, [tmp]);
 
   return (
     <>

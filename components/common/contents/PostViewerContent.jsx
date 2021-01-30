@@ -80,7 +80,7 @@ const PostViewerContent = ({ post, contentType }) => {
               <span>태그</span>
             </div>
             <div className="content">
-              {post.tags.map((v, i) => (
+              {post.tag.map((v, i) => (
                 <Tag color="magenta" key={v}>
                   {v}
                 </Tag>
@@ -108,7 +108,7 @@ const PostViewerContent = ({ post, contentType }) => {
               <span>지역</span>
             </div>
             <div className="content">
-              <Tag color="geekblue">{post.area}</Tag>
+              <Tag color="geekblue">{post.location}</Tag>
             </div>
           </div>
           <div className="summary-row">
