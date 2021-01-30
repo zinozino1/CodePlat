@@ -90,7 +90,7 @@ const ListItem = ({ item, type }) => {
                     {v}
                   </Tag>
                 ))}
-                <Tag color="geekblue">{item.area}</Tag>
+                <Tag color="geekblue">{item.location}</Tag>
                 {item.isOnGoing ? (
                   <Tag color="volcano">모집중</Tag>
                 ) : (
@@ -162,7 +162,7 @@ const ListItem = ({ item, type }) => {
               />,
               <IconText
                 icon={TagsOutlined}
-                text={item.scraped}
+                text={item.scraps}
                 key="list-vertical-scrap-o"
               />,
             ]}
@@ -170,7 +170,7 @@ const ListItem = ({ item, type }) => {
             <ListHeader>
               <div className="tag-wrapper">
                 <Tag color="red" key={item}>
-                  {item.filter}
+                  {item.tag}
                 </Tag>
               </div>
               <div className="user-date-wrapper">
