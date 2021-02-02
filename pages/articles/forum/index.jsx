@@ -121,6 +121,7 @@ const Forum = ({ router }) => {
     skip += 10;
 
     return () => {
+      skip = 0;
       dispatch(initializePostsAction());
     };
   }, [router]);

@@ -16,10 +16,13 @@ const SpinWrapper = styled.div`
   margin: 100px 0;
 `;
 
+let skip = 0;
+
 const Project = ({ router }) => {
   const dispatch = useDispatch();
   const { projectPosts, loadPostsLoading } = useSelector((state) => state.post);
-  const [skip, setSkip] = useState(0);
+
+  const { temporalPostsLength } = useSelector((state) => state.post);
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -27,7 +30,10 @@ const Project = ({ router }) => {
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
       dispatch(loadPostsReqeustAction({ type: "project", skip }));
-      setSkip(skip + 10);
+      if (temporalPostsLength >= 10) {
+        dispatch(loadPostsReqeustAction({ type: "project", skip }));
+        skip += 10;
+      }
     }
   };
 
@@ -36,16 +42,20 @@ const Project = ({ router }) => {
     //   contentType:"project",
     //   query:"asdf"
     // }
-
+    console.log("router에 따른 useeffect");
     dispatch(loadPostsReqeustAction({ type: "project", skip }));
+    skip += 10;
     return () => {
       dispatch(initializePostsAction());
     };
   }, [router]);
 
   useEffect(() => {
+    console.log("window useEffect");
     window.addEventListener("scroll", handleScroll);
     return () => {
+      console.log("window remover");
+      skip = 0;
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);

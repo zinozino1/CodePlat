@@ -16,16 +16,22 @@ const SpinWrapper = styled.div`
   margin: 100px 0;
 `;
 
+let skip = 0;
+
 const Study = ({ router }) => {
   const dispatch = useDispatch();
   const { studyPosts, loadPostsLoading } = useSelector((state) => state.post);
-
+  const { temporalPostsLength } = useSelector((state) => state.post);
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      dispatch(loadPostsReqeustAction("study"));
+      dispatch(loadPostsReqeustAction({ type: "study", skip }));
+      if (temporalPostsLength >= 10) {
+        dispatch(loadPostsReqeustAction({ type: "study", skip }));
+        skip += 10;
+      }
     }
   };
 
@@ -34,7 +40,8 @@ const Study = ({ router }) => {
     //   contentType:"project",
     //   query:"asdf"
     // }
-    dispatch(loadPostsReqeustAction("study"));
+    dispatch(loadPostsReqeustAction({ type: "study", skip }));
+    skip += 10;
     return () => {
       dispatch(initializePostsAction());
     };
@@ -42,7 +49,9 @@ const Study = ({ router }) => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
+
     return () => {
+      skip = 0;
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
