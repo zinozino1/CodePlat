@@ -33,6 +33,12 @@ const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  // searchPostsLoading: false,
+  // searchPostsDone: false,
+  // searchPostsError: null,
+  // filterSearchLoading: false,
+  // filterSearchDone: false,
+  // filterSearchError: null,
 };
 
 // action type
@@ -64,6 +70,14 @@ export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
 
+// export const SEARCH_POSTS_REQUEST = "post/SEARCH_POSTS_REQUEST";
+// export const SEARCH_POSTS_SUCCESS = "post/SEARCH_POSTS_SUCCESS";
+// export const SEARCH_POSTS_FAILURE = "post/SEARCH_POSTS_FAILURE";
+
+// export const FILTER_SEARCH_REQUEST = "post/FILTER_SEARCH_REQUEST";
+// export const FILTER_SEARCH_SUCCESS = "post/FILTER_SEARCH_SUCCESS";
+// export const FILTER_SEARCH_FAILURE = "post/FILTER_SEARCH_FAILURE";
+
 // action creator
 
 export const initializePostAction = createAction(INITIALIZE_POST);
@@ -94,6 +108,16 @@ export const addCommentRequestAction = createAction(
   ADD_COMMENT_REQUEST,
   (data) => data,
 );
+
+// export const searchPostsRequestAction = createAction(
+//   SEARCH_POSTS_REQUEST,
+//   (data) => data,
+// );
+
+// export const filterSearchRequestAction = createAction(
+//   FILTER_SEARCH_REQUEST,
+//   (data) => data,
+// );
 
 // reducer
 
@@ -241,7 +265,46 @@ const postReducer = handleActions(
       addCommentDone: false,
       addCommentError: null,
     }),
+    // [SEARCH_POSTS_REQUEST]: (state, action) => ({
+    //   ...state,
+    //   searchPostsLoading: true,
+    //   searchPostsDone: false,
+    //   searchPostsError: null,
+    // }),
+    // [SEARCH_POSTS_SUCCESS]: (state, action) => ({
+    //   ...state,
+    //   searchPostsLoading: false,
+    //   searchPostsDone: true,
+    //   searchPostsError: null,
+    //   [action.contentType + "Posts"]: action.posts,
+    // }),
+    // [SEARCH_POSTS_FAILURE]: (state, action) => ({
+    //   ...state,
+    //   searchPostsLoading: false,
+    //   searchPostsDone: false,
+    //   searchPostsError: null,
+    // }),
+    // [FILTER_SEARCH_REQUEST]: (state, action) => ({
+    //   ...state,
+    //   filterSearchLoading: true,
+    //   filterSearchDone: false,
+    //   filterSearchError: null,
+    // }),
+    // [FILTER_SEARCH_SUCCESS]: (state, action) => ({
+    //   ...state,
+    //   filterSearchLoading: false,
+    //   filterSearchDone: true,
+    //   filterSearchError: null,
+    //   [action.contentType + "Posts"]: action.posts,
+    // }),
+    // [FILTER_SEARCH_FAILURE]: (state, action) => ({
+    //   ...state,
+    //   filterSearchLoading: false,
+    //   filterSearchDone: false,
+    //   filterSearchError: null,
+    // }),
   },
+
   initialState,
 );
 

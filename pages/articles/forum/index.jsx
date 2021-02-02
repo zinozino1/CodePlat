@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
+  searchPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
 import { Spin, Radio, Select } from "antd";
@@ -94,31 +95,26 @@ const Forum = ({ router }) => {
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      console.log(temporalPostsLength);
       if (temporalPostsLength >= 10) {
         dispatch(loadPostsReqeustAction({ type: "forum", skip }));
         skip += 10;
       }
     }
   };
-  // console.log(temporalPostsLength);
-  // console.log(forumPosts);
-  // if (temporalPostsLength >= 10) {
-  //   console.log("Asdfasf");
-  // }
-  useEffect(() => {
-    console.log(temporalPostsLength);
-  }, [temporalPostsLength]);
 
   useEffect(() => {
-    // 쿼리값에 따라 다르게 요청해야함.
-    // {
-    //   contentType:"forum",
-    //   query:"asdf"
-    // }
-
-    dispatch(loadPostsReqeustAction({ type: "forum", skip }));
-    skip += 10;
+    if (router.query.term) {
+      dispatch(
+        searchPostsRequestAction({
+          type: "forum",
+          term: router.query.term,
+          skip,
+        }),
+      );
+    } else {
+      dispatch(loadPostsReqeustAction({ type: "forum", skip }));
+      skip += 10;
+    }
 
     return () => {
       skip = 0;
@@ -132,13 +128,6 @@ const Forum = ({ router }) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [temporalPostsLength]);
-
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log(1);
-  //     setTmp(tmp + 1);
-  //   }, 1000);
-  // }, [tmp]);
 
   return (
     <>

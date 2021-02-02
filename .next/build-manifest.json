@@ -24,21 +24,6 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/articles/forum": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum.js"
-    ],
-    "/articles/forum/[id]": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum/[id].js"
-    ],
-    "/articles/project": [
-      "static/chunks/main.js",
-      "static/chunks/webpack.js",
-      "static/chunks/pages/articles/project.js"
-    ],
     "/articles/study": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",

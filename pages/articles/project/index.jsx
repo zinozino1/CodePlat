@@ -4,12 +4,18 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
+  searchPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
 import { Spin } from "antd";
 import styled from "styled-components";
 import { withRouter } from "next/router";
 import Head from "next/head";
+
+const SelectLocationWrapper = styled.div`
+  text-align: right;
+  margin-bottom: 10px;
+`;
 
 const SpinWrapper = styled.div`
   text-align: center;
@@ -42,20 +48,29 @@ const Project = ({ router }) => {
     //   contentType:"project",
     //   query:"asdf"
     // }
-    console.log("router에 따른 useeffect");
-    dispatch(loadPostsReqeustAction({ type: "project", skip }));
-    skip += 10;
+
+    if (router.query.term) {
+      dispatch(
+        searchPostsRequestAction({
+          type: "project",
+          term: router.query.term,
+          skip,
+        }),
+      );
+    } else {
+      dispatch(loadPostsReqeustAction({ type: "project", skip }));
+      skip += 10;
+    }
+
     return () => {
+      skip = 0;
       dispatch(initializePostsAction());
     };
   }, [router]);
 
   useEffect(() => {
-    console.log("window useEffect");
     window.addEventListener("scroll", handleScroll);
     return () => {
-      console.log("window remover");
-      skip = 0;
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
@@ -67,6 +82,7 @@ const Project = ({ router }) => {
         <title>프로젝트</title>
       </Head>
       <ArticleLayout contentType="project">
+        <SelectLocationWrapper>asdfasdf</SelectLocationWrapper>
         <List data={projectPosts} type="project" />
         {loadPostsLoading && (
           <SpinWrapper>
