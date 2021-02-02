@@ -32,8 +32,8 @@ const Label = styled.span`
 const LocationSelectChildren = [];
 const PeopleSelectChildren = [];
 const ForumSelectChildren = [
-  <Select.Option key="free">자유</Select.Option>,
-  <Select.Option key="qna">QnA</Select.Option>,
+  <Select.Option key="자유">자유</Select.Option>,
+  <Select.Option key="QnA">QnA</Select.Option>,
 ];
 Locations.forEach((v, i) => {
   LocationSelectChildren.push(
@@ -131,12 +131,11 @@ const WriteForm = ({ contentType, router }) => {
         writer: me._id,
         title,
         content: description,
-        filter,
         tag: tags,
-        field: router.route.split("/")[2],
+        field: filter,
       }),
     );
-  }, [title, description, filter, tags, router, me]);
+  }, [title, description, tags, router, me, filter]);
 
   return (
     <>

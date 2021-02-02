@@ -24,6 +24,8 @@ const RowWrapper = styled.div`
 
 const ProfileModal = ({ writer }) => {
   const { me } = useSelector((state) => state.user);
+  console.log(me.id);
+  console.log(writer.id);
 
   const onSendLetter = useCallback(() => {
     // if (!me) {

@@ -146,6 +146,7 @@ const RegisterInputForm = ({ router }) => {
     axios
       .post("/api/join", { email, nickname, password })
       .then((res) => {
+        console.log(res);
         setUserId(res.data.userId);
         setEmailExistError(false);
         setNicknameExistError(false);

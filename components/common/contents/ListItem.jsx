@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Avatar, Space, Tag, Popover, Skeleton } from "antd";
+import { List, Avatar, Space, Tag, Popover, Skeleton, Image } from "antd";
 import {
   MessageOutlined,
   LikeOutlined,
@@ -13,6 +13,7 @@ import styled, { css } from "styled-components";
 import Link from "next/link";
 import ProfileModal from "../../modal/ProfileModal";
 import shortid from "shortid";
+import { SERVER_URL } from "../../../lib/constant/constant";
 
 const ListItemWrapper = styled(List.Item)`
   background: #fff;
@@ -67,7 +68,11 @@ const IconText = ({ icon, text }) => (
 const ListItem = ({ item, type }) => {
   if (type == "study" || type == "project") {
     return (
-      <Link href={`/articles/${type}/${item._id}`}>
+      <Link
+        href={
+          item.writer ? `/articles/${type}/${item._id}` : `articles/${type}`
+        }
+      >
         <a>
           <ListItemWrapper
             actions={[
@@ -105,7 +110,9 @@ const ListItem = ({ item, type }) => {
                         e.stopPropagation();
                       }}
                     >
-                      <ProfileModal writer={item.writer}></ProfileModal>
+                      {item.writer && (
+                        <ProfileModal writer={item.writer}></ProfileModal>
+                      )}
                     </div>
                   }
                 >
@@ -118,13 +125,15 @@ const ListItem = ({ item, type }) => {
                     size={24}
                     icon={<UserOutlined />}
                     src={
-                      item.writer.avatarUrl && (
+                      item.writer && (
                         <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
                       )
                     }
                   />{" "}
                 </Popover>
-                <span className="user-nickname">{item.writer.nickname}</span>
+                <span className="user-nickname">
+                  {item.writer ? item.writer.nickname : "탈퇴한 회원"}
+                </span>
                 <span className="create-date">{`${new Date(
                   item.createAt,
                 ).getFullYear()}.${
@@ -143,7 +152,9 @@ const ListItem = ({ item, type }) => {
     );
   } else {
     return (
-      <Link href={`/articles/forum/${item._id}`}>
+      <Link
+        href={item.writer ? `/articles/forum/${item._id}` : "/articles/forum"}
+      >
         <a>
           <ListItemWrapper
             actions={[
@@ -172,7 +183,7 @@ const ListItem = ({ item, type }) => {
             <ListHeader>
               <div className="tag-wrapper">
                 <Tag color="red" key={item}>
-                  {item.filter}
+                  {item.field}
                 </Tag>
               </div>
               <div className="user-date-wrapper">
@@ -183,12 +194,9 @@ const ListItem = ({ item, type }) => {
                         e.stopPropagation();
                       }}
                     >
-                      <ProfileModal
-                        writer={item.writer}
-                        // onClick={(e) => {
-                        //   e.stopPropagation();
-                        // }}
-                      ></ProfileModal>
+                      {item.writer && (
+                        <ProfileModal writer={item.writer}></ProfileModal>
+                      )}
                     </div>
                   }
                 >
@@ -201,13 +209,15 @@ const ListItem = ({ item, type }) => {
                     size={24}
                     icon={<UserOutlined />}
                     src={
-                      item.writer.avatarUrl && (
+                      item.writer && (
                         <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
                       )
                     }
                   />{" "}
                 </Popover>
-                <span className="user-nickname">{item.writer.nickname}</span>
+                <span className="user-nickname">
+                  {item.writer ? item.writer.nickname : "탈퇴한 회원"}
+                </span>
                 <span className="create-date">{`${new Date(
                   item.createAt,
                 ).getFullYear()}.${

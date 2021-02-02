@@ -22,6 +22,7 @@ import {
 import ProfileModal from "../../modal/ProfileModal";
 import { postScrapRequestAction } from "../../../reducers/post";
 import { useDispatch } from "react-redux";
+import { SERVER_URL } from "../../../lib/constant/constant";
 
 const PostViewerHeaderWrapper = styled.div`
   /* display: flex; */

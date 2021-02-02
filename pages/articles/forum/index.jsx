@@ -48,6 +48,7 @@ const ForumFilterWrapper = styled.div`
 let skip = 0;
 
 const Forum = ({ router }) => {
+  console.log("skip : ", skip);
   const [radioValue, setRadioValue] = useState("latest");
   const [field, setField] = useState("free");
 
@@ -95,7 +96,8 @@ const Forum = ({ router }) => {
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
       console.log(temporalPostsLength);
       if (temporalPostsLength >= 10) {
-        dispatch(loadPostsReqeustAction({ type: "forum", skip: skip + 10 }));
+        dispatch(loadPostsReqeustAction({ type: "forum", skip }));
+        skip += 10;
       }
     }
   };
@@ -116,6 +118,7 @@ const Forum = ({ router }) => {
     // }
 
     dispatch(loadPostsReqeustAction({ type: "forum", skip }));
+    skip += 10;
 
     return () => {
       dispatch(initializePostsAction());
