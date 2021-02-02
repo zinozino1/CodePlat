@@ -18,6 +18,9 @@ import {
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
   ADD_COMMENT_FAILURE,
+  LOAD_FORUM_POSTS_REQUEST,
+  LOAD_FORUM_POSTS_SUCCESS,
+  LOAD_FORUM_POSTS_FAILURE,
   // SEARCH_POSTS_REQUEST,
   // SEARCH_POSTS_SUCCESS,
   // SEARCH_POSTS_FAILURE,
@@ -31,6 +34,7 @@ import {
   writePost,
   loadPost,
   loadPosts,
+  loadForumPosts,
   // searchPosts,
   // filterSearch,
 } from "../lib/api/post";
@@ -56,15 +60,9 @@ function* loadPostSaga(action) {
 }
 
 function* loadPostsSaga(action) {
-  // 쿼리값에 따라 요청
   try {
-    // yield delay(1000);
-    // 수정 필요
-    // action.payload.contentType, action.payload.query가 필요
-    // term도 필요
-    // forum일 경우 sortingBy 쿼리 필요 -> study, project와 분기 필요
     const res = yield call(loadPosts, action.payload);
-    //console.log(res);
+
     yield put({
       type: LOAD_POSTS_SUCCESS,
       contentType: action.payload.type,
@@ -155,6 +153,25 @@ function* addCommentSaga(action) {
   }
 }
 
+function* loadForumPostsSaga(action) {
+  try {
+    console.log(action.payload);
+    const res = yield call(loadForumPosts, action.payload);
+    console.log(res);
+    yield put({
+      type: LOAD_FORUM_POSTS_SUCCESS,
+      forumPosts: res.data.posts,
+      temporalPostsLength: res.data.postSize,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: LOAD_FORUM_POSTS_FAILURE,
+      //error: error.response.data,
+    });
+  }
+}
+
 // function* searchPostsSaga(action) {
 //   try {
 //     // action.payload = postID
@@ -202,6 +219,7 @@ export function* watchPost() {
   yield takeLatest(WRITE_POST_REQUEST, writePostSaga);
   yield takeLatest(POST_SCRAP_REQUEST, postScrapSaga);
   yield takeLatest(ADD_COMMENT_REQUEST, addCommentSaga);
+  yield takeLatest(LOAD_FORUM_POSTS_REQUEST, loadForumPostsSaga);
   //yield takeLatest(SEARCH_POSTS_REQUEST, searchPostsSaga);
   // yield takeLatest(FILTER_SEARCH_REQUEST, filterSearchSaga);
 }

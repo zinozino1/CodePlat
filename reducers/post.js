@@ -33,6 +33,9 @@ const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  loadForumPostsLoading: false,
+  loadForumPostsDone: false,
+  loadForumPostsError: null,
   // searchPostsLoading: false,
   // searchPostsDone: false,
   // searchPostsError: null,
@@ -70,6 +73,10 @@ export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
 
+export const LOAD_FORUM_POSTS_REQUEST = "post/LOAD_FORUM_POSTS_REQUEST";
+export const LOAD_FORUM_POSTS_SUCCESS = "post/LOAD_FORUM_POSTS_SUCCESS";
+export const LOAD_FORUM_POSTS_FAILURE = "post/LOAD_FORUM_POSTS_FAILURE";
+
 // export const SEARCH_POSTS_REQUEST = "post/SEARCH_POSTS_REQUEST";
 // export const SEARCH_POSTS_SUCCESS = "post/SEARCH_POSTS_SUCCESS";
 // export const SEARCH_POSTS_FAILURE = "post/SEARCH_POSTS_FAILURE";
@@ -106,6 +113,11 @@ export const postScrapRequestAction = createAction(
 
 export const addCommentRequestAction = createAction(
   ADD_COMMENT_REQUEST,
+  (data) => data,
+);
+
+export const loadForumPostsRequestAction = createAction(
+  LOAD_FORUM_POSTS_REQUEST,
   (data) => data,
 );
 
@@ -264,6 +276,26 @@ const postReducer = handleActions(
       addCommentLoading: false,
       addCommentDone: false,
       addCommentError: null,
+    }),
+    [LOAD_FORUM_POSTS_REQUEST]: (state, action) => ({
+      ...state,
+      loadForumPostsLoading: true,
+      loadForumPostsDone: false,
+      loadForumPostsError: null,
+    }),
+    [LOAD_FORUM_POSTS_SUCCESS]: (state, action) => ({
+      ...state,
+      loadForumPostsLoading: false,
+      loadForumPostsDone: true,
+      loadForumPostsError: null,
+      temporalPostsLength: action.temporalPostsLength,
+      forumPosts: action.forumPosts,
+    }),
+    [LOAD_FORUM_POSTS_FAILURE]: (state, action) => ({
+      ...state,
+      loadForumPostsLoading: false,
+      loadForumPostsDone: false,
+      loadForumPostsError: null,
     }),
     // [SEARCH_POSTS_REQUEST]: (state, action) => ({
     //   ...state,

@@ -47,80 +47,40 @@ const Study = ({ router }) => {
     setLocation(value);
   }, []);
 
-  const onFilterSearch = useCallback(() => {}, []);
-
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
+
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      console.log("temporalPostsLength : ", temporalPostsLength);
-      dispatch(
-        loadPostsReqeustAction({
-          type: "study",
-          skip,
-          techStack: skill,
-          term: router.query.term,
-        }),
-      );
       if (temporalPostsLength >= 10) {
-        skip += 10;
         dispatch(
           loadPostsReqeustAction({
             type: "study",
             skip,
             techStack: skill,
             term: router.query.term,
+            location,
           }),
         );
+        skip += 10;
       }
     }
   };
 
-  // useEffect(() => {
-  //   console.log(skill);
-  //   console.log(location);
-  //   // if (skill.length !== 0) {
-  //   //   skip = 0;
-  //   //   console.log(skill);
-  //   //   console.log(location);
-  //   //   dispatch(initializePostsAction()); // 초기화 시켜준 후 호출
-  //   //   dispatch(
-  //   //     filterSearchRequestAction({ type: "study", skip, skill, location }),
-  //   //   );
-  //   //   skip += 10;
-  //   // }
-  // }, [skill, location]);
-
   useEffect(() => {
-    console.log("skip : ", skip);
-    console.log("query : ", router.query.term);
-    console.log("skill: ", skill);
-    console.log("location : ", location);
-    if (router.query.term) {
-      dispatch(
-        loadPostsReqeustAction({
-          type: "study",
-          term: router.query.term,
-          skip,
-          techStack: skill,
-          location,
-        }),
-      );
-    } else {
-      dispatch(
-        loadPostsReqeustAction({
-          type: "study",
-          skip,
-          teckStack: skill,
-          location,
-        }),
-      );
-    }
+    dispatch(
+      loadPostsReqeustAction({
+        type: "study",
+        term: router.query.term,
+        skip,
+        techStack: skill,
+        location,
+      }),
+    );
     skip += 10;
 
     return () => {
-      console.log("언마운트");
       skip = 0;
       dispatch(initializePostsAction());
     };
@@ -128,11 +88,10 @@ const Study = ({ router }) => {
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [temporalPostsLength]);
 
   return (
     <>

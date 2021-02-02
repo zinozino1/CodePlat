@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
-  searchPostsRequestAction,
+  loadForumPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
 import { Spin, Radio, Select } from "antd";
@@ -49,11 +49,8 @@ const ForumFilterWrapper = styled.div`
 let skip = 0;
 
 const Forum = ({ router }) => {
-  console.log("skip : ", skip);
   const [radioValue, setRadioValue] = useState("latest");
-  const [field, setField] = useState("free");
-
-  const [tmp, setTmp] = useState(0);
+  const [field, setField] = useState("자유");
 
   const onChangeField = useCallback(
     (e) => {
@@ -96,25 +93,29 @@ const Forum = ({ router }) => {
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
       if (temporalPostsLength >= 10) {
-        dispatch(loadPostsReqeustAction({ type: "forum", skip }));
-        skip += 10;
+        dispatch(
+          loadForumPostsRequestAction({
+            type: radioValue,
+            skip,
+            term: router.query.term,
+            field,
+          }),
+        );
       }
+      skip += 10;
     }
   };
 
   useEffect(() => {
-    if (router.query.term) {
-      dispatch(
-        searchPostsRequestAction({
-          type: "forum",
-          term: router.query.term,
-          skip,
-        }),
-      );
-    } else {
-      dispatch(loadPostsReqeustAction({ type: "forum", skip }));
-      skip += 10;
-    }
+    dispatch(
+      loadForumPostsRequestAction({
+        type: radioValue,
+        term: router.query.term,
+        skip,
+        field,
+      }),
+    );
+    skip += 10;
 
     return () => {
       skip = 0;
@@ -137,24 +138,24 @@ const Forum = ({ router }) => {
       </Head>
       <ArticleLayout contentType="forum">
         <ForumFilterWrapper>
-          <Select defaultValue="free" onChange={onChangeField}>
-            <Select.Option value="free">자유</Select.Option>
+          <Select defaultValue="자유" onChange={onChangeField}>
+            <Select.Option value="자유">자유</Select.Option>
             <Select.Option value="QnA">QnA</Select.Option>
           </Select>
           <Radio.Group onChange={onClickRadio} defaultValue="latest">
             <Radio.Button value="latest" onClick={onClickSort}>
               최신순
             </Radio.Button>
-            <Radio.Button value="recommend" onClick={onClickSort}>
+            <Radio.Button value="likes" onClick={onClickSort}>
               추천순
             </Radio.Button>
-            <Radio.Button value="comment" onClick={onClickSort}>
+            <Radio.Button value="comments" onClick={onClickSort}>
               댓글순
             </Radio.Button>
-            <Radio.Button value="scrap" onClick={onClickSort}>
+            <Radio.Button value="scraps" onClick={onClickSort}>
               스크랩순
             </Radio.Button>
-            <Radio.Button value="view" onClick={onClickSort}>
+            <Radio.Button value="views" onClick={onClickSort}>
               조회순
             </Radio.Button>
           </Radio.Group>

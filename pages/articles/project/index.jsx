@@ -1,20 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ArticleLayout from "../../../components/layout/ArticleLayout";
 import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
-  searchPostsRequestAction,
+  // searchPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
-import { Spin } from "antd";
+import { Spin, Select } from "antd";
 import styled from "styled-components";
 import { withRouter } from "next/router";
 import Head from "next/head";
+import { Locations } from "../../../lib/constant/constant";
 
 const SelectLocationWrapper = styled.div`
   text-align: right;
   margin-bottom: 10px;
+`;
+
+const Label = styled.span`
+  font-weight: 500;
 `;
 
 const SpinWrapper = styled.div`
@@ -23,57 +28,68 @@ const SpinWrapper = styled.div`
 `;
 
 let skip = 0;
+const LocationSelectChildren = [];
+Locations.forEach((v, i) => {
+  LocationSelectChildren.push(
+    <Select.Option key={v.key}>{v.value}</Select.Option>,
+  );
+});
 
 const Project = ({ router }) => {
   const dispatch = useDispatch();
+  const { skill } = useSelector((state) => state.skill);
   const { projectPosts, loadPostsLoading } = useSelector((state) => state.post);
 
   const { temporalPostsLength } = useSelector((state) => state.post);
+  const [location, setLocation] = useState("전체");
+  const onChangeLocation = useCallback((value) => {
+    setLocation(value);
+  }, []);
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
     const clientHeight = document.documentElement.clientHeight;
     if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      dispatch(loadPostsReqeustAction({ type: "project", skip }));
       if (temporalPostsLength >= 10) {
-        dispatch(loadPostsReqeustAction({ type: "project", skip }));
+        dispatch(
+          loadPostsReqeustAction({
+            type: "project",
+            skip,
+            techStack: skill,
+            term: router.query.term,
+            location,
+          }),
+        );
         skip += 10;
       }
     }
   };
 
   useEffect(() => {
-    // {
-    //   contentType:"project",
-    //   query:"asdf"
-    // }
-
-    if (router.query.term) {
-      dispatch(
-        searchPostsRequestAction({
-          type: "project",
-          term: router.query.term,
-          skip,
-        }),
-      );
-    } else {
-      dispatch(loadPostsReqeustAction({ type: "project", skip }));
-      skip += 10;
-    }
+    dispatch(
+      loadPostsReqeustAction({
+        type: "project",
+        term: router.query.term,
+        skip,
+        techStack: skill,
+        location,
+      }),
+    );
+    skip += 10;
 
     return () => {
       skip = 0;
       dispatch(initializePostsAction());
     };
-  }, [router]);
+  }, [router, skill, location]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [temporalPostsLength]);
 
   return (
     <>
@@ -82,7 +98,17 @@ const Project = ({ router }) => {
         <title>프로젝트</title>
       </Head>
       <ArticleLayout contentType="project">
-        <SelectLocationWrapper>asdfasdf</SelectLocationWrapper>
+        <SelectLocationWrapper>
+          <Label style={{ lineHeight: "32px" }}>지역</Label>
+          <Select
+            defaultValue="전체"
+            bordered={false}
+            style={{ color: "#999" }}
+            onChange={onChangeLocation}
+          >
+            {LocationSelectChildren}
+          </Select>
+        </SelectLocationWrapper>
         <List data={projectPosts} type="project" />
         {loadPostsLoading && (
           <SpinWrapper>
