@@ -82,7 +82,7 @@ const WriteForm = ({ contentType, router }) => {
       return;
     }
     if (description.length < 5) {
-      alert("5글자 이상 써주세요.");
+      alert("내용을 5글자 이상 써주세요.");
       return;
     }
 
@@ -125,6 +125,10 @@ const WriteForm = ({ contentType, router }) => {
       alert("내용을 채워주세요.");
       return;
     }
+    if (description.length < 5) {
+      alert("내용을 5글자 이상 써주세요.");
+      return;
+    }
     dispatch(
       writePostRequestAction({
         type: router.route.split("/")[2],
@@ -164,7 +168,7 @@ const WriteForm = ({ contentType, router }) => {
             </Select>
             <Label style={{ lineHeight: "32px" }}>지역</Label>
             <Select
-              defaultValue="서울"
+              defaultValue="전체"
               bordered={false}
               style={{ color: "#999" }}
               onChange={onChangeLocation}

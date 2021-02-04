@@ -12,6 +12,7 @@ import {
   Divider,
   Input,
   Image,
+  Checkbox,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
@@ -28,7 +29,8 @@ import useInput from "../../../hooks/useInput";
 import Router from "next/router";
 
 const ReApplyFormWrapper = styled.div`
-  width: 600px;
+  /* border: 1px solid black; */
+  width: 800px;
   display: flex;
   @media (max-width: 768px) {
     width: 200px;
@@ -52,6 +54,9 @@ const ButtonWrapper = styled.div`
     color: #208fff;
     margin-left: 10px;
   }
+  .secret-btn {
+    margin-left: 10px;
+  }
 `;
 
 const CommentListItem = ({ item, post }) => {
@@ -60,6 +65,7 @@ const CommentListItem = ({ item, post }) => {
 
   //console.log(item);
   const [reComment, onChangeReComment] = useInput("");
+  const [isSecret, onToggleIsSecret] = useToggle(false);
 
   const onReCommentSubmit = useCallback(() => {
     dispatch(
@@ -76,9 +82,21 @@ const CommentListItem = ({ item, post }) => {
 
   const onDeleteComment = useCallback(
     (id) => {
-      //console.log(id);
-      dispatch(deleteCommentRequestAction(id));
-      Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+      let flag = false;
+      post.comments.forEach((v, i) => {
+        if (id === v.commentTo) {
+          flag = true;
+        }
+      });
+      if (flag) {
+        // 자식 있을 때 api
+        dispatch(deleteCommentRequestAction({ type: "children", id }));
+      } else {
+        // 없을 때 api
+        dispatch(deleteCommentRequestAction({ type: "none", id }));
+      }
+      //dispatch(deleteCommentRequestAction(id));
+      //Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
     },
     [item, post],
   );
@@ -132,6 +150,13 @@ const CommentListItem = ({ item, post }) => {
                       >
                         취소
                       </span>
+                      <span
+                        className="secret-btn"
+                        key="comment-list-reply-to-2"
+                        //onClick={onChangeApplyToggle}
+                      >
+                        <Checkbox style={{ color: "#999" }}>비밀 댓글</Checkbox>
+                      </span>
                     </ButtonWrapper>
                   </ReApplyFormWrapper>
                 </>,
@@ -159,13 +184,24 @@ const CommentListItem = ({ item, post }) => {
               icon={<UserOutlined />}
               src={
                 item.writer.avatarUrl && (
-                  <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                  <Image
+                    src={`${SERVER_URL}/${item.writer.avatarUrl}`}
+                    width={100}
+                  />
                 )
               }
             />{" "}
           </Popover>
         }
-        content={item.content}
+        content={
+          // item._id ===
+          //   post.deletedComments.map((v, i) => {
+          //     if (v._id === item._id) {
+          //       return v._id;
+          //     }
+          //   }) &&
+          item.content
+        }
         datetime={`${new Date(item.createAt).getFullYear()}.${
           new Date(item.createAt).getMonth() + 1
         }.${new Date(item.createAt).getDay()}`}
@@ -215,6 +251,7 @@ const CommentListItem = ({ item, post }) => {
                           item.writer.avatarUrl && (
                             <Image
                               src={`${SERVER_URL}/${item.writer.avatarUrl}`}
+                              width={100}
                             />
                           )
                         }

@@ -38,7 +38,6 @@ const PostViewerHeaderWrapper = styled.div`
 
   .user-profile {
     flex: 1;
-    /* border: 1px solid black; */
     padding: 5px 0;
     .user-nickname {
       margin: 0 5px;
@@ -114,7 +113,10 @@ const PostViewerHeader = ({ post, contentType }) => {
             icon={<UserOutlined />}
             src={
               post.writer.avatarUrl && (
-                <Image src={`${SERVER_URL}/${post.writer.avatarUrl}`} />
+                <Image
+                  src={`${SERVER_URL}/${post.writer.avatarUrl}`}
+                  width={100}
+                />
               )
             }
           />{" "}

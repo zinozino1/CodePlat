@@ -56,6 +56,7 @@ import {
   addComment,
   deletePost,
   deleteComment,
+  deleteCommentWithChildren,
   // searchPosts,
   // filterSearch,
 } from "../lib/api/post";
@@ -203,7 +204,12 @@ function* deletePostSaga(action) {
 
 function* deleteCommentSaga(action) {
   try {
-    yield call(deleteComment, action.payload);
+    console.log(action.payload);
+    if (action.payload.type === "children") {
+      yield call(deleteCommentWithChildren, action.payload.id);
+    } else {
+      yield call(deleteComment, action.payload.id);
+    }
     yield put({ type: DELETE_COMMENT_SUCCESS });
   } catch (error) {
     console.log(error);

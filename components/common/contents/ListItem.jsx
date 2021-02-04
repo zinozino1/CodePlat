@@ -124,6 +124,7 @@ const ListItem = ({ item, type }) => {
                     style={{ cursor: "pointer" }}
                     size={24}
                     icon={<UserOutlined />}
+                    width={100}
                     src={
                       item.writer && (
                         <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
@@ -206,6 +207,7 @@ const ListItem = ({ item, type }) => {
                       //console.log("아바타 클릭했음");
                     }}
                     style={{ cursor: "pointer" }}
+                    width={100}
                     size={24}
                     icon={<UserOutlined />}
                     src={
