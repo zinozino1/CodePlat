@@ -50,20 +50,20 @@ let skip = 0;
 
 const Forum = ({ router }) => {
   const [radioValue, setRadioValue] = useState("latest");
-  const [field, setField] = useState("자유");
+  const [field, setField] = useState("전체");
+
+  const { term } = router.query;
 
   const onChangeField = useCallback(
     (e) => {
       setField(e);
-      if (radioValue) {
-        Router.push(
-          `/articles/forum?sortingField=${e}&sortingBy=${radioValue}`,
-        );
+      if (term) {
+        Router.push(`/articles/forum?term=${term}`);
       } else {
-        Router.push(`/articles/forum?sortingField=${e}`);
+        Router.push(`/articles/forum`);
       }
     },
-    [radioValue],
+    [router],
   );
 
   const onClickRadio = useCallback((e) => {
@@ -72,15 +72,13 @@ const Forum = ({ router }) => {
 
   const onClickSort = useCallback(
     (e) => {
-      if (field) {
-        Router.push(
-          `/articles/forum?sortingField=${field}&sortingBy=${e.target.value}`,
-        );
+      if (term) {
+        Router.push(`/articles/forum?term=${term}`);
       } else {
-        Router.push(`/articles/forum?sortingBy=${e.target.value}`);
+        Router.push(`/articles/forum`);
       }
     },
-    [field],
+    [router],
   );
 
   const dispatch = useDispatch();
@@ -138,7 +136,8 @@ const Forum = ({ router }) => {
       </Head>
       <ArticleLayout contentType="forum">
         <ForumFilterWrapper>
-          <Select defaultValue="자유" onChange={onChangeField}>
+          <Select defaultValue="전체" onChange={onChangeField}>
+            <Select.Option value="전체">전체</Select.Option>
             <Select.Option value="자유">자유</Select.Option>
             <Select.Option value="QnA">QnA</Select.Option>
           </Select>

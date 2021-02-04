@@ -24,6 +24,8 @@ const ForumDetail = ({ router }) => {
     };
   }, [router]);
 
+  if (!post) return null;
+
   return (
     <>
       <Head>

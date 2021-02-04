@@ -20,9 +20,13 @@ import {
   Image,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
-import { postScrapRequestAction } from "../../../reducers/post";
-import { useDispatch } from "react-redux";
+import {
+  postScrapRequestAction,
+  deletePostRequestAction,
+} from "../../../reducers/post";
+import { useDispatch, useSelector } from "react-redux";
 import { SERVER_URL } from "../../../lib/constant/constant";
+import Router from "next/router";
 
 const PostViewerHeaderWrapper = styled.div`
   /* display: flex; */
@@ -65,15 +69,27 @@ const PostViewerHeaderWrapper = styled.div`
 
       text-align: center;
     }
+    .delete-btn {
+      margin-left: 10px;
+
+      text-align: center;
+    }
   }
 `;
 
 const PostViewerHeader = ({ post, contentType }) => {
   const dispatch = useDispatch();
 
+  const { me } = useSelector((state) => state.user);
+
   const onScrap = useCallback((id) => {
     dispatch(postScrapRequestAction(id));
   }, []);
+
+  const onPostDelete = useCallback(() => {
+    dispatch(deletePostRequestAction(post._id));
+    Router.push(`http://localhost:3000/articles/${contentType}`);
+  }, [post]);
 
   return (
     <PostViewerHeaderWrapper>
@@ -121,13 +137,26 @@ const PostViewerHeader = ({ post, contentType }) => {
         <MessageOutlined />
         <span className="post-comments">{post.comments.length}</span>
         {contentType == "forum" && (
+          <>
+            <Button
+              className="scrap-btn"
+              onClick={() => {
+                onScrap(post.id);
+              }}
+            >
+              <TagsOutlined />
+            </Button>
+          </>
+        )}
+        {me._id === post.writer._id && (
           <Button
-            className="scrap-btn"
+            type="ghost"
+            className="delete-btn"
             onClick={() => {
-              onScrap(post.id);
+              onPostDelete();
             }}
           >
-            <TagsOutlined />
+            삭제
           </Button>
         )}
       </div>

@@ -24,15 +24,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/articles/forum": [
+    "/articles/forum/[id]": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum.js"
+      "static/chunks/pages/articles/forum/[id].js"
     ],
-    "/articles/project": [
+    "/articles/forum/write": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/project.js"
+      "static/chunks/pages/articles/forum/write.js"
     ]
   },
   "ampFirstPages": []

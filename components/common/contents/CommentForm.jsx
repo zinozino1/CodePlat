@@ -4,12 +4,13 @@ import useInput from "../../../hooks/useInput";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { addCommentRequestAction } from "../../../reducers/post";
+import Router, { withRouter } from "next/router";
 
 const TextAreaWrapper = styled(Input.TextArea)`
   width: 94%;
 `;
 
-const CommentForm = ({ post }) => {
+const CommentForm = ({ post, router }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
@@ -22,7 +23,16 @@ const CommentForm = ({ post }) => {
     // 1) 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
     // 2) 일부러 새로고침시킨다
     setComment("");
-    dispatch(addCommentRequestAction({ post, content: comment, writer: me }));
+    dispatch(
+      // post말고 comment받는 것도 고려
+      addCommentRequestAction({
+        postId: post._id,
+        type: post.type,
+        content: comment,
+        //writer: me,
+      }),
+    );
+    Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
   }, [comment, post]);
 
   return (
@@ -49,4 +59,4 @@ const CommentForm = ({ post }) => {
   );
 };
 
-export default CommentForm;
+export default withRouter(CommentForm);

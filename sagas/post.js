@@ -21,6 +21,24 @@ import {
   LOAD_FORUM_POSTS_REQUEST,
   LOAD_FORUM_POSTS_SUCCESS,
   LOAD_FORUM_POSTS_FAILURE,
+  DELETE_COMMENT_REQUEST,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAILURE,
+  DELETE_POST_REQUEST,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  LIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE,
+  LIKE_COMMENT_REQUEST,
+  LIKE_COMMENT_SUCCESS,
+  LIKE_COMMENT_FAILURE,
+  UNLIKE_COMMENT_REQUEST,
+  UNLIKE_COMMENT_SUCCESS,
+  UNLIKE_COMMENT_FAILURE,
   // SEARCH_POSTS_REQUEST,
   // SEARCH_POSTS_SUCCESS,
   // SEARCH_POSTS_FAILURE,
@@ -35,6 +53,9 @@ import {
   loadPost,
   loadPosts,
   loadForumPosts,
+  addComment,
+  deletePost,
+  deleteComment,
   // searchPosts,
   // filterSearch,
 } from "../lib/api/post";
@@ -120,7 +141,7 @@ function* writePostSaga(action) {
 
 function* postScrapSaga(action) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     yield delay(1000);
     yield put({ type: POST_SCRAP_SUCCESS });
   } catch (error) {
@@ -137,12 +158,11 @@ function* addCommentSaga(action) {
     // action.payload = postID
 
     //console.log(action.payload);
-    yield delay(1000);
+    const res = yield call(addComment, action.payload);
+    // console.log(res);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      content: action.payload.content,
-      postId: action.payload.post.id,
-      writer: action.payload.writer,
+      //post: res.data.post,
     });
   } catch (error) {
     console.log(error);
@@ -155,9 +175,8 @@ function* addCommentSaga(action) {
 
 function* loadForumPostsSaga(action) {
   try {
-    console.log(action.payload);
     const res = yield call(loadForumPosts, action.payload);
-    console.log(res);
+
     yield put({
       type: LOAD_FORUM_POSTS_SUCCESS,
       forumPosts: res.data.posts,
@@ -169,6 +188,62 @@ function* loadForumPostsSaga(action) {
       type: LOAD_FORUM_POSTS_FAILURE,
       //error: error.response.data,
     });
+  }
+}
+
+function* deletePostSaga(action) {
+  try {
+    yield call(deletePost, action.payload);
+    yield put({ type: DELETE_POST_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: DELETE_POST_FAILURE });
+  }
+}
+
+function* deleteCommentSaga(action) {
+  try {
+    yield call(deleteComment, action.payload);
+    yield put({ type: DELETE_COMMENT_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: DELETE_COMMENT_FAILURE });
+  }
+}
+
+function* upLikePostSaga(action) {
+  try {
+    yield put({ type: LIKE_POST_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: LIKE_POST_FAILURE });
+  }
+}
+
+function* unLikePostSaga(action) {
+  try {
+    yield put({ type: UNLIKE_POST_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: UNLIKE_POST_FAILURE });
+  }
+}
+
+function* upLikeCommentSaga(action) {
+  try {
+    yield put({ type: LIKE_COMMENT_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: LIKE_COMMENT_FAILURE });
+  }
+}
+
+function* unLikeCommentSaga(action) {
+  try {
+    yield put({ type: UNLIKE_COMMENT_SUCCESS });
+  } catch (error) {
+    console.log(error);
+    yield put({ type: UNLIKE_COMMENT_FAILURE });
   }
 }
 
@@ -220,6 +295,12 @@ export function* watchPost() {
   yield takeLatest(POST_SCRAP_REQUEST, postScrapSaga);
   yield takeLatest(ADD_COMMENT_REQUEST, addCommentSaga);
   yield takeLatest(LOAD_FORUM_POSTS_REQUEST, loadForumPostsSaga);
+  yield takeLatest(DELETE_POST_REQUEST, deletePostSaga);
+  yield takeLatest(DELETE_COMMENT_REQUEST, deleteCommentSaga);
+  yield takeLatest(LIKE_POST_REQUEST, upLikePostSaga);
+  yield takeLatest(UNLIKE_POST_REQUEST, unLikePostSaga);
+  yield takeLatest(LIKE_COMMENT_REQUEST, upLikeCommentSaga);
+  yield takeLatest(UNLIKE_COMMENT_REQUEST, unLikeCommentSaga);
   //yield takeLatest(SEARCH_POSTS_REQUEST, searchPostsSaga);
   // yield takeLatest(FILTER_SEARCH_REQUEST, filterSearchSaga);
 }

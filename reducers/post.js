@@ -33,9 +33,27 @@ const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  deleteCommentLoading: false,
+  deleteCommentDone: false,
+  deleteCommentError: null,
   loadForumPostsLoading: false,
   loadForumPostsDone: false,
   loadForumPostsError: null,
+  deletePostLoading: false,
+  deletePostDone: false,
+  deletePostError: null,
+  likeCommentLoading: false,
+  likeCommentDone: false,
+  likeCommentError: null,
+  unLikeCommentLoading: false,
+  unLikeCommentDone: false,
+  unLikeCommentError: null,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unLikePostLoading: false,
+  unLikePostDone: false,
+  unLikePostError: null,
   // searchPostsLoading: false,
   // searchPostsDone: false,
   // searchPostsError: null,
@@ -73,9 +91,33 @@ export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
 
+export const DELETE_COMMENT_REQUEST = "post/DELETE_COMMENT_REQUEST";
+export const DELETE_COMMENT_SUCCESS = "post/DELETE_COMMENT_SUCCESS";
+export const DELETE_COMMENT_FAILURE = "post/DELETE_COMMENT_FAILURE";
+
 export const LOAD_FORUM_POSTS_REQUEST = "post/LOAD_FORUM_POSTS_REQUEST";
 export const LOAD_FORUM_POSTS_SUCCESS = "post/LOAD_FORUM_POSTS_SUCCESS";
 export const LOAD_FORUM_POSTS_FAILURE = "post/LOAD_FORUM_POSTS_FAILURE";
+
+export const DELETE_POST_REQUEST = "post/DELETE_POST_REQUEST";
+export const DELETE_POST_SUCCESS = "post/DELETE_POST_SUCCESS";
+export const DELETE_POST_FAILURE = "post/DELETE_POST_FAILURE";
+
+export const LIKE_POST_REQUEST = "post/LIKE_POST_REQUEST";
+export const LIKE_POST_SUCCESS = "post/LIKE_POST_SUCCESS";
+export const LIKE_POST_FAILURE = "post/LIKE_POST_FAILURE";
+
+export const UNLIKE_POST_REQUEST = "post/UNLIKE_POST_REQUEST";
+export const UNLIKE_POST_SUCCESS = "post/UNLIKE_POST_SUCCESS";
+export const UNLIKE_POST_FAILURE = "post/UNLIKE_POST_FAILURE";
+
+export const LIKE_COMMENT_REQUEST = "post/LIKE_COMMENT_REQUEST";
+export const LIKE_COMMENT_SUCCESS = "post/LIKE_COMMENT_SUCCESS";
+export const LIKE_COMMENT_FAILURE = "post/LIKE_COMMENT_FAILURE";
+
+export const UNLIKE_COMMENT_REQUEST = "post/UNLIKE_COMMENT_REQUEST";
+export const UNLIKE_COMMENT_SUCCESS = "post/UNLIKE_COMMENT_SUCCESS";
+export const UNLIKE_COMMENT_FAILURE = "post/UNLIKE_COMMENT_FAILURE";
 
 // export const SEARCH_POSTS_REQUEST = "post/SEARCH_POSTS_REQUEST";
 // export const SEARCH_POSTS_SUCCESS = "post/SEARCH_POSTS_SUCCESS";
@@ -116,8 +158,18 @@ export const addCommentRequestAction = createAction(
   (data) => data,
 );
 
+export const deleteCommentRequestAction = createAction(
+  DELETE_COMMENT_REQUEST,
+  (data) => data,
+);
+
 export const loadForumPostsRequestAction = createAction(
   LOAD_FORUM_POSTS_REQUEST,
+  (data) => data,
+);
+
+export const deletePostRequestAction = createAction(
+  DELETE_POST_REQUEST,
   (data) => data,
 );
 
@@ -162,7 +214,7 @@ const postReducer = handleActions(
       ...state,
       loadPostLoading: false,
       loadPostDone: false,
-      loadPostError: null,
+      loadPostError: action.error,
     }),
     [LOAD_POSTS_REQUEST]: (state, action) => ({
       ...state,
@@ -226,7 +278,7 @@ const postReducer = handleActions(
       ...state,
       writePostLoading: false,
       writePostDone: false,
-      writePostError: null,
+      writePostError: action.error,
     }),
     [POST_SCRAP_REQUEST]: (state, action) => ({
       ...state,
@@ -244,7 +296,7 @@ const postReducer = handleActions(
       ...state,
       postScrapLoading: false,
       postScrapDone: false,
-      postScrapError: null,
+      postScrapError: action.error,
     }),
     [ADD_COMMENT_REQUEST]: (state, action) => ({
       ...state,
@@ -257,25 +309,31 @@ const postReducer = handleActions(
       addCommentLoading: false,
       addCommentDone: true,
       addCommentError: null,
-      post: {
-        ...state.post,
-        comments: state.post.comments.concat({
-          id: shortid.generate(),
-          writer: action.writer,
-          content: action.content,
-          postId: action.postId,
-          createAt: new Date(),
-          commentTo: null,
-          likes: 0,
-          secretComment: false,
-        }),
-      },
+      post: action.post,
     }),
     [ADD_COMMENT_FAILURE]: (state, action) => ({
       ...state,
       addCommentLoading: false,
       addCommentDone: false,
-      addCommentError: null,
+      addCommentError: action.error,
+    }),
+    [DELETE_COMMENT_REQUEST]: (state, action) => ({
+      ...state,
+      deleteCommentLoading: true,
+      deleteCommentDone: false,
+      deleteCommentError: null,
+    }),
+    [DELETE_COMMENT_SUCCESS]: (state, action) => ({
+      ...state,
+      deleteCommentLoading: false,
+      deleteCommentDone: true,
+      deleteCommentError: null,
+    }),
+    [DELETE_COMMENT_FAILURE]: (state, action) => ({
+      ...state,
+      deleteCommentLoading: false,
+      deleteCommentDone: false,
+      deleteCommentError: action.error,
     }),
     [LOAD_FORUM_POSTS_REQUEST]: (state, action) => ({
       ...state,
@@ -289,13 +347,103 @@ const postReducer = handleActions(
       loadForumPostsDone: true,
       loadForumPostsError: null,
       temporalPostsLength: action.temporalPostsLength,
-      forumPosts: action.forumPosts,
+      forumPosts: state.forumPosts.concat(action.forumPosts),
     }),
     [LOAD_FORUM_POSTS_FAILURE]: (state, action) => ({
       ...state,
       loadForumPostsLoading: false,
       loadForumPostsDone: false,
-      loadForumPostsError: null,
+      loadForumPostsError: action.error,
+    }),
+    [DELETE_POST_REQUEST]: (state, action) => ({
+      ...state,
+      deletePostLoading: true,
+      deletePostDone: false,
+      deletePostError: null,
+    }),
+    [DELETE_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      deletePostLoading: false,
+      deletePostDone: true,
+      deletePostError: null,
+    }),
+    [DELETE_POST_FAILURE]: (state, action) => ({
+      ...state,
+      deletePostLoading: false,
+      deletePostDone: false,
+      deletePostError: action.error,
+    }),
+    [LIKE_POST_REQUEST]: (state, action) => ({
+      ...state,
+      likePostLoading: true,
+      likePostDone: false,
+      likePostError: null,
+    }),
+    [LIKE_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      likePostLoading: false,
+      likePostDone: true,
+      likePostError: null,
+    }),
+    [LIKE_POST_FAILURE]: (state, action) => ({
+      ...state,
+      likePostLoading: false,
+      likePostDone: false,
+      likePostError: action.error,
+    }),
+    [UNLIKE_POST_REQUEST]: (state, action) => ({
+      ...state,
+      unLikePostLoading: true,
+      unLikePostDone: false,
+      unLikePostError: null,
+    }),
+    [UNLIKE_POST_SUCCESS]: (state, action) => ({
+      ...state,
+      unLikePostLoading: false,
+      unLikePostDone: true,
+      unLikePostError: null,
+    }),
+    [UNLIKE_POST_FAILURE]: (state, action) => ({
+      ...state,
+      unLikePostLoading: false,
+      unLikePostDone: false,
+      unLikePostError: action.error,
+    }),
+    [LIKE_COMMENT_REQUEST]: (state, action) => ({
+      ...state,
+      likeCommentLoading: true,
+      likeCommentDone: false,
+      likeCommentError: null,
+    }),
+    [LIKE_COMMENT_SUCCESS]: (state, action) => ({
+      ...state,
+      likeCommentLoading: false,
+      likeCommentDone: true,
+      likeCommentError: null,
+    }),
+    [LIKE_COMMENT_FAILURE]: (state, action) => ({
+      ...state,
+      likeCommentLoading: false,
+      likeCommentDone: false,
+      likeCommentError: action.error,
+    }),
+    [UNLIKE_COMMENT_REQUEST]: (state, action) => ({
+      ...state,
+      unLikeCommentLoading: true,
+      unLikeCommentDone: false,
+      unLikeCommentError: null,
+    }),
+    [UNLIKE_COMMENT_SUCCESS]: (state, action) => ({
+      ...state,
+      unLikeCommentLoading: false,
+      unLikeCommentDone: true,
+      unLikeCommentError: null,
+    }),
+    [UNLIKE_COMMENT_FAILURE]: (state, action) => ({
+      ...state,
+      unLikeCommentLoading: false,
+      unLikeCommentDone: false,
+      unLikeCommentError: action.error,
     }),
     // [SEARCH_POSTS_REQUEST]: (state, action) => ({
     //   ...state,
