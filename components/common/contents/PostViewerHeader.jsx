@@ -48,7 +48,7 @@ const PostViewerHeaderWrapper = styled.div`
     color: #888;
     flex: 1;
     text-align: left;
-    /* border: 1px solid black; */
+    border: 1px solid black;
     line-height: 30px;
     .create-date {
       margin-right: 10px;
@@ -69,6 +69,11 @@ const PostViewerHeaderWrapper = styled.div`
       text-align: center;
     }
     .delete-btn {
+      margin-left: 10px;
+
+      text-align: center;
+    }
+    .like-btn {
       margin-left: 10px;
 
       text-align: center;
@@ -124,43 +129,58 @@ const PostViewerHeader = ({ post, contentType }) => {
         <span className="user-nickname">{post.writer.nickname}</span>
       </div>
       <div className="post-desc">
-        <span className="create-date">
-          {`${new Date(post.writer.createdAt).getFullYear()}.${
-            new Date(post.writer.createdAt).getMonth() + 1
-          }.${new Date(post.writer.createdAt).getDate()}`}
-        </span>
-        <span className="create-time">
-          {`${new Date(post.writer.createdAt).getHours()}:${new Date(
-            post.writer.createdAt,
-          ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
-        </span>
-        <EyeOutlined />
-        <span className="post-views">{post.views}</span>
-        <MessageOutlined />
-        <span className="post-comments">{post.comments.length}</span>
-        {contentType == "forum" && (
-          <>
+        <div>
+          <span className="create-date">
+            {`${new Date(post.writer.createdAt).getFullYear()}.${
+              new Date(post.writer.createdAt).getMonth() + 1
+            }.${new Date(post.writer.createdAt).getDate()}`}
+          </span>
+          <span className="create-time">
+            {`${new Date(post.writer.createdAt).getHours()}:${new Date(
+              post.writer.createdAt,
+            ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
+          </span>
+          <EyeOutlined />
+          <span className="post-views">{post.views}</span>
+          <MessageOutlined />
+          <span className="post-comments">{post.comments.length}</span>
+        </div>
+        <div>
+          {contentType == "forum" && (
+            <>
+              <Button
+                className="scrap-btn"
+                onClick={() => {
+                  onScrap(post.id);
+                }}
+              >
+                <TagsOutlined />
+              </Button>
+            </>
+          )}
+          {me && me._id === post.writer._id && (
             <Button
-              className="scrap-btn"
+              type="ghost"
+              className="delete-btn"
               onClick={() => {
-                onScrap(post.id);
+                onPostDelete();
               }}
             >
-              <TagsOutlined />
+              삭제
             </Button>
-          </>
-        )}
-        {me._id === post.writer._id && (
-          <Button
-            type="ghost"
-            className="delete-btn"
-            onClick={() => {
-              onPostDelete();
-            }}
-          >
-            삭제
-          </Button>
-        )}
+          )}
+          {me && me._id === post.writer._id && (
+            <Button
+              type="ghost"
+              className="like-btn"
+              onClick={() => {
+                //onPostDelete();
+              }}
+            >
+              <LikeOutlined />
+            </Button>
+          )}
+        </div>
       </div>
     </PostViewerHeaderWrapper>
   );

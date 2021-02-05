@@ -1,4 +1,11 @@
-import { takeLatest, call, put, delay, throttle } from "redux-saga/effects";
+import {
+  takeLatest,
+  call,
+  put,
+  delay,
+  throttle,
+  takeEvery,
+} from "redux-saga/effects";
 import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
@@ -68,6 +75,7 @@ function* loadPostSaga(action) {
     const { postId } = action.payload;
 
     const res = yield call(loadPost, postId);
+    console.log(res);
     yield put({
       type: LOAD_POST_SUCCESS,
       post: res.data.post,
@@ -302,7 +310,7 @@ export function* watchPost() {
   yield takeLatest(ADD_COMMENT_REQUEST, addCommentSaga);
   yield takeLatest(LOAD_FORUM_POSTS_REQUEST, loadForumPostsSaga);
   yield takeLatest(DELETE_POST_REQUEST, deletePostSaga);
-  yield takeLatest(DELETE_COMMENT_REQUEST, deleteCommentSaga);
+  yield takeEvery(DELETE_COMMENT_REQUEST, deleteCommentSaga);
   yield takeLatest(LIKE_POST_REQUEST, upLikePostSaga);
   yield takeLatest(UNLIKE_POST_REQUEST, unLikePostSaga);
   yield takeLatest(LIKE_COMMENT_REQUEST, upLikeCommentSaga);

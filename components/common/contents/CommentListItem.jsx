@@ -27,6 +27,7 @@ import {
 } from "../../../reducers/post";
 import useInput from "../../../hooks/useInput";
 import Router from "next/router";
+import axios from "axios";
 
 const ReApplyFormWrapper = styled.div`
   /* border: 1px solid black; */
@@ -82,21 +83,58 @@ const CommentListItem = ({ item, post }) => {
 
   const onDeleteComment = useCallback(
     (id) => {
-      let flag = false;
-      post.comments.forEach((v, i) => {
-        if (id === v.commentTo) {
-          flag = true;
+      let confirmDelete = confirm("정말로 삭제하시겠습니까?");
+      if (confirmDelete) {
+        let flag = false;
+
+        let parentId = null;
+        post.comments.forEach((v, i) => {
+          if (id === v.commentTo) {
+            flag = true;
+          }
+        });
+        if (flag) {
+          dispatch(deleteCommentRequestAction({ type: "children", id }));
+        } else {
+          let child;
+          let parent;
+          let childInParentLength = 0;
+          post.comments.forEach((v, i) => {
+            if (id === v._id) {
+              child = v;
+            }
+          });
+          post.comments.forEach((v, i) => {
+            if (child.commentTo === v._id) {
+              parent = v;
+            }
+          });
+          post.comments.forEach((v, i) => {
+            if (parent && parent._id === v.commentTo) {
+              childInParentLength++;
+            }
+          });
+
+          if (parent && parent.isDelete && childInParentLength === 1) {
+            parentId = parent._id;
+
+            axios.delete(`/api/comment/${parentId}/delete`).then(() => {
+              axios.delete(`/api/comment/${id}/delete`).then(() => {
+                Router.push(
+                  `http://localhost:3000/articles/${post.type}/${post._id}`,
+                );
+                return;
+              });
+            });
+          } else {
+            dispatch(deleteCommentRequestAction({ type: "none", id }));
+          }
         }
-      });
-      if (flag) {
-        // 자식 있을 때 api
-        dispatch(deleteCommentRequestAction({ type: "children", id }));
+
+        Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
       } else {
-        // 없을 때 api
-        dispatch(deleteCommentRequestAction({ type: "none", id }));
+        return;
       }
-      //dispatch(deleteCommentRequestAction(id));
-      //Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
     },
     [item, post],
   );
@@ -108,6 +146,7 @@ const CommentListItem = ({ item, post }) => {
       <Comment
         actions={
           me &&
+          !item.isDelete &&
           (!applyToggle
             ? [
                 <span
@@ -116,9 +155,11 @@ const CommentListItem = ({ item, post }) => {
                 >
                   대댓글 쓰기
                 </span>,
-                <span>{me._id === item.writer._id && <span>|</span>}</span>,
                 <span>
-                  {me._id === item.writer._id && (
+                  {item.writer && me._id === item.writer._id && <span>|</span>}
+                </span>,
+                <span>
+                  {item.writer && me._id === item.writer._id && (
                     <span
                       key="comment-list-reply-to-0"
                       onClick={() => {
@@ -162,7 +203,7 @@ const CommentListItem = ({ item, post }) => {
                 </>,
               ])
         }
-        author={item.writer.nickname}
+        author={!item.isDelete && item.writer && item.writer.nickname}
         avatar={
           <Popover
             content={
@@ -171,7 +212,11 @@ const CommentListItem = ({ item, post }) => {
                   e.stopPropagation();
                 }}
               >
-                <ProfileModal writer={item.writer}></ProfileModal>
+                {!item.isDelete && (
+                  <ProfileModal
+                    writer={item.writer && item.writer}
+                  ></ProfileModal>
+                )}
               </div>
             }
           >
@@ -183,6 +228,7 @@ const CommentListItem = ({ item, post }) => {
               size={24}
               icon={<UserOutlined />}
               src={
+                item.writer &&
                 item.writer.avatarUrl && (
                   <Image
                     src={`${SERVER_URL}/${item.writer.avatarUrl}`}
@@ -214,7 +260,7 @@ const CommentListItem = ({ item, post }) => {
                   author={v.writer.nickname}
                   actions={[
                     <span>
-                      {me._id === item.writer._id && (
+                      {me && me._id === v.writer._id && (
                         <span
                           key="comment-list-reply-to-0"
                           onClick={() => {
@@ -248,9 +294,9 @@ const CommentListItem = ({ item, post }) => {
                         size={24}
                         icon={<UserOutlined />}
                         src={
-                          item.writer.avatarUrl && (
+                          v.writer.avatarUrl && (
                             <Image
-                              src={`${SERVER_URL}/${item.writer.avatarUrl}`}
+                              src={`${SERVER_URL}/${v.writer.avatarUrl}`}
                               width={100}
                             />
                           )
