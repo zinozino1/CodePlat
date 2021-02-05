@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import {
   MessageOutlined,
@@ -27,6 +27,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { SERVER_URL } from "../../../lib/constant/constant";
 import Router from "next/router";
+import useToggle from "../../../hooks/useToggle";
+import WriteForm from "./WriteForm";
 
 const PostViewerHeaderWrapper = styled.div`
   /* display: flex; */
@@ -48,36 +50,58 @@ const PostViewerHeaderWrapper = styled.div`
     color: #888;
     flex: 1;
     text-align: left;
-    border: 1px solid black;
+
     line-height: 30px;
+    display: flex;
+    .post-summary {
+    }
+    .post-btns {
+      text-align: right;
+
+      flex: 1;
+    }
     .create-date {
       margin-right: 10px;
     }
     .create-time {
       margin-right: 10px;
     }
-    .post-views {
-      margin: 0 5px;
-      margin-right: 10px;
+    .post-views,
+    .post-comments,
+    .post-forum-likes,
+    .post-forum-scraps {
+      margin: 0 7px;
     }
-    .post-comments {
-      margin: 0 5px;
+    /* .post-comments {
+      margin: 0 7px;
     }
-    .scrap-btn {
-      margin-left: 10px;
-
+    .post-forum-likes {
+      margin: 0 7px;
+    }
+    .post-forum-scraps {
+      margin: 0 7px;
+    } */
+    .scrap-btn,
+    .delete-btn,
+    .like-btn,
+    .revise-btn {
+      padding: 5px;
+      margin: 0 5px;
+      border: none;
       text-align: center;
     }
-    .delete-btn {
+    /* .delete-btn {
+      padding: 5px;
       margin-left: 10px;
-
+      border: none;
       text-align: center;
     }
     .like-btn {
+      padding: 5px;
       margin-left: 10px;
-
+      border: none;
       text-align: center;
-    }
+    } */
   }
 `;
 
@@ -90,99 +114,161 @@ const PostViewerHeader = ({ post, contentType }) => {
     dispatch(postScrapRequestAction(id));
   }, []);
 
-  const onPostDelete = useCallback(() => {
-    dispatch(deletePostRequestAction(post._id));
-    Router.push(`http://localhost:3000/articles/${contentType}`);
+  const onPostDelete = useCallback(
+    (deleteType) => {
+      let confirmDelete =
+        deleteType === "recruitDone"
+          ? confirm("게시글이 삭제됩니다 정말로 모집완료 처리하시겠습니까?")
+          : confirm("정말로 삭제하시겠습니까?");
+      if (confirmDelete) {
+        dispatch(deletePostRequestAction(post._id));
+        Router.push(`http://localhost:3000/articles/${contentType}`);
+      } else {
+        return;
+      }
+    },
+    [post],
+  );
+
+  const onPostRevise = useCallback(() => {
+    let confirmRevise = confirm("글을 수정하시겠습니까?");
+    if (confirmRevise) {
+      Router.push(`http://localhost:3000/articles/edit/${post._id}`);
+    } else {
+    }
   }, [post]);
 
   return (
-    <PostViewerHeaderWrapper>
-      <div className="user-profile">
-        <Popover
-          content={
-            <div
+    <>
+      <PostViewerHeaderWrapper>
+        <div className="user-profile">
+          <Popover
+            content={
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <ProfileModal writer={post.writer}></ProfileModal>
+              </div>
+            }
+          >
+            <Avatar
               onClick={(e) => {
                 e.stopPropagation();
               }}
-            >
-              <ProfileModal writer={post.writer}></ProfileModal>
-            </div>
-          }
-        >
-          <Avatar
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            style={{ cursor: "pointer" }}
-            size={24}
-            icon={<UserOutlined />}
-            src={
-              post.writer.avatarUrl && (
-                <Image
-                  src={`${SERVER_URL}/${post.writer.avatarUrl}`}
-                  width={100}
-                />
-              )
-            }
-          />{" "}
-        </Popover>
-        <span className="user-nickname">{post.writer.nickname}</span>
-      </div>
-      <div className="post-desc">
-        <div>
-          <span className="create-date">
-            {`${new Date(post.writer.createdAt).getFullYear()}.${
-              new Date(post.writer.createdAt).getMonth() + 1
-            }.${new Date(post.writer.createdAt).getDate()}`}
-          </span>
-          <span className="create-time">
-            {`${new Date(post.writer.createdAt).getHours()}:${new Date(
-              post.writer.createdAt,
-            ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
-          </span>
-          <EyeOutlined />
-          <span className="post-views">{post.views}</span>
-          <MessageOutlined />
-          <span className="post-comments">{post.comments.length}</span>
+              style={{ cursor: "pointer" }}
+              size={24}
+              icon={<UserOutlined />}
+              src={
+                post.writer.avatarUrl && (
+                  <Image
+                    src={`${SERVER_URL}/${post.writer.avatarUrl}`}
+                    width={100}
+                  />
+                )
+              }
+            />{" "}
+          </Popover>
+          <span className="user-nickname">{post.writer.nickname}</span>
         </div>
-        <div>
-          {contentType == "forum" && (
-            <>
+        <div className="post-desc">
+          <div className="post-header-summary">
+            <span className="create-date">
+              {`${new Date(post.writer.createdAt).getFullYear()}.${
+                new Date(post.writer.createdAt).getMonth() + 1
+              }.${new Date(post.writer.createdAt).getDate()}`}
+            </span>
+            <span className="create-time">
+              {`${new Date(post.writer.createdAt).getHours()}:${new Date(
+                post.writer.createdAt,
+              ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
+            </span>
+            <EyeOutlined />
+            <span className="post-views">{post.views}</span>
+            <MessageOutlined />
+            <span className="post-comments">{post.comments.length}</span>
+            {contentType === "forum" && (
+              <>
+                <LikeOutlined />
+                <span className="post-forum-likes">{post.likes.length}</span>
+                <TagsOutlined />
+                <span className="post-forum-scraps">{post.scraps.length}</span>
+              </>
+            )}
+          </div>
+          <div className="post-btns">
+            {me && contentType == "forum" && (
+              <>
+                <Button
+                  className="scrap-btn"
+                  onClick={() => {
+                    onScrap(post.id);
+                  }}
+                >
+                  <TagsOutlined />
+                </Button>
+              </>
+            )}
+            {me && contentType == "forum" && (
               <Button
-                className="scrap-btn"
+                type="ghost"
+                className="like-btn"
                 onClick={() => {
-                  onScrap(post.id);
+                  //onPostDelete();
                 }}
               >
-                <TagsOutlined />
+                <LikeOutlined />
               </Button>
-            </>
-          )}
-          {me && me._id === post.writer._id && (
-            <Button
-              type="ghost"
-              className="delete-btn"
-              onClick={() => {
-                onPostDelete();
-              }}
-            >
-              삭제
-            </Button>
-          )}
-          {me && me._id === post.writer._id && (
-            <Button
-              type="ghost"
-              className="like-btn"
-              onClick={() => {
-                //onPostDelete();
-              }}
-            >
-              <LikeOutlined />
-            </Button>
-          )}
+            )}
+            {me &&
+              (contentType === "study" || contentType === "project") &&
+              me._id === post.writer._id && (
+                <>
+                  <Button
+                    type="ghost"
+                    className="revise-btn"
+                    onClick={() => {
+                      onPostDelete("recruitDone");
+                    }}
+                  >
+                    모집완료
+                    {/* <Tag color="green">모집완료</Tag> */}
+                  </Button>
+                  <span>/</span>
+                </>
+              )}
+
+            {me && me._id === post.writer._id && (
+              <>
+                <Button
+                  type="ghost"
+                  className="revise-btn"
+                  onClick={() => {
+                    onPostRevise();
+                  }}
+                >
+                  수정
+                </Button>
+              </>
+            )}
+
+            {me && me._id === post.writer._id && contentType === "forum" && (
+              <Button
+                type="ghost"
+                style={{ color: "tomato" }}
+                className="delete-btn"
+                onClick={() => {
+                  onPostDelete("deletePost");
+                }}
+              >
+                삭제
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </PostViewerHeaderWrapper>
+      </PostViewerHeaderWrapper>
+    </>
   );
 };
 

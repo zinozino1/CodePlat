@@ -124,11 +124,7 @@ const PostViewerContent = ({ post, contentType }) => {
               <span>진행 여부</span>
             </div>
             <div className="content">
-              {post.isOnGoing ? (
-                <Tag color="volcano">모집중</Tag>
-              ) : (
-                <Tag color="green">모집완료</Tag>
-              )}
+              <Tag color="volcano">모집중</Tag>
             </div>
           </div>
         </div>

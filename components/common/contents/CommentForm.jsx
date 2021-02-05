@@ -32,11 +32,11 @@ const CommentForm = ({ post, router }) => {
         postId: post._id,
         type: post.type,
         content: comment,
-        //writer: me,
+        secretComment: isSecret,
       }),
     );
     Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
-  }, [comment, post]);
+  }, [comment, post, isSecret]);
 
   return (
     <Form>

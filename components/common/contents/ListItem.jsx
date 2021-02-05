@@ -171,12 +171,12 @@ const ListItem = ({ item, type }) => {
               />,
               <IconText
                 icon={LikeOutlined}
-                text={item.likes}
+                text={item.likes.length}
                 key="list-vertical-like-o"
               />,
               <IconText
                 icon={TagsOutlined}
-                text={item.scraps}
+                text={item.scraps.length}
                 key="list-vertical-scrap-o"
               />,
             ]}

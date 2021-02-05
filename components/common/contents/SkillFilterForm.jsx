@@ -54,12 +54,14 @@ const SelectWrapper = styled.div`
   }
 `;
 
-const SkillFilterForm = ({ type }) => {
+const SkillFilterForm = ({ type, isEdit, values }) => {
   const dispatch = useDispatch();
 
   const [radioValue, setRadioValue] = useState("language");
   const [checkList, setCheckList] = useState(StackList.language);
-  const [checkedValues, setCheckedValues] = useState([]);
+  const [checkedValues, setCheckedValues] = isEdit
+    ? useState(values)
+    : useState([]);
 
   const onClickRadio = useCallback((e) => {
     setRadioValue(e.target.value);
@@ -79,7 +81,7 @@ const SkillFilterForm = ({ type }) => {
         setCheckedValues(checkedValues.concat(e.target.value));
       }
     },
-    [checkedValues],
+    [checkedValues, values],
   );
 
   useEffect(() => {
@@ -116,7 +118,7 @@ const SkillFilterForm = ({ type }) => {
       <CheckBoxWrapper>
         <Checkbox.Group
           options={checkList}
-          defaultValue={["Apple"]}
+          defaultValue={isEdit ? values : []}
           onClick={onClickCheckBox}
         />
       </CheckBoxWrapper>

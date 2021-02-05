@@ -54,6 +54,9 @@ const initialState = {
   unLikePostLoading: false,
   unLikePostDone: false,
   unLikePostError: null,
+  // editPostLoading: false,
+  // editPostDone: false,
+  // editPostError: null,
   // searchPostsLoading: false,
   // searchPostsDone: false,
   // searchPostsError: null,
@@ -119,6 +122,10 @@ export const UNLIKE_COMMENT_REQUEST = "post/UNLIKE_COMMENT_REQUEST";
 export const UNLIKE_COMMENT_SUCCESS = "post/UNLIKE_COMMENT_SUCCESS";
 export const UNLIKE_COMMENT_FAILURE = "post/UNLIKE_COMMENT_FAILURE";
 
+// export const EDIT_POST_REQUEST = "post/EDIT_POST_REQUEST";
+// export const EDIT_POST_SUCCESS = "post/EDIT_POST_SUCCESS";
+// export const EDIT_POST_FAILURE = "post/EDIT_POST_FAILURE";
+
 // export const SEARCH_POSTS_REQUEST = "post/SEARCH_POSTS_REQUEST";
 // export const SEARCH_POSTS_SUCCESS = "post/SEARCH_POSTS_SUCCESS";
 // export const SEARCH_POSTS_FAILURE = "post/SEARCH_POSTS_FAILURE";
@@ -172,6 +179,11 @@ export const deletePostRequestAction = createAction(
   DELETE_POST_REQUEST,
   (data) => data,
 );
+
+// export const editPostReqeustAction = createAction(
+//   EDIT_POST_REQUEST,
+//   (data) => data,
+// );
 
 // export const searchPostsRequestAction = createAction(
 //   SEARCH_POSTS_REQUEST,
@@ -445,6 +457,24 @@ const postReducer = handleActions(
       unLikeCommentDone: false,
       unLikeCommentError: action.error,
     }),
+    // [EDIT_POST_REQUEST]: (state, action) => ({
+    //   ...state,
+    //   editPostLoading: true,
+    //   editPostDone: false,
+    //   editPostError: null,
+    // }),
+    // [EDIT_POST_SUCCESS]: (state, action) => ({
+    //   ...state,
+    //   editPostLoading: false,
+    //   editPostDone: true,
+    //   editPostError: null,
+    // }),
+    // [EDIT_POST_FAILURE]: (state, action) => ({
+    //   ...state,
+    //   unLikeCommentLoading: false,
+    //   unLikeCommentDone: false,
+    //   unLikeCommentError: action.error,
+    // }),
     // [SEARCH_POSTS_REQUEST]: (state, action) => ({
     //   ...state,
     //   searchPostsLoading: true,

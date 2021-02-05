@@ -15,7 +15,7 @@ import {
   Checkbox,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector, useDispatch } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
@@ -75,11 +75,11 @@ const CommentListItem = ({ item, post }) => {
         type: post.type,
         content: reComment,
         commentTo: item._id,
-        //writer: me,
+        secretComment: isSecret,
       }),
     );
     Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
-  }, [post, item, reComment]);
+  }, [post, item, reComment, isSecret]);
 
   const onDeleteComment = useCallback(
     (id) => {
@@ -194,16 +194,28 @@ const CommentListItem = ({ item, post }) => {
                       <span
                         className="secret-btn"
                         key="comment-list-reply-to-2"
-                        //onClick={onChangeApplyToggle}
                       >
-                        <Checkbox style={{ color: "#999" }}>비밀 댓글</Checkbox>
+                        <Checkbox
+                          onChange={onToggleIsSecret}
+                          style={{ color: "#999" }}
+                        >
+                          비밀 댓글
+                        </Checkbox>
                       </span>
                     </ButtonWrapper>
                   </ReApplyFormWrapper>
                 </>,
               ])
         }
-        author={!item.isDelete && item.writer && item.writer.nickname}
+        author={
+          !item.isDelete &&
+          item.writer &&
+          (item.writer._id === post.writer._id ? (
+            <span style={{ color: "#1a91fe" }}>글쓴이</span>
+          ) : (
+            item.writer.nickname
+          ))
+        }
         avatar={
           <Popover
             content={
@@ -246,7 +258,26 @@ const CommentListItem = ({ item, post }) => {
           //       return v._id;
           //     }
           //   }) &&
-          item.content
+          item.secretComment ? (
+            // 비밀댓글일 경우
+            me && (me._id === post.writer._id || item.writer._id === me._id) ? (
+              <>
+                <span>{item.content}</span>
+                <span style={{ color: "#999", fontSize: "12px" }}>
+                  <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
+                  비밀 댓글
+                </span>
+              </>
+            ) : (
+              <>
+                <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
+                <span style={{ color: "#999" }}>비밀 댓글입니다.</span>
+              </>
+            )
+          ) : (
+            // 공개댓글일 경우
+            item.content
+          )
         }
         datetime={`${new Date(item.createAt).getFullYear()}.${
           new Date(item.createAt).getMonth() + 1
@@ -257,21 +288,33 @@ const CommentListItem = ({ item, post }) => {
             return (
               <div key={v._id + shortid.generate()}>
                 <Comment
-                  author={v.writer.nickname}
-                  actions={[
-                    <span>
-                      {me && me._id === v.writer._id && (
-                        <span
-                          key="comment-list-reply-to-0"
-                          onClick={() => {
-                            onDeleteComment(v._id);
-                          }}
-                        >
-                          삭제
-                        </span>
-                      )}
-                    </span>,
-                  ]}
+                  author={
+                    !v.isDelete &&
+                    v.writer &&
+                    (v.writer._id === post.writer._id ? (
+                      <span style={{ color: "#1a91fe" }}>글쓴이</span>
+                    ) : (
+                      v.writer.nickname
+                    ))
+                  }
+                  actions={
+                    me && me._id === v.writer._id
+                      ? [
+                          <span>
+                            {me && me._id === v.writer._id && (
+                              <span
+                                key="comment-list-reply-to-0"
+                                onClick={() => {
+                                  onDeleteComment(v._id);
+                                }}
+                              >
+                                삭제
+                              </span>
+                            )}
+                          </span>,
+                        ]
+                      : []
+                  }
                   avatar={
                     <Popover
                       content={
@@ -304,7 +347,36 @@ const CommentListItem = ({ item, post }) => {
                       />
                     </Popover>
                   }
-                  content={v.content}
+                  content={
+                    v.secretComment ? (
+                      // 비밀댓글일 경우
+                      me &&
+                      (me._id === post.writer._id ||
+                        v.writer._id === me._id) ? (
+                        <>
+                          <span>{v.content}</span>
+                          <span style={{ color: "#999", fontSize: "12px" }}>
+                            <LockOutlined
+                              style={{ margin: "0 5px", color: "#999" }}
+                            />
+                            비밀 댓글
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <LockOutlined
+                            style={{ margin: "0 5px", color: "#999" }}
+                          />
+                          <span style={{ color: "#999" }}>
+                            비밀 댓글입니다.
+                          </span>
+                        </>
+                      )
+                    ) : (
+                      // 공개댓글일 경우
+                      v.content
+                    )
+                  }
                   datetime={`${new Date(v.createAt).getFullYear()}.${
                     new Date(v.createAt).getMonth() + 1
                   }.${new Date(v.createAt).getDay()}`}
