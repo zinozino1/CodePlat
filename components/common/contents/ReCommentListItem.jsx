@@ -60,7 +60,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const ReCommentListItem = ({ reComment, post, me }) => {
+const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
   const dispatch = useDispatch();
 
   const [editReCommentText, setEditReCommentText] = useState("");
@@ -68,7 +68,8 @@ const ReCommentListItem = ({ reComment, post, me }) => {
     setEditReCommentText(e.target.value);
   }, []);
   const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
-  const [isReEditSecret, setIsReEditSecret] = useToggle(false);
+  const [isReEditSecret, setIsReEditSecret] = useState(false);
+
   const onToggleIsReEditSecret = useCallback(() => {
     setIsReEditSecret(!isReEditSecret);
   }, [isReEditSecret]);
@@ -78,23 +79,29 @@ const ReCommentListItem = ({ reComment, post, me }) => {
 
   const onUpdateReComment = useCallback(
     (reComment) => {
-      axios
-        .put(`/api/comment/update`, {
-          id: reComment._id,
-          content: editReCommentText,
-          secretComment: isReEditSecret,
-        })
-        .then((res) => {
-          Router.push(
-            `http://localhost:3000/articles/${post.type}/${post._id}`,
-          );
-        })
-        .catch((error) => {
-          alert("댓글수정 실패");
-        });
+      let updateConfirm = confirm("수정하시겠습니까?");
+      if (updateConfirm) {
+        axios
+          .put(`/api/comment/update`, {
+            commentId: reComment._id,
+            content: editReCommentText,
+            secretComment: isReEditSecret,
+          })
+          .then((res) => {
+            Router.push(
+              `http://localhost:3000/articles/${post.type}/${post._id}`,
+            );
+          })
+          .catch((error) => {
+            alert("댓글수정 실패");
+          });
+      } else {
+        return;
+      }
+
       // console.log("id", reComment._id);
       // console.log("editCommentText", editReCommentText);
-      // console.log("isEditSecret", isReEditSecret);
+      // console.log("isReEditSecret", isReEditSecret);
     },
     [editReCommentText, isReEditSecret],
   );

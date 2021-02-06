@@ -128,20 +128,26 @@ const CommentListItem = ({ item, post }) => {
 
   const onUpdateComment = useCallback(
     (comment) => {
-      axios
-        .put(`/api/comment/update`, {
-          id: comment._id,
-          content: editCommentText,
-          secretComment: isEditSecret,
-        })
-        .then((res) => {
-          Router.push(
-            `http://localhost:3000/articles/${post.type}/${post._id}`,
-          );
-        })
-        .catch((error) => {
-          alert("댓글수정 실패");
-        });
+      let updateConfirm = confirm("수정하시겠습니까?");
+      if (updateConfirm) {
+        axios
+          .put(`/api/comment/update`, {
+            commentId: comment._id,
+            content: editCommentText,
+            secretComment: isEditSecret,
+          })
+          .then((res) => {
+            Router.push(
+              `http://localhost:3000/articles/${post.type}/${post._id}`,
+            );
+          })
+          .catch((error) => {
+            alert("댓글수정 실패");
+          });
+      } else {
+        return;
+      }
+
       // console.log("id", comment._id);
       // console.log("editCommentText", editCommentText);
       // console.log("isEditSecret", isEditSecret);
@@ -436,6 +442,7 @@ const CommentListItem = ({ item, post }) => {
                 reComment={reComment}
                 post={post}
                 me={me}
+                onDeleteComment={onDeleteComment}
               />
             );
           }
