@@ -2,9 +2,5 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/articles/project": "pages/articles/project.js",
-  "/articles/project/[id]": "pages/articles/project/[id].js",
-  "/articles/edit/[id]": "pages/articles/edit/[id].js",
-  "/articles/forum": "pages/articles/forum.js",
-  "/articles/forum/[id]": "pages/articles/forum/[id].js"
+  "/articles/study/[id]": "pages/articles/study/[id].js"
 }

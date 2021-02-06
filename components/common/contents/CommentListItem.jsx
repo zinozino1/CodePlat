@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   List,
@@ -28,6 +28,7 @@ import {
 import useInput from "../../../hooks/useInput";
 import Router from "next/router";
 import axios from "axios";
+import ReCommentListItem from "./ReCommentListItem";
 
 const ReApplyFormWrapper = styled.div`
   /* border: 1px solid black; */
@@ -65,8 +66,52 @@ const CommentListItem = ({ item, post }) => {
   const dispatch = useDispatch();
 
   //console.log(item);
+  // 대댓글
   const [reComment, onChangeReComment] = useInput("");
+  // const [reComment, setReComment] = useState("");
+  // const onChangeReComment = useCallback(() => {
+  //   setReComment(e.target.value);
+  // }, []);
+  // 루트댓글 수정텍스트
+  // const [editCommentText, onChangeEditCommentText] = useInput("");
+  const [editCommentText, setEditCommentText] = useState("");
+  const onChangeEditCommentText = useCallback((e) => {
+    setEditCommentText(e.target.value);
+  }, []);
+  // 자녀댓글 수정텍스트
+  // const [editReCommentText, onChangeEditReCommentText] = useInput("");
+
   const [isSecret, onToggleIsSecret] = useToggle(false);
+  // 루트댓글이 수정중인가
+  const [isEdit, onToggleIsEdit] = useToggle(false);
+  // 자녀댓글이 수정중인가
+  // const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
+
+  // const [currentReComment, setCurrentReComment] = useState(null);
+
+  // const [isEditSecret, onToggleIsEditSecret] = useToggle(false);
+  const [isEditSecret, setIsEditSecret] = useState(false);
+  const onToggleIsEditSecret = useCallback(() => {
+    setIsEditSecret(!isEditSecret);
+  }, [isEditSecret]);
+
+  // const [isReEditSecret, onToggleIsReEditSecret] = useToggle(false);
+
+  // const onChangeCurrentReComment = useCallback((reComment) => {
+  //   // 현재 수정버튼이 눌러진 자식 댓글 표시
+  //   setCurrentReComment(reComment);
+  // }, []);
+
+  useEffect(() => {
+    setEditCommentText(item.content);
+    setIsEditSecret(item.secretComment);
+  }, [item]);
+
+  const onCancelEdit = useCallback(() => {
+    setEditCommentText(item.content);
+    setIsEditSecret(item.secretComment);
+    onToggleIsEdit();
+  }, [item, isEdit]);
 
   const onReCommentSubmit = useCallback(() => {
     dispatch(
@@ -80,6 +125,29 @@ const CommentListItem = ({ item, post }) => {
     );
     Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
   }, [post, item, reComment, isSecret]);
+
+  const onUpdateComment = useCallback(
+    (comment) => {
+      axios
+        .put(`/api/comment/update`, {
+          id: comment._id,
+          content: editCommentText,
+          secretComment: isEditSecret,
+        })
+        .then((res) => {
+          Router.push(
+            `http://localhost:3000/articles/${post.type}/${post._id}`,
+          );
+        })
+        .catch((error) => {
+          alert("댓글수정 실패");
+        });
+      // console.log("id", comment._id);
+      // console.log("editCommentText", editCommentText);
+      // console.log("isEditSecret", isEditSecret);
+    },
+    [isEditSecret, editCommentText],
+  );
 
   const onDeleteComment = useCallback(
     (id) => {
@@ -148,31 +216,107 @@ const CommentListItem = ({ item, post }) => {
           me &&
           !item.isDelete &&
           (!applyToggle
-            ? [
-                <span
-                  key="comment-list-reply-to-0"
-                  onClick={onChangeApplyToggle}
-                >
-                  대댓글 쓰기
-                </span>,
-                <span>
-                  {item.writer && me._id === item.writer._id && <span>|</span>}
-                </span>,
-                <span>
-                  {item.writer && me._id === item.writer._id && (
-                    <span
-                      key="comment-list-reply-to-0"
-                      onClick={() => {
-                        onDeleteComment(item._id);
-                      }}
-                    >
-                      삭제
-                    </span>
-                  )}
-                </span>,
-                ,
-              ]
+            ? isEdit
+              ? [
+                  //루트 댓글에서 수정눌렀을 떄
+                  <>
+                    <ReApplyFormWrapper>
+                      {/* {editCommentText === "" ? (
+                        <ReApplyInput
+                          rows={1}
+                          onChange={onChangeEditCommentText}
+                          defaultValue={item.content}
+                        />
+                      ) : (
+                        <ReApplyInput
+                          rows={1}
+                          onChange={onChangeEditCommentText}
+                          // defaultValue={item.content}
+                        />
+                      )} */}
+                      <ReApplyInput
+                        rows={1}
+                        onChange={onChangeEditCommentText}
+                        defaultValue={item.content}
+                      />
+
+                      <ButtonWrapper>
+                        <span
+                          className="submit-btn"
+                          key="comment-list-reply-to-0"
+                          onClick={() => {
+                            onUpdateComment(item);
+                          }}
+                        >
+                          수정
+                        </span>
+                        <span
+                          className="cancel-btn"
+                          key="comment-list-reply-to-1"
+                          onClick={onCancelEdit}
+                        >
+                          취소
+                        </span>
+                        <span
+                          className="secret-btn"
+                          key="comment-list-reply-to-2"
+                        >
+                          <Checkbox
+                            onChange={onToggleIsEditSecret}
+                            style={{ color: "#999" }}
+                            defaultChecked={item.secretComment}
+                          >
+                            비밀 댓글
+                          </Checkbox>
+                        </span>
+                      </ButtonWrapper>
+                    </ReApplyFormWrapper>
+                  </>,
+                ]
+              : [
+                  // 루트댓글 원래상태
+                  <span
+                    key="comment-list-reply-to-0"
+                    onClick={onChangeApplyToggle}
+                  >
+                    대댓글 쓰기
+                  </span>,
+                  <span>
+                    {item.writer && me._id === item.writer._id && (
+                      <span>|</span>
+                    )}
+                  </span>,
+                  <span>
+                    {item.writer && me._id === item.writer._id && (
+                      <span
+                        key="comment-list-reply-to-0"
+                        onClick={() => {
+                          onDeleteComment(item._id);
+                        }}
+                      >
+                        삭제
+                      </span>
+                    )}
+                  </span>,
+                  <span>
+                    {item.writer && me._id === item.writer._id && (
+                      <span>|</span>
+                    )}
+                  </span>,
+                  <span>
+                    {item.writer && me._id === item.writer._id && (
+                      <span
+                        key="comment-list-reply-to-0"
+                        onClick={onToggleIsEdit}
+                      >
+                        수정
+                      </span>
+                    )}
+                  </span>,
+                  ,
+                ]
             : [
+                // 루트 댓글에서 대댓글쓰기 눌렀을 떄
                 <>
                   <ReApplyFormWrapper>
                     <ReApplyInput rows={1} onChange={onChangeReComment} />
@@ -283,105 +427,16 @@ const CommentListItem = ({ item, post }) => {
           new Date(item.createAt).getMonth() + 1
         }.${new Date(item.createAt).getDay()}`}
       >
-        {post.comments.map((v, i) => {
-          if (v.commentTo === item._id) {
+        {/* 자녀 댓글 렌더링 */}
+        {post.comments.map((reComment, i) => {
+          if (reComment.commentTo === item._id) {
             return (
-              <div key={v._id + shortid.generate()}>
-                <Comment
-                  author={
-                    !v.isDelete &&
-                    v.writer &&
-                    (v.writer._id === post.writer._id ? (
-                      <span style={{ color: "#1a91fe" }}>글쓴이</span>
-                    ) : (
-                      v.writer.nickname
-                    ))
-                  }
-                  actions={
-                    me && me._id === v.writer._id
-                      ? [
-                          <span>
-                            {me && me._id === v.writer._id && (
-                              <span
-                                key="comment-list-reply-to-0"
-                                onClick={() => {
-                                  onDeleteComment(v._id);
-                                }}
-                              >
-                                삭제
-                              </span>
-                            )}
-                          </span>,
-                        ]
-                      : []
-                  }
-                  avatar={
-                    <Popover
-                      content={
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                        >
-                          <ProfileModal writer={v.writer}></ProfileModal>
-                        </div>
-                      }
-                    >
-                      <Avatar
-                        onClick={(e) => {
-                          e.stopPropagation();
-                        }}
-                        style={{
-                          cursor: "pointer",
-                        }}
-                        size={24}
-                        icon={<UserOutlined />}
-                        src={
-                          v.writer.avatarUrl && (
-                            <Image
-                              src={`${SERVER_URL}/${v.writer.avatarUrl}`}
-                              width={100}
-                            />
-                          )
-                        }
-                      />
-                    </Popover>
-                  }
-                  content={
-                    v.secretComment ? (
-                      // 비밀댓글일 경우
-                      me &&
-                      (me._id === post.writer._id ||
-                        v.writer._id === me._id) ? (
-                        <>
-                          <span>{v.content}</span>
-                          <span style={{ color: "#999", fontSize: "12px" }}>
-                            <LockOutlined
-                              style={{ margin: "0 5px", color: "#999" }}
-                            />
-                            비밀 댓글
-                          </span>
-                        </>
-                      ) : (
-                        <>
-                          <LockOutlined
-                            style={{ margin: "0 5px", color: "#999" }}
-                          />
-                          <span style={{ color: "#999" }}>
-                            비밀 댓글입니다.
-                          </span>
-                        </>
-                      )
-                    ) : (
-                      // 공개댓글일 경우
-                      v.content
-                    )
-                  }
-                  datetime={`${new Date(v.createAt).getFullYear()}.${
-                    new Date(v.createAt).getMonth() + 1
-                  }.${new Date(v.createAt).getDay()}`}
-                />
-              </div>
+              <ReCommentListItem
+                key={reComment._id}
+                reComment={reComment}
+                post={post}
+                me={me}
+              />
             );
           }
         })}

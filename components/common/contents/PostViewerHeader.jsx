@@ -118,7 +118,7 @@ const PostViewerHeader = ({ post, contentType }) => {
     (deleteType) => {
       let confirmDelete =
         deleteType === "recruitDone"
-          ? confirm("게시글이 삭제됩니다 정말로 모집완료 처리하시겠습니까?")
+          ? confirm("게시글이 삭제됩니다. 정말로 모집완료 처리하시겠습니까?")
           : confirm("정말로 삭제하시겠습니까?");
       if (confirmDelete) {
         dispatch(deletePostRequestAction(post._id));
