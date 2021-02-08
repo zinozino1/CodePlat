@@ -146,41 +146,41 @@ const PostViewerContent = ({ post, contentType }) => {
             }
           />
         )}
-        {me && (
-          <div className="comment-form">
-            <Divider />
-            <Comment
-              post={post}
-              avatar={
-                <Popover
-                  content={
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    >
-                      <ProfileModal writer={me}></ProfileModal>
-                    </div>
-                  }
-                >
-                  <Avatar
+
+        <div className="comment-form">
+          <Divider />
+          <Comment
+            post={post}
+            avatar={
+              <Popover
+                content={
+                  <div
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
-                    style={{ cursor: "pointer" }}
-                    icon={<UserOutlined />}
-                    src={
-                      me.avatarUrl && (
-                        <img src={`${SERVER_URL}/${me.avatarUrl}`} />
-                      )
-                    }
-                  />{" "}
-                </Popover>
-              }
-              content={<CommentForm post={post} />}
-            />
-          </div>
-        )}
+                  >
+                    {me && <ProfileModal writer={me}></ProfileModal>}
+                  </div>
+                }
+              >
+                <Avatar
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  style={{ cursor: "pointer" }}
+                  icon={<UserOutlined />}
+                  src={
+                    me &&
+                    me.avatarUrl && (
+                      <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+                    )
+                  }
+                />{" "}
+              </Popover>
+            }
+            content={<CommentForm post={post} />}
+          />
+        </div>
       </div>
     </PostViewerContentWrapper>
   );

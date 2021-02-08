@@ -93,6 +93,10 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
 
   const onUpdateReComment = useCallback(
     (reComment) => {
+      if (editReCommentText === "") {
+        alert("내용을 입력해주세요.");
+        return;
+      }
       let updateConfirm = confirm("수정하시겠습니까?");
       if (updateConfirm) {
         axios
@@ -368,9 +372,17 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
             reComment.content
           )
         }
-        datetime={`${new Date(reComment.createAt).getFullYear()}.${
-          new Date(reComment.createAt).getMonth() + 1
-        }.${new Date(reComment.createAt).getDay()}`}
+        datetime={`${new Date(reComment.createdAt).getMonth() + 1}/${new Date(
+          reComment.createdAt,
+        ).getDate()}  ${new Date(reComment.createdAt).getHours()}:${
+          new Date(reComment.createdAt).getMinutes() < 10
+            ? "0" + new Date(reComment.createdAt).getMinutes()
+            : new Date(reComment.createdAt).getMinutes()
+        }:${
+          new Date(reComment.createdAt).getSeconds() < 10
+            ? "0" + new Date(reComment.createdAt).getSeconds()
+            : new Date(reComment.createdAt).getSeconds()
+        }`}
       />
     </div>
   );

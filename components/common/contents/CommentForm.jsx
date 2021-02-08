@@ -45,11 +45,14 @@ const CommentForm = ({ post, router }) => {
           rows={3}
           onChange={onChangeComment}
           value={comment}
-          placeholder="댓글을 작성해보세요."
+          placeholder={
+            me ? "댓글을 작성해보세요." : "로그인이 필요한 서비스입니다."
+          }
         />
         <Checkbox
           style={{ marginTop: "5px", color: "#999" }}
           onChange={onToggleIsSecret}
+          disabled={me ? false : true}
         >
           비밀 댓글
         </Checkbox>
@@ -60,6 +63,7 @@ const CommentForm = ({ post, router }) => {
           //loading={submitting}
           onClick={onSubmit}
           type="primary"
+          disabled={me ? false : true}
         >
           등록
         </Button>

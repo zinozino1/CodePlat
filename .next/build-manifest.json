@@ -24,15 +24,15 @@
       "static/chunks/webpack.js",
       "static/chunks/pages/_error.js"
     ],
-    "/articles/forum": [
+    "/auth/login": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum.js"
+      "static/chunks/pages/auth/login.js"
     ],
-    "/articles/forum/[id]": [
+    "/auth/register": [
       "static/chunks/main.js",
       "static/chunks/webpack.js",
-      "static/chunks/pages/articles/forum/[id].js"
+      "static/chunks/pages/auth/register.js"
     ]
   },
   "ampFirstPages": []

@@ -164,6 +164,10 @@ const CommentListItem = ({ item, post }) => {
   }, [item, isEdit]);
 
   const onReCommentSubmit = useCallback(() => {
+    if (reComment === "") {
+      alert("내용을 입력해주세요.");
+      return;
+    }
     dispatch(
       addCommentRequestAction({
         postId: post._id,
@@ -178,6 +182,10 @@ const CommentListItem = ({ item, post }) => {
 
   const onUpdateComment = useCallback(
     (comment) => {
+      if (editCommentText === "") {
+        alert("내용을 입력해주세요.");
+        return;
+      }
       let updateConfirm = confirm("수정하시겠습니까?");
       if (updateConfirm) {
         axios
@@ -501,9 +509,17 @@ const CommentListItem = ({ item, post }) => {
             item.content
           )
         }
-        datetime={`${new Date(item.createAt).getFullYear()}.${
-          new Date(item.createAt).getMonth() + 1
-        }.${new Date(item.createAt).getDay()}`}
+        datetime={`${new Date(item.createdAt).getMonth() + 1}/${new Date(
+          item.createdAt,
+        ).getDate()}  ${new Date(item.createdAt).getHours()}:${
+          new Date(item.createdAt).getMinutes() < 10
+            ? "0" + new Date(item.createdAt).getMinutes()
+            : new Date(item.createdAt).getMinutes()
+        }:${
+          new Date(item.createdAt).getSeconds() < 10
+            ? "0" + new Date(item.createdAt).getSeconds()
+            : new Date(item.createdAt).getSeconds()
+        }`}
       >
         {/* 자녀 댓글 렌더링 */}
         {post.comments.map((reComment, i) => {

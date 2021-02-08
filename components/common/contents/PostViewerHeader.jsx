@@ -214,14 +214,20 @@ const PostViewerHeader = ({ post, contentType }) => {
         <div className="post-desc">
           <div className="post-header-summary">
             <span className="create-date">
-              {`${new Date(post.writer.createdAt).getFullYear()}.${
-                new Date(post.writer.createdAt).getMonth() + 1
-              }.${new Date(post.writer.createdAt).getDate()}`}
+              {`${new Date(post.createdAt).getFullYear()}.${
+                new Date(post.createdAt).getMonth() + 1
+              }.${new Date(post.createdAt).getDate()}`}
             </span>
             <span className="create-time">
-              {`${new Date(post.writer.createdAt).getHours()}:${new Date(
-                post.writer.createdAt,
-              ).getMinutes()}:${new Date(post.writer.createdAt).getSeconds()}`}
+              {`${new Date(post.createdAt).getHours()}:${
+                new Date(post.createdAt).getMinutes() < 10
+                  ? "0" + new Date(post.createdAt).getMinutes()
+                  : new Date(post.createdAt).getMinutes()
+              }:${
+                new Date(post.createdAt).getSeconds() < 10
+                  ? "0" + new Date(post.createdAt).getSeconds()
+                  : new Date(post.createdAt).getSeconds()
+              }`}
             </span>
             <EyeOutlined />
             <span className="post-views">{post.views}</span>
