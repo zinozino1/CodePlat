@@ -132,8 +132,13 @@ const CommentListItem = ({ item, post }) => {
       dispatch(
         unLikeCommentRequestAction({
           user: me,
-          id: item._id,
+          id: item.likes.find((v, i) => {
+            if (v.userId === me._id) {
+              return true;
+            }
+          })._id,
           type: "comment",
+          commentId: item._id,
         }),
       );
     } else {
@@ -145,7 +150,7 @@ const CommentListItem = ({ item, post }) => {
         }),
       );
     }
-  }, [like, me]);
+  }, [like, me, item]);
 
   useEffect(() => {
     setEditCommentText(item.content);

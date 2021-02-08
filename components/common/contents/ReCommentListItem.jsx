@@ -136,8 +136,13 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
       dispatch(
         unLikeCommentRequestAction({
           user: me,
-          id: reComment._id,
+          id: reComment.likes.find((v, i) => {
+            if (v.userId === me._id) {
+              return true;
+            }
+          })._id,
           type: "comment",
+          commentId: reComment._id,
         }),
       );
     } else {
@@ -149,7 +154,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
         }),
       );
     }
-  }, [like, me]);
+  }, [like, me, reComment]);
 
   useEffect(() => {
     setEditReCommentText(reComment.content);

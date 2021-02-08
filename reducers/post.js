@@ -416,6 +416,10 @@ const postReducer = handleActions(
       likePostLoading: false,
       likePostDone: true,
       likePostError: null,
+      post: {
+        ...state.post,
+        likes: [...state.post.likes].concat(action.like),
+      },
       // todo
     }),
     [LIKE_POST_FAILURE]: (state, action) => ({
@@ -435,6 +439,14 @@ const postReducer = handleActions(
       unLikePostLoading: false,
       unLikePostDone: true,
       unLikePostError: null,
+      post: {
+        ...state.post,
+        likes: [...state.post.likes].filter((v, i) => {
+          if (v._id !== action.likeId) {
+            return { ...v };
+          }
+        }),
+      },
       //todo
     }),
     [UNLIKE_POST_FAILURE]: (state, action) => ({
@@ -460,7 +472,7 @@ const postReducer = handleActions(
           return v._id === action.commentId
             ? {
                 ...v,
-                likes: [...v.likes].concat(action.user),
+                likes: [...v.likes].concat(action.like),
               }
             : { ...v };
         }),
@@ -490,7 +502,7 @@ const postReducer = handleActions(
             ? {
                 ...v,
                 likes: [...v.likes].filter((v, i) => {
-                  if (v._id !== action.user._id) {
+                  if (v._id !== action.likeId) {
                     return { ...v };
                   }
                 }),

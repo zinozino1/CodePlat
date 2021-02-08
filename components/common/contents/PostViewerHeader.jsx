@@ -8,6 +8,7 @@ import {
   CommentOutlined,
   UserOutlined,
   TagsOutlined,
+  LikeFilled,
 } from "@ant-design/icons";
 import {
   List,
@@ -112,15 +113,29 @@ const PostViewerHeader = ({ post, contentType }) => {
 
   const { me } = useSelector((state) => state.user);
 
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(
+    post.likes.some((v, i) => {
+      if (me && v.userId === me._id) {
+        return true;
+      }
+    })
+      ? true
+      : false,
+  ); //useState(false);
+
   const onToggleLike = useCallback(() => {
     setLike(!like);
     if (like) {
       dispatch(
         unLikePostRequestAction({
           user: me,
-          id: post._id,
+          id: post.likes.find((v, i) => {
+            if (v.userId === me._id) {
+              return true;
+            }
+          })._id,
           type: "forum",
+          postId: post._id,
         }),
       );
     } else {
@@ -239,10 +254,16 @@ const PostViewerHeader = ({ post, contentType }) => {
                 type="ghost"
                 className="like-btn"
                 onClick={() => {
-                  //onPostDelete();
+                  onToggleLike();
                 }}
               >
-                <LikeOutlined />
+                {like ? (
+                  <LikeFilled
+                    style={{ marginRight: "3px", color: "#1a91fe" }}
+                  />
+                ) : (
+                  <LikeOutlined style={{ marginRight: "3px" }} />
+                )}
               </Button>
             )}
             {me &&
