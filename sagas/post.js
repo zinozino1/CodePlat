@@ -64,6 +64,8 @@ import {
   deletePost,
   deleteComment,
   deleteCommentWithChildren,
+  upLike,
+  unLike,
   // searchPosts,
   // filterSearch,
 } from "../lib/api/post";
@@ -245,11 +247,11 @@ function* unLikePostSaga(action) {
 
 function* upLikeCommentSaga(action) {
   try {
-    // yield call() -> like api
+    yield call(upLike, action.payload);
     yield put({
       type: LIKE_COMMENT_SUCCESS,
       user: action.payload.user,
-      commentId: action.payload.commentId,
+      commentId: action.payload.id,
     });
   } catch (error) {
     console.log(error);
@@ -259,10 +261,11 @@ function* upLikeCommentSaga(action) {
 
 function* unLikeCommentSaga(action) {
   try {
+    yield call(unLike, action.payload);
     yield put({
       type: UNLIKE_COMMENT_SUCCESS,
       user: action.payload.user,
-      commentId: action.payload.commentId,
+      commentId: action.payload.id,
     });
   } catch (error) {
     console.log(error);

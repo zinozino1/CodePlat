@@ -120,7 +120,15 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
     [editReCommentText, isReEditSecret],
   );
 
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(
+    reComment.likes.forEach((v, i) => {
+      if (v._id === me._id) {
+        return true;
+      } else {
+        return false;
+      }
+    }),
+  );
   const onToggleLike = useCallback(() => {
     setLike(!like);
     if (like) {

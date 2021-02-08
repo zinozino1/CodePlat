@@ -116,13 +116,34 @@ const CommentListItem = ({ item, post }) => {
   //   setCurrentReComment(reComment);
   // }, []);
 
-  const [like, setLike] = useState(false);
+  const [like, setLike] = useState(
+    item.likes.forEach((v, i) => {
+      if (v._id === me._id) {
+        return true;
+      } else {
+        return false;
+      }
+    }),
+  ); //useState(false);
+
   const onToggleLike = useCallback(() => {
     setLike(!like);
     if (like) {
-      dispatch(unLikeCommentRequestAction({ user: me, commentId: item._id }));
+      dispatch(
+        unLikeCommentRequestAction({
+          user: me,
+          id: item._id,
+          type: "comment",
+        }),
+      );
     } else {
-      dispatch(likeCommentRequestAction({ user: me, commentId: item._id }));
+      dispatch(
+        likeCommentRequestAction({
+          user: me,
+          id: item._id,
+          type: "comment",
+        }),
+      );
     }
   }, [like, me]);
 
@@ -435,6 +456,7 @@ const CommentListItem = ({ item, post }) => {
               size={24}
               icon={<UserOutlined />}
               src={
+                !item.isDelete &&
                 item.writer &&
                 item.writer.avatarUrl && (
                   <Image
