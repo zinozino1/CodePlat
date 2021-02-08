@@ -96,6 +96,7 @@ const RegisterInputForm = ({ router }) => {
   const [formError, setFormError] = useState(true);
   const [nicknameExistError, setNicknameExistError] = useState(false);
   const [emailExistError, setEmailExistError] = useState(false);
+  const [noneEmailUser, setNoneEmailUser] = useState(false);
 
   const [imageFile, setImageFile] = useState(null);
 
@@ -220,6 +221,10 @@ const RegisterInputForm = ({ router }) => {
         alert("닉네임을 입력해주세요.");
         return;
       }
+      if (email === "") {
+        alert("이메일을 입력해주세요.");
+        return;
+      }
       const config = {
         headers: {
           Accept: "application/json",
@@ -236,35 +241,53 @@ const RegisterInputForm = ({ router }) => {
       //     //avatar: imageFile,
       //   }),
       // );
-      formData.append("type", "sns");
-      formData.append("nickname", nickname);
-      formData.append("techStack", JSON.stringify(skill));
-      formData.append("githubUrl", githubUrl);
-      axios
-        .post("/api/join/optionForm", formData, config)
-        .then((res) => {
-          dispatch(setUserRequestAction());
-          setNicknameExistError(false);
-          router.push("/");
-        })
-        .catch((error) => {
-          setNicknameExistError(true);
-          formData.delete("type");
-          formData.delete("nickname");
-          formData.delete("techStack");
-          formData.delete("githubUrl");
-        });
-      // axios
-      //   .post(`/api/join/optionForm`, {
-      //     nickname,
-      //     techStack: skill,
-      //     githubUrl,
-      //     type: "sns",
-      //   })
-      //   .then((res) => {
-      //     dispatch(setUserRequestAction());
-      //     router.push("/");
-      //   });
+      if (noneEmailUser) {
+        formData.append("type", "email");
+        formData.append("nickname", nickname);
+        formData.append("techStack", JSON.stringify(skill));
+        formData.append("githubUrl", githubUrl);
+        formData.append("email", email);
+        axios
+          .post("/api/join/optionForm", formData, config)
+          .then((res) => {
+            dispatch(setUserRequestAction());
+            setNicknameExistError(false);
+            setEmailExistError(false);
+            setProgress(2);
+          })
+          .catch((error) => {
+            console.log(error.response.data.message);
+            if (error.response.data.message === "email is reduplication") {
+              setEmailExistError(true);
+            } else {
+              setNicknameExistError(true);
+            }
+            formData.delete("type");
+            formData.delete("nickname");
+            formData.delete("techStack");
+            formData.delete("githubUrl");
+            formData.delete("email");
+          });
+      } else {
+        formData.append("type", "sns");
+        formData.append("nickname", nickname);
+        formData.append("techStack", JSON.stringify(skill));
+        formData.append("githubUrl", githubUrl);
+        axios
+          .post("/api/join/optionForm", formData, config)
+          .then((res) => {
+            dispatch(setUserRequestAction());
+            setNicknameExistError(false);
+            router.push("/");
+          })
+          .catch((error) => {
+            setNicknameExistError(true);
+            formData.delete("type");
+            formData.delete("nickname");
+            formData.delete("techStack");
+            formData.delete("githubUrl");
+          });
+      }
     },
     [nickname, skill, githubUrl],
   );
@@ -291,6 +314,11 @@ const RegisterInputForm = ({ router }) => {
     if (router.query.type === "sns") {
       setProgress(1);
       setRegisterType("social");
+    } else if (router.query.type === "email") {
+      setProgress(1);
+      setRegisterType("social");
+      setNoneEmailUser(true);
+      //setEmail("");
     }
   }, [router]);
 
@@ -526,43 +554,85 @@ const RegisterInputForm = ({ router }) => {
       {progress == 1 && registerType == "social" && (
         <>
           {nicknameExistError ? (
-            <RegisterInputItemWrapper
-              name="nickname"
-              label="닉네임"
-              validateStatus="error"
-              help="이미 존재하는 닉네임입니다."
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "닉네임을 입력해주세요.",
-                  whitespace: true,
-                },
-              ]}
-              onChange={onChangeNickname}
-            >
-              <Input placeholder="nickname" />
-            </RegisterInputItemWrapper>
+            <>
+              <RegisterInputItemWrapper
+                name="nickname"
+                label="닉네임"
+                validateStatus="error"
+                help="이미 존재하는 닉네임입니다."
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "닉네임을 입력해주세요.",
+                    whitespace: true,
+                  },
+                ]}
+                onChange={onChangeNickname}
+              >
+                <Input placeholder="nickname" />
+              </RegisterInputItemWrapper>
+            </>
           ) : (
-            <RegisterInputItemWrapper
-              name="nickname"
-              label="닉네임"
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: "닉네임을 입력해주세요.",
-                  whitespace: true,
-                },
-              ]}
-              onChange={onChangeNickname}
-            >
-              <Input placeholder="nickname" />
-            </RegisterInputItemWrapper>
+            <>
+              <RegisterInputItemWrapper
+                name="nickname"
+                label="닉네임"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: "닉네임을 입력해주세요.",
+                    whitespace: true,
+                  },
+                ]}
+                onChange={onChangeNickname}
+              >
+                <Input placeholder="nickname" />
+              </RegisterInputItemWrapper>
+            </>
+          )}
+          {noneEmailUser && (
+            <>
+              {emailExistError ? (
+                <RegisterInputItemWrapper
+                  name="email"
+                  label="이메일"
+                  validateStatus="error"
+                  help="이미 존재하는 이메일입니다."
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "이메일을 입력해주세요.",
+                      whitespace: true,
+                    },
+                  ]}
+                  onChange={onChangeEmail}
+                >
+                  <Input placeholder="email" />
+                </RegisterInputItemWrapper>
+              ) : (
+                <RegisterInputItemWrapper
+                  name="email"
+                  label="이메일"
+                  hasFeedback
+                  rules={[
+                    {
+                      required: true,
+                      message: "이메일을 입력해주세요.",
+                      whitespace: true,
+                    },
+                  ]}
+                  onChange={onChangeEmail}
+                >
+                  <Input placeholder="email" />
+                </RegisterInputItemWrapper>
+              )}
+            </>
           )}
 
           <StyledDivider>선택 입력 사항</StyledDivider>
-
           <SkillFilterForm type="register" />
           <RegisterInputItemWrapper
             name="github"
@@ -595,7 +665,6 @@ const RegisterInputForm = ({ router }) => {
               가입하기
             </Button>
           </div>
-
           <PushBackButton onClick={onPushBack}>뒤로가기</PushBackButton>
         </>
       )}
