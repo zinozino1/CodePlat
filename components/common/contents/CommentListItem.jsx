@@ -117,13 +117,13 @@ const CommentListItem = ({ item, post }) => {
   // }, []);
 
   const [like, setLike] = useState(
-    item.likes.forEach((v, i) => {
-      if (v._id === me._id) {
+    item.likes.some((v, i) => {
+      if (me && v.userId === me._id) {
         return true;
-      } else {
-        return false;
       }
-    }),
+    })
+      ? true
+      : false,
   ); //useState(false);
 
   const onToggleLike = useCallback(() => {

@@ -121,13 +121,13 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
   );
 
   const [like, setLike] = useState(
-    reComment.likes.forEach((v, i) => {
-      if (v._id === me._id) {
+    reComment.likes.some((v, i) => {
+      if (me && v.userId === me._id) {
         return true;
-      } else {
-        return false;
       }
-    }),
+    })
+      ? true
+      : false,
   );
 
   const onToggleLike = useCallback(() => {
