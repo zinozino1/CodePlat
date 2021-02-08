@@ -229,7 +229,12 @@ function* deleteCommentSaga(action) {
 
 function* upLikePostSaga(action) {
   try {
-    yield put({ type: LIKE_POST_SUCCESS });
+    yield call(upLike, action.payload);
+    yield put({
+      type: LIKE_POST_SUCCESS,
+      user: action.payload.user,
+      postId: action.payload.id,
+    });
   } catch (error) {
     console.log(error);
     yield put({ type: LIKE_POST_FAILURE });
@@ -238,7 +243,12 @@ function* upLikePostSaga(action) {
 
 function* unLikePostSaga(action) {
   try {
-    yield put({ type: UNLIKE_POST_SUCCESS });
+    yield call(unLike, action.payload);
+    yield put({
+      type: UNLIKE_POST_SUCCESS,
+      user: action.payload.user,
+      postId: action.payload.id,
+    });
   } catch (error) {
     console.log(error);
     yield put({ type: UNLIKE_POST_FAILURE });

@@ -23,6 +23,8 @@ import ProfileModal from "../../modal/ProfileModal";
 import {
   postScrapRequestAction,
   deletePostRequestAction,
+  likePostRequestAction,
+  unLikePostRequestAction,
 } from "../../../reducers/post";
 import { useDispatch, useSelector } from "react-redux";
 import { SERVER_URL } from "../../../lib/constant/constant";
@@ -109,6 +111,28 @@ const PostViewerHeader = ({ post, contentType }) => {
   const dispatch = useDispatch();
 
   const { me } = useSelector((state) => state.user);
+
+  const [like, setLike] = useState(false);
+  const onToggleLike = useCallback(() => {
+    setLike(!like);
+    if (like) {
+      dispatch(
+        unLikePostRequestAction({
+          user: me,
+          id: post._id,
+          type: "forum",
+        }),
+      );
+    } else {
+      dispatch(
+        likePostRequestAction({
+          user: me,
+          id: post._id,
+          type: "forum",
+        }),
+      );
+    }
+  }, [like, me, post]);
 
   const onScrap = useCallback((id) => {
     dispatch(postScrapRequestAction(id));

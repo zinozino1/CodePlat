@@ -180,6 +180,16 @@ export const deletePostRequestAction = createAction(
   (data) => data,
 );
 
+export const likePostRequestAction = createAction(
+  LIKE_POST_REQUEST,
+  (data) => data,
+);
+
+export const unLikePostRequestAction = createAction(
+  UNLIKE_POST_REQUEST,
+  (data) => data,
+);
+
 export const likeCommentRequestAction = createAction(
   LIKE_COMMENT_REQUEST,
   (data) => data,
@@ -406,6 +416,7 @@ const postReducer = handleActions(
       likePostLoading: false,
       likePostDone: true,
       likePostError: null,
+      // todo
     }),
     [LIKE_POST_FAILURE]: (state, action) => ({
       ...state,
@@ -424,6 +435,7 @@ const postReducer = handleActions(
       unLikePostLoading: false,
       unLikePostDone: true,
       unLikePostError: null,
+      //todo
     }),
     [UNLIKE_POST_FAILURE]: (state, action) => ({
       ...state,

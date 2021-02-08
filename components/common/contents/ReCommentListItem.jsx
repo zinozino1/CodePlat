@@ -129,15 +129,24 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
       }
     }),
   );
+
   const onToggleLike = useCallback(() => {
     setLike(!like);
     if (like) {
       dispatch(
-        unLikeCommentRequestAction({ user: me, commentId: reComment._id }),
+        unLikeCommentRequestAction({
+          user: me,
+          id: reComment._id,
+          type: "comment",
+        }),
       );
     } else {
       dispatch(
-        likeCommentRequestAction({ user: me, commentId: reComment._id }),
+        likeCommentRequestAction({
+          user: me,
+          id: reComment._id,
+          type: "comment",
+        }),
       );
     }
   }, [like, me]);
@@ -327,7 +336,15 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           reComment.secretComment ? (
             // 비밀댓글일 경우
             me &&
-            (me._id === post.writer._id || reComment.writer._id === me._id) ? (
+            // 내가쓴 대댓글이거나 or 루트댓글이 내가 쓴거고 대댓글이 비밀댓글일 경우
+            (reComment.writer._id === me._id ||
+              post.comments.find((v, i) => {
+                if (v._id === reComment.commentTo) {
+                  // console.log("루트댓글작성자의 id", v.writer._id);
+                  // console.log("object", me._id);
+                  return true;
+                }
+              }).writer._id === me._id) ? (
               <>
                 <span>{reComment.content}</span>
                 <span style={{ color: "#999", fontSize: "12px" }}>
