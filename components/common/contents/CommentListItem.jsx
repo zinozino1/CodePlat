@@ -15,7 +15,12 @@ import {
   Checkbox,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  LikeOutlined,
+  LikeFilled,
+} from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector, useDispatch } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
@@ -24,6 +29,8 @@ import shortid from "shortid";
 import {
   addCommentRequestAction,
   deleteCommentRequestAction,
+  likeCommentRequestAction,
+  unLikeCommentRequestAction,
 } from "../../../reducers/post";
 import useInput from "../../../hooks/useInput";
 import Router from "next/router";
@@ -59,6 +66,13 @@ const ButtonWrapper = styled.div`
   .secret-btn {
     margin-left: 10px;
   }
+`;
+
+const CommentActivityWrapper = styled.div`
+  font-size: 11px;
+  padding: 0 3px;
+  cursor: pointer;
+  /* border: 1px solid black; */
 `;
 
 const CommentListItem = ({ item, post }) => {
@@ -101,6 +115,16 @@ const CommentListItem = ({ item, post }) => {
   //   // 현재 수정버튼이 눌러진 자식 댓글 표시
   //   setCurrentReComment(reComment);
   // }, []);
+
+  const [like, setLike] = useState(false);
+  const onToggleLike = useCallback(() => {
+    setLike(!like);
+    if (like) {
+      dispatch(unLikeCommentRequestAction({ user: me, commentId: item._id }));
+    } else {
+      dispatch(likeCommentRequestAction({ user: me, commentId: item._id }));
+    }
+  }, [like, me]);
 
   useEffect(() => {
     setEditCommentText(item.content);
@@ -281,18 +305,38 @@ const CommentListItem = ({ item, post }) => {
                 ]
               : [
                   // 루트댓글 원래상태
-                  <span
+                  <CommentActivityWrapper>
+                    {me && (
+                      <span
+                        //key="comment-list-reply-to-0"
+                        //onClick={onToggleIsEdit}
+                        style={{ marginRight: "10px" }}
+                        onClick={onToggleLike}
+                      >
+                        {like ? (
+                          <LikeFilled
+                            style={{ marginRight: "3px", color: "#1a91fe" }}
+                          />
+                        ) : (
+                          <LikeOutlined style={{ marginRight: "3px" }} />
+                        )}
+
+                        {item.likes.length}
+                      </span>
+                    )}
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper
                     key="comment-list-reply-to-0"
                     onClick={onChangeApplyToggle}
                   >
                     대댓글 쓰기
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {item.writer && me._id === item.writer._id && (
                       <span>|</span>
                     )}
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {item.writer && me._id === item.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
@@ -303,13 +347,13 @@ const CommentListItem = ({ item, post }) => {
                         삭제
                       </span>
                     )}
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {item.writer && me._id === item.writer._id && (
                       <span>|</span>
                     )}
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {item.writer && me._id === item.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
@@ -318,7 +362,8 @@ const CommentListItem = ({ item, post }) => {
                         수정
                       </span>
                     )}
-                  </span>,
+                  </CommentActivityWrapper>,
+
                   ,
                 ]
             : [

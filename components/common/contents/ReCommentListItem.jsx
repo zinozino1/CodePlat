@@ -15,7 +15,12 @@ import {
   Checkbox,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  LikeOutlined,
+  LikeFilled,
+} from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector, useDispatch } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
@@ -24,6 +29,8 @@ import shortid from "shortid";
 import {
   addCommentRequestAction,
   deleteCommentRequestAction,
+  likeCommentRequestAction,
+  unLikeCommentRequestAction,
 } from "../../../reducers/post";
 import useInput from "../../../hooks/useInput";
 import Router from "next/router";
@@ -58,6 +65,13 @@ const ButtonWrapper = styled.div`
   .secret-btn {
     margin-left: 10px;
   }
+`;
+
+const CommentActivityWrapper = styled.div`
+  font-size: 11px;
+  padding: 0 3px;
+  cursor: pointer;
+  /* border: 1px solid black; */
 `;
 
 const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
@@ -106,6 +120,20 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
     [editReCommentText, isReEditSecret],
   );
 
+  const [like, setLike] = useState(false);
+  const onToggleLike = useCallback(() => {
+    setLike(!like);
+    if (like) {
+      dispatch(
+        unLikeCommentRequestAction({ user: me, commentId: reComment._id }),
+      );
+    } else {
+      dispatch(
+        likeCommentRequestAction({ user: me, commentId: reComment._id }),
+      );
+    }
+  }, [like, me]);
+
   useEffect(() => {
     setEditReCommentText(reComment.content);
     setIsReEditSecret(reComment.secretComment);
@@ -135,10 +163,10 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           ))
         }
         actions={
-          me && me._id === reComment.writer._id
-            ? isEditReComment &&
-              currentReComment &&
-              currentReComment._id === reComment._id //&& reComment._id ===
+          me //&& me._id === reComment.writer._id
+            ? isEditReComment && // 수정중이니
+              currentReComment && // 현재 수정중인 대댓글
+              currentReComment._id === reComment._id
               ? [
                   // 자녀댓글에서 수정을 눌렀을 떄
                   <>
@@ -201,7 +229,27 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                 ]
               : [
                   // 자녀댓글 기본상태
-                  <span>
+                  <CommentActivityWrapper>
+                    {me && (
+                      <span
+                        //key="comment-list-reply-to-0"
+                        //onClick={onToggleIsEdit}
+                        onClick={onToggleLike}
+                        style={{ marginRight: "10px" }}
+                      >
+                        {like ? (
+                          <LikeFilled
+                            style={{ marginRight: "3px", color: "#1a91fe" }}
+                          />
+                        ) : (
+                          <LikeOutlined style={{ marginRight: "3px" }} />
+                        )}
+
+                        {reComment.likes.length}
+                      </span>
+                    )}
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {me && me._id === reComment.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
@@ -212,13 +260,13 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                         삭제
                       </span>
                     )}
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {reComment.writer && me._id === reComment.writer._id && (
                       <span>|</span>
                     )}
-                  </span>,
-                  <span>
+                  </CommentActivityWrapper>,
+                  <CommentActivityWrapper>
                     {reComment.writer && me._id === reComment.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
@@ -231,7 +279,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                         수정
                       </span>
                     )}
-                  </span>,
+                  </CommentActivityWrapper>,
                 ]
             : []
         }

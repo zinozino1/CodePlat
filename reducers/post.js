@@ -180,6 +180,16 @@ export const deletePostRequestAction = createAction(
   (data) => data,
 );
 
+export const likeCommentRequestAction = createAction(
+  LIKE_COMMENT_REQUEST,
+  (data) => data,
+);
+
+export const unLikeCommentRequestAction = createAction(
+  UNLIKE_COMMENT_REQUEST,
+  (data) => data,
+);
+
 // export const editPostReqeustAction = createAction(
 //   EDIT_POST_REQUEST,
 //   (data) => data,
@@ -432,6 +442,17 @@ const postReducer = handleActions(
       likeCommentLoading: false,
       likeCommentDone: true,
       likeCommentError: null,
+      post: {
+        ...state.post,
+        comments: [...state.post.comments].map((v, i) => {
+          return v._id === action.commentId
+            ? {
+                ...v,
+                likes: [...v.likes].concat(action.user),
+              }
+            : { ...v };
+        }),
+      },
     }),
     [LIKE_COMMENT_FAILURE]: (state, action) => ({
       ...state,
@@ -450,6 +471,21 @@ const postReducer = handleActions(
       unLikeCommentLoading: false,
       unLikeCommentDone: true,
       unLikeCommentError: null,
+      post: {
+        ...state.post,
+        comments: [...state.post.comments].map((v, i) => {
+          return v._id === action.commentId
+            ? {
+                ...v,
+                likes: [...v.likes].filter((v, i) => {
+                  if (v._id !== action.user._id) {
+                    return { ...v };
+                  }
+                }),
+              }
+            : { ...v };
+        }),
+      },
     }),
     [UNLIKE_COMMENT_FAILURE]: (state, action) => ({
       ...state,
