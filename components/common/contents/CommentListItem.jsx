@@ -453,10 +453,8 @@ const CommentListItem = ({ item, post }) => {
                   e.stopPropagation();
                 }}
               >
-                {!item.isDelete && (
-                  <ProfileModal
-                    writer={item.writer && item.writer}
-                  ></ProfileModal>
+                {!item.isDelete && item.writer.constructor == Object && (
+                  <ProfileModal writer={item.writer}></ProfileModal>
                 )}
               </div>
             }
@@ -488,25 +486,30 @@ const CommentListItem = ({ item, post }) => {
           //       return v._id;
           //     }
           //   }) &&
-          item.secretComment ? (
-            // 비밀댓글일 경우
-            me && (me._id === post.writer._id || item.writer._id === me._id) ? (
-              <>
-                <span>{item.content}</span>
-                <span style={{ color: "#999", fontSize: "12px" }}>
+          item.writer.constructor == Object ? (
+            item.secretComment ? (
+              // 비밀댓글일 경우
+              me &&
+              (me._id === post.writer._id || item.writer._id === me._id) ? (
+                <>
+                  <span>{item.content}</span>
+                  <span style={{ color: "#999", fontSize: "12px" }}>
+                    <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
+                    비밀 댓글
+                  </span>
+                </>
+              ) : (
+                <>
                   <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
-                  비밀 댓글
-                </span>
-              </>
+                  <span style={{ color: "#999" }}>비밀 댓글입니다.</span>
+                </>
+              )
             ) : (
-              <>
-                <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
-                <span style={{ color: "#999" }}>비밀 댓글입니다.</span>
-              </>
+              // 공개댓글일 경우
+              item.content
             )
           ) : (
-            // 공개댓글일 경우
-            item.content
+            "탈퇴한 회원입니다."
           )
         }
         datetime={`${new Date(item.createdAt).getMonth() + 1}/${new Date(

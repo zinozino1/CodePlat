@@ -317,7 +317,9 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                   e.stopPropagation();
                 }}
               >
-                <ProfileModal writer={reComment.writer}></ProfileModal>
+                {reComment.writer.constructor == Object && (
+                  <ProfileModal writer={reComment.writer}></ProfileModal>
+                )}
               </div>
             }
           >
@@ -342,34 +344,38 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           </Popover>
         }
         content={
-          reComment.secretComment ? (
-            // 비밀댓글일 경우
-            me &&
-            // 내가쓴 대댓글이거나 or 루트댓글이 내가 쓴거고 대댓글이 비밀댓글일 경우
-            (reComment.writer._id === me._id ||
-              post.comments.find((v, i) => {
-                if (v._id === reComment.commentTo) {
-                  // console.log("루트댓글작성자의 id", v.writer._id);
-                  // console.log("object", me._id);
-                  return true;
-                }
-              }).writer._id === me._id) ? (
-              <>
-                <span>{reComment.content}</span>
-                <span style={{ color: "#999", fontSize: "12px" }}>
+          reComment.writer.constructor == Object ? (
+            reComment.secretComment ? (
+              // 비밀댓글일 경우
+              me &&
+              // 내가쓴 대댓글이거나 or 루트댓글이 내가 쓴거고 대댓글이 비밀댓글일 경우
+              (reComment.writer._id === me._id ||
+                post.comments.find((v, i) => {
+                  if (v._id === reComment.commentTo) {
+                    // console.log("루트댓글작성자의 id", v.writer._id);
+                    // console.log("object", me._id);
+                    return true;
+                  }
+                }).writer._id === me._id) ? (
+                <>
+                  <span>{reComment.content}</span>
+                  <span style={{ color: "#999", fontSize: "12px" }}>
+                    <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
+                    비밀 댓글
+                  </span>
+                </>
+              ) : (
+                <>
                   <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
-                  비밀 댓글
-                </span>
-              </>
+                  <span style={{ color: "#999" }}>비밀 댓글입니다.</span>
+                </>
+              )
             ) : (
-              <>
-                <LockOutlined style={{ margin: "0 5px", color: "#999" }} />
-                <span style={{ color: "#999" }}>비밀 댓글입니다.</span>
-              </>
+              // 공개댓글일 경우
+              reComment.content
             )
           ) : (
-            // 공개댓글일 경우
-            reComment.content
+            "탈퇴한 회원입니다."
           )
         }
         datetime={`${new Date(reComment.createdAt).getMonth() + 1}/${new Date(
