@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import Form from "antd/lib/form/Form";
 import SkillFilterForm from "./SkillFilterForm";
@@ -54,10 +54,27 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   const { me } = useSelector((state) => state.user);
 
   // 공통 state
-  const [title, onChangeTitle] = isEdit ? useInput(post.title) : useInput("");
-  const [description, onChangeDescription] = isEdit
-    ? useInput(post.content)
-    : useInput("");
+  const [title, setTitle] = isEdit ? useState(post.title) : useState("");
+  const onChangeTitle = useCallback((e) => {
+    setTitle(e.target.value);
+  }, []);
+
+  const [description, setDescription] = isEdit
+    ? useState(post.content)
+    : useState("");
+  const onChangeDescription = useCallback((e) => {
+    setDescription(e);
+  }, []);
+  // test
+
+  // const [forumTitle, setForumTitle] = useState("");
+  // const onChangeForumTitle = useCallback((e) => {
+  //   setForumTitle(e.target.value);
+  // }, []);
+  // const [forumDescription, setForumDescription] = useState("");
+  // const onChangeForumDescription = useCallback((e) => {
+  //   setForumDescription(e);
+  // }, []);
 
   // 스터디, 프로젝트 state
   const [peopleNumber, setPeopleNumber] = isEdit
@@ -177,6 +194,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   // 포럼 state
   const [filter, setFilter] = isEdit ? useState(post.field) : useState("자유");
 
+  // tagbox 관련된 것들
   const [tags, setTags] = isEdit ? useState(post.tag) : useState([]);
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -256,6 +274,11 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       return;
     }
   }, [title, description, tags, post, filter]);
+
+  useEffect(() => {
+    console.log(title);
+    console.log(description);
+  }, [title, description]);
 
   return (
     <>
@@ -355,7 +378,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             </div>
             <Input.TextArea
               placeholder="제목을 입력해주세요."
-              onChange={onChangeTitle}
+              //onChange={onChangeTitle}
               defaultValue={isEdit ? post.title : ""}
             />
           </FormItemWrapper>
@@ -383,11 +406,14 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             <Input.TextArea
               rows={6}
               placeholder="내용을 입력해주세요."
-              onChange={onChangeDescription}
+              //onChange={onChangeDescription}
               defaultValue={isEdit ? post.content : ""}
             />
           </FormItemWrapper>
-          <Editor />
+          <Editor
+            onChangeDescription={onChangeDescription}
+            onChangeTitle={onChangeTitle}
+          />
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
               style={{ width: "100px" }}

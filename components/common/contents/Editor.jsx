@@ -12,12 +12,13 @@ const EditorBlock = styled.div`
   padding-bottom: 5rem;
 `;
 const TitleInput = styled.input`
-  font-size: 2rem;
+  /* padding-left: 20px; */
+  font-size: 1.2rem;
   outline: none;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.2rem;
   border: none;
-  border-bottom: 1px solid black;
-  margin-bottom: 2rem;
+  border-bottom: 1px solid #aaa;
+  margin-bottom: 1rem;
   width: 100%;
 `;
 const QuillWrapper = styled.div`
@@ -25,15 +26,15 @@ const QuillWrapper = styled.div`
   .ql-editor {
     padding: 20px;
     min-height: 320px;
-    font-size: 1.125rem;
+    font-size: 1rem;
     line-height: 1.5;
   }
   .ql-editor.ql-blank::before {
-    left: 0px;
+    left: 20px;
   }
 `;
 
-const Editor = () => {
+const Editor = ({ onChangeTitle, onChangeDescription }) => {
   const Quill = typeof window === "object" ? require("quill") : () => false;
   const quillElement = useRef(null); // Quill을 적용할 DivElement를 설정
   const quillInstance = useRef(null); // Quill 인스턴스를 설정
@@ -41,33 +42,34 @@ const Editor = () => {
   useEffect(() => {
     quillInstance.current = new Quill(quillElement.current, {
       theme: "snow",
-      placeholder: "내용을 작성하세요...",
+      placeholder: "내용을 입력해주세요.",
       modules: {
         // 더 많은 옵션
         // https://quilljs.com/docs/modules/toolbar/ 참고
         toolbar: [
           [{ header: "1" }, { header: "2" }],
+          [{ color: [] }],
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
           ["blockquote", "code-block", "link", "image"],
+          [{ size: ["small", false, "large", "huge"] }],
+          ["clean"],
         ],
       },
     });
     const quill = quillInstance.current;
     quill.on("text-change", (delta, oldDelta, source) => {
       if (source === "user") {
-        //onChangeField({ key: "body", value: quill.root.innerHTML });
+        onChangeDescription(quill.root.innerHTML);
       }
     });
-  }, []);
+  }, [onChangeDescription]);
 
   return (
     <EditorBlock>
       <TitleInput
-        placeholder="제목을 입력하세요..."
-        onChange={(e) => {
-          //onChangeField({ key: "title", value: e.target.value });
-        }}
+        placeholder="제목을 입력해주세요."
+        onChange={onChangeTitle}
       ></TitleInput>
       <QuillWrapper>
         <div ref={quillElement}></div>
