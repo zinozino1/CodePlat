@@ -372,7 +372,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               {ForumSelectChildren}
             </Select>
           </FormItemWrapper>
-          <FormItemWrapper>
+          {/* <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>제목</Label>
             </div>
@@ -381,7 +381,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               //onChange={onChangeTitle}
               defaultValue={isEdit ? post.title : ""}
             />
-          </FormItemWrapper>
+          </FormItemWrapper> */}
           <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>태그</Label>
@@ -399,7 +399,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               setEditInputValue={setEditInputValue}
             />
           </FormItemWrapper>
-          <FormItemWrapper>
+          {/* <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>내용</Label>
             </div>
@@ -409,7 +409,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               //onChange={onChangeDescription}
               defaultValue={isEdit ? post.content : ""}
             />
-          </FormItemWrapper>
+          </FormItemWrapper> */}
           <Editor
             onChangeDescription={onChangeDescription}
             onChangeTitle={onChangeTitle}

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 
 // import "quill/dist/quill.bubble.css";
 import "quill/dist/quill.snow.css";
@@ -8,8 +8,8 @@ import { END } from "redux-saga";
 
 const EditorBlock = styled.div`
   /* 페이지 위 아래 여백 지정 */
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
 `;
 const TitleInput = styled.input`
   /* padding-left: 20px; */
@@ -38,6 +38,7 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
   const Quill = typeof window === "object" ? require("quill") : () => false;
   const quillElement = useRef(null); // Quill을 적용할 DivElement를 설정
   const quillInstance = useRef(null); // Quill 인스턴스를 설정
+  const imageRef = useRef();
 
   useEffect(() => {
     quillInstance.current = new Quill(quillElement.current, {
@@ -63,8 +64,21 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
         onChangeDescription(quill.root.innerHTML);
       }
     });
+
+    //quillInstance.current.getModule("toolbar");
+    const toolbar = quill.getModule("toolbar");
+    toolbar.addHandler("image", onClickImageBtn);
   }, [onChangeDescription]);
 
+  const onClickImageBtn = useCallback(
+    (e) => {
+      console.log(e);
+      imageRef.current.click();
+    },
+    [imageRef.current],
+  );
+
+  const onChangeImageInput = useCallback(() => {}, []);
   return (
     <EditorBlock>
       <TitleInput
@@ -74,6 +88,7 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
       <QuillWrapper>
         <div ref={quillElement}></div>
       </QuillWrapper>
+      <input hidden type="file" onChange={onChangeImageInput} ref={imageRef} />
     </EditorBlock>
   );
 };
