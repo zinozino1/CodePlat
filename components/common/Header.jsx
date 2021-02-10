@@ -138,7 +138,9 @@ const Header = ({ router }) => {
   }, []);
 
   useEffect(() => {
-    setCurrentMenu(router.route);
+    const route = router.route.split("/");
+
+    setCurrentMenu(`/${route[1]}/${route[2]}`);
   }, [router]);
 
   return (

@@ -4,18 +4,34 @@ import user from "./user";
 import post from "./post";
 import skill from "./skill";
 
-const rootReducer = combineReducers({
-  index: (state = {}, action) => {
-    switch (action.type) {
-      case HYDRATE:
-        return action.payload;
-      default:
-        return state;
+// const rootReducer = combineReducers({
+//   index: (state = {}, action) => {
+//     switch (action.type) {
+//       case HYDRATE:
+//         return action.payload;
+//       default:
+//         return state;
+//     }
+//   },
+//   user,
+//   post,
+//   skill,
+// });
+
+const rootReducer = (state, action) => {
+  switch (action.type) {
+    case HYDRATE:
+      return action.payload;
+
+    default: {
+      const combineReducer = combineReducers({
+        user,
+        post,
+        skill,
+      });
+      return combineReducer(state, action);
     }
-  },
-  user,
-  post,
-  skill,
-});
+  }
+};
 
 export default rootReducer;

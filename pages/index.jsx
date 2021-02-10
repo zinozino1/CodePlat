@@ -11,6 +11,8 @@ import {
   mainLoadPostsReqeustAction,
   initializePostsAction,
 } from "../reducers/post";
+import { END } from "redux-saga";
+import wrapper from "../store/configureStore";
 
 const Content = Layout.Content;
 
@@ -49,9 +51,8 @@ const index = () => {
   } = useSelector((state) => state.post);
 
   useEffect(() => {
-    dispatch(mainLoadPostsReqeustAction());
-    // dispatch(mainLoadPostsReqeustAction({ type: "study" }));
-    // dispatch(mainLoadPostsReqeustAction({ type: "project" }));
+    //dispatch(mainLoadPostsReqeustAction());
+
     return () => {
       dispatch(initializePostsAction());
     };
@@ -145,5 +146,13 @@ const index = () => {
     </Layout>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    context.store.dispatch(mainLoadPostsReqeustAction());
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default index;

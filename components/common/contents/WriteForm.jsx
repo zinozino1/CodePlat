@@ -12,6 +12,7 @@ import { writePostRequestAction } from "../../../reducers/post";
 import Router, { withRouter } from "next/router";
 import axios from "axios";
 import { editPost } from "../../../lib/api/post";
+import Editor from "./Editor";
 
 const WriteFormWrapper = styled.div`
   margin: 40px 0;
@@ -386,6 +387,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               defaultValue={isEdit ? post.content : ""}
             />
           </FormItemWrapper>
+          <Editor />
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
               style={{ width: "100px" }}

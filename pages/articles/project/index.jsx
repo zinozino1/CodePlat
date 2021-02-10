@@ -67,6 +67,7 @@ const Project = ({ router }) => {
   };
 
   useEffect(() => {
+    console.log(encodeURIComponent(skill.toString()));
     dispatch(
       loadPostsReqeustAction({
         type: "project",

@@ -94,7 +94,7 @@ function* loadPostSaga(action) {
 function* loadPostsSaga(action) {
   try {
     const res = yield call(loadPosts, action.payload);
-
+    //console.log(res);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       contentType: action.payload.type,
