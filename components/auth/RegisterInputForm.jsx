@@ -221,7 +221,7 @@ const RegisterInputForm = ({ router }) => {
         alert("닉네임을 입력해주세요.");
         return;
       }
-      if (email === "") {
+      if (noneEmailUser && email === "") {
         alert("이메일을 입력해주세요.");
         return;
       }
