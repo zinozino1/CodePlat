@@ -331,7 +331,7 @@ export function* watchPost() {
   yield takeLatest(MAIN_LOAD_POSTS_REQUEST, mainLoadPostsSaga);
   yield takeLatest(LOAD_POSTS_REQUEST, loadPostsSaga);
   yield takeLatest(LOAD_POST_REQUEST, loadPostSaga);
-  yield takeLatest(WRITE_POST_REQUEST, writePostSaga);
+  yield throttle(2000, WRITE_POST_REQUEST, writePostSaga);
   yield takeLatest(POST_SCRAP_REQUEST, postScrapSaga);
   yield takeLatest(ADD_COMMENT_REQUEST, addCommentSaga);
   yield takeLatest(LOAD_FORUM_POSTS_REQUEST, loadForumPostsSaga);
