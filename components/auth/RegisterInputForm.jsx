@@ -193,6 +193,7 @@ const RegisterInputForm = ({ router }) => {
   }, []);
 
   const normFile = (e) => {
+    //console.log("norm file : ", e);
     //console.log(e.fileList[0].originFileObj);
     if (e.file.status === "done") {
       formData.append("avatar", e.fileList[0].originFileObj);

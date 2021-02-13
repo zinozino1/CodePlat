@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
-import Form from "antd/lib/form/Form";
+
 import SkillFilterForm from "./SkillFilterForm";
-import { Select, Input, Upload, Button, Tag, Tooltip } from "antd";
+import { Select, Input, Upload, Button, Tag, Tooltip, Form } from "antd";
 import { UploadOutlined, SlidersFilled } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { Locations } from "../../../lib/constant/constant";
@@ -13,6 +13,8 @@ import Router, { withRouter } from "next/router";
 import axios from "axios";
 import { editPost } from "../../../lib/api/post";
 import Editor from "./Editor";
+import FormData from "form-data";
+// import ImgCrop from "antd-img-crop";
 
 const WriteFormWrapper = styled.div`
   margin: 40px 0;
@@ -31,6 +33,8 @@ const FormItemWrapper = styled.div`
 const Label = styled.span`
   font-weight: 500;
 `;
+
+// const files = new FormData();
 
 const LocationSelectChildren = [];
 const PeopleSelectChildren = [];
@@ -65,7 +69,73 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   const onChangeDescription = useCallback((e) => {
     setDescription(e);
   }, []);
-  // test
+
+  const [fileList, setFileList] = useState([]);
+
+  const onChangeFileList = useCallback(
+    (e) => {
+      //console.log(e);
+      setFileList(fileList.concat(e));
+      // console.log(file);
+    },
+    [fileList],
+  );
+
+  const onRemoveFile = useCallback(
+    (e) => {
+      setFileList(
+        fileList.filter((v, i) => {
+          if (v.uid !== e.uid) {
+            return { ...v };
+          }
+        }),
+      );
+    },
+    [fileList],
+  );
+
+  // const onPreview = async (file) => {
+  //   let src = file.url;
+  //   if (!src) {
+  //     src = await new Promise((resolve) => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(file.originFileObj);
+  //       reader.onload = () => resolve(reader.result);
+  //     });
+  //   }
+  //   const image = new Image();
+  //   image.src = src;
+  //   const imgWindow = window.open(src);
+  //   imgWindow.document.write(image.outerHTML);
+  // };
+
+  // const onSubmit
+
+  // const onChangeFile = useCallback((e) => {
+  //   console.log(e.fileList[0].originFileObj);
+  // }, []);
+
+  // const normFile = (e) => {
+  //   //console.log(e.fileList[0].originFileObj);
+  //   if (e.file.status === "done") {
+  //     files.append("file", e.fileList[0].originFileObj);
+
+  //     // console.log(e.fileList[0].originFileObj);
+  //     // setImageFile(formData);
+  //     // console.log("done");
+  //   } else if (e.file.status === "removed") {
+  //     files.delete("file");
+  //     // console.log("removed");
+  //   }
+
+  //   // let fileList = e.fileList;
+  //   // fileList = fileList.slice(-1);
+
+  //   // if (Array.isArray(e)) {
+  //   //   return e;
+  //   // }
+  //   // return e && fileList;
+  // };
 
   // const [forumTitle, setForumTitle] = useState("");
   // const onChangeForumTitle = useCallback((e) => {
@@ -222,17 +292,31 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       alert("내용을 5글자 이상 써주세요.");
       return;
     }
-    dispatch(
-      writePostRequestAction({
-        type: router.route.split("/")[2],
-        writer: me._id,
-        title,
-        content: description,
-        tag: tags,
-        field: filter,
-      }),
-    );
-  }, [title, description, tags, router, me, filter]);
+
+    const formData = new FormData();
+    fileList.forEach((file) => formData.append("files", file));
+    console.log(fileList);
+    //formData.append()
+    // formData.append("")
+    // 여기부터 작업하면 댐
+    formData.append("type", "forum");
+    formData.append("wirter", me._id);
+    formData.append("title", title);
+    formData.append("content", description);
+    formData.append("tag", JSON.stringify(tags));
+    formData.append("field", filter);
+
+    // dispatch(
+    //   writePostRequestAction({
+    //     type: router.route.split("/")[2],
+    //     writer: me._id,
+    //     title,
+    //     content: description,
+    //     tag: tags,
+    //     field: filter,
+    //   }),
+    // );
+  }, [title, description, tags, router, me, filter, fileList]);
 
   const onForumEdit = useCallback(() => {
     if (!me) {
@@ -413,7 +497,20 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           <Editor
             onChangeDescription={onChangeDescription}
             onChangeTitle={onChangeTitle}
+            description={description}
           />
+
+          <Upload
+            name="logo"
+            listType="picture"
+            beforeUpload={onChangeFileList}
+            defaultFileList={fileList}
+            onRemove={onRemoveFile}
+          >
+            {/* // defaultFileList> */}
+            <Button icon={<UploadOutlined />}>파일 업로드</Button>
+          </Upload>
+
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
               style={{ width: "100px" }}

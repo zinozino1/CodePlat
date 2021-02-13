@@ -13,6 +13,7 @@ import {
 } from "../reducers/post";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
+import { setUserRequestAction } from "../reducers/user";
 
 const Content = Layout.Content;
 
@@ -52,7 +53,7 @@ const index = () => {
 
   useEffect(() => {
     //dispatch(mainLoadPostsReqeustAction());
-
+    dispatch(setUserRequestAction());
     return () => {
       dispatch(initializePostsAction());
     };

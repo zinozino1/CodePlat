@@ -34,11 +34,11 @@ const QuillWrapper = styled.div`
   }
 `;
 
-const Editor = ({ onChangeTitle, onChangeDescription }) => {
+const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
   const Quill = typeof window === "object" ? require("quill") : () => false;
   const quillElement = useRef(null); // Quill을 적용할 DivElement를 설정
   const quillInstance = useRef(null); // Quill 인스턴스를 설정
-  const imageRef = useRef();
+  //   const imageRef = useRef();
 
   useEffect(() => {
     quillInstance.current = new Quill(quillElement.current, {
@@ -52,7 +52,7 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
           [{ color: [] }],
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
-          ["blockquote", "code-block", "link", "image"],
+          ["blockquote", "code-block"],
           [{ size: ["small", false, "large", "huge"] }],
           ["clean"],
         ],
@@ -66,19 +66,37 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
     });
 
     //quillInstance.current.getModule("toolbar");
-    const toolbar = quill.getModule("toolbar");
-    toolbar.addHandler("image", onClickImageBtn);
+    // const toolbar = quill.getModule("toolbar");
+    // toolbar.addHandler("image", onClickImageBtn);
   }, [onChangeDescription]);
 
-  const onClickImageBtn = useCallback(
-    (e) => {
-      console.log(e);
-      imageRef.current.click();
-    },
-    [imageRef.current],
-  );
+  //   const onClickImageBtn = useCallback(
+  //     (e) => {
+  //       // quill 의 이미지 버튼을 누르면 숨겨져있는 인풋태그가 활성화된다
+  //       //Quill을 초기화 합니다. 툴바에서 image가 선택되면 handlers에서 정의한대로 숨겨둔 file 타입 input을 click() 호출하여 파일 선택 dialog를 띄웁니다.
+  //       imageRef.current.click();
+  //     },
+  //     [imageRef.current],
+  //   );
 
-  const onChangeImageInput = useCallback(() => {}, []);
+  //   const onChangeImageInput = useCallback((e) => {
+  //     // 실제 이미지 저장하는 로직 작성
+  //     const imageFormData = new FormData();
+  //     [].forEach.call(e.target.files, (f) => {
+  //       console.log(f);
+  //       imageFormData.append("image", f);
+  //     });
+  //     //console.log(description);
+
+  //     // -> 서버에 일단 저장 -> 서버에서 이미지 소스 리턴 -> quill에서 그걸 다시 보여줘야함.
+  //     // dispatch({
+  //     //     type : UPLOAD_IMAGES_REQUEST,
+  //     //     data : imageFormData
+  //     // })
+  //   }, []);
+
+  // 이미지 전송작업 해야댐
+
   return (
     <EditorBlock>
       <TitleInput
@@ -88,7 +106,7 @@ const Editor = ({ onChangeTitle, onChangeDescription }) => {
       <QuillWrapper>
         <div ref={quillElement}></div>
       </QuillWrapper>
-      <input hidden type="file" onChange={onChangeImageInput} ref={imageRef} />
+      {/* <input hidden type="file" onChange={onChangeImageInput} ref={imageRef} /> */}
     </EditorBlock>
   );
 };
