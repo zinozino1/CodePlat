@@ -12,6 +12,9 @@ import styled from "styled-components";
 import { withRouter } from "next/router";
 import Head from "next/head";
 import { Locations } from "../../../lib/constant/constant";
+import wrapper from "../../../store/configureStore";
+import { setUserRequestAction } from "../../../reducers/user";
+import { END } from "redux-saga";
 
 const SelectLocationWrapper = styled.div`
   text-align: right;
@@ -121,5 +124,15 @@ const Study = ({ router }) => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    context.store.dispatch(setUserRequestAction());
+    // 포스트 SSR 필요
+    // context.store.dispatch(mainLoadPostsReqeustAction());
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default withRouter(Study);

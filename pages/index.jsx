@@ -14,6 +14,7 @@ import {
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
 import { setUserRequestAction } from "../reducers/user";
+import axios from "axios";
 
 const Content = Layout.Content;
 
@@ -53,7 +54,8 @@ const index = () => {
 
   useEffect(() => {
     //dispatch(mainLoadPostsReqeustAction());
-    dispatch(setUserRequestAction());
+    // console.log("rerender");
+    //dispatch(setUserRequestAction());
     return () => {
       dispatch(initializePostsAction());
     };
@@ -150,6 +152,13 @@ const index = () => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
+    // const cookie = context.req ? context.req.headers.cookie : "";
+    // axios.defaults.headers.Cookie = "";
+    // if (context.req && cookie) {
+    //   axios.defaults.headers.Cookie = cookie;
+    // }
+    context.store.dispatch(setUserRequestAction());
+    // context.store.dispatch(END);
     context.store.dispatch(mainLoadPostsReqeustAction());
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();

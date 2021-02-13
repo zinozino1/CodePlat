@@ -12,9 +12,9 @@ import axios from "axios";
 const App = ({ Component }) => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setUserRequestAction());
-  }, []);
+  // useEffect(() => {
+  //   dispatch(setUserRequestAction());
+  // }, [Component]);
 
   return (
     <>
