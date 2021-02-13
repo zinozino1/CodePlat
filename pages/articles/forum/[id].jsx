@@ -44,7 +44,7 @@ const ForumDetail = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    context.store.dispatch(setUserRequestAction);
+    context.store.dispatch(setUserRequestAction());
     // 포스트 SSR 필요
     // context.store.dispatch(mainLoadPostsReqeustAction());
     context.store.dispatch(END);
