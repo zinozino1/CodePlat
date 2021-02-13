@@ -405,7 +405,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               {LocationSelectChildren}
             </Select>
           </FormItemWrapper>
-          <FormItemWrapper>
+          {/* <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>제목</Label>
             </div>
@@ -425,15 +425,30 @@ const WriteForm = ({ contentType, router, isEdit }) => {
               onChange={onChangeDescription}
               defaultValue={isEdit ? post.content : ""}
             />
-          </FormItemWrapper>
-          <FormItemWrapper>
+          </FormItemWrapper> */}
+          <Editor
+            onChangeDescription={onChangeDescription}
+            onChangeTitle={onChangeTitle}
+            description={description}
+          />
+          {/* <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
               <Label>첨부파일</Label>
             </div>
             <Upload name="logo" listType="picture">
               <Button icon={<UploadOutlined />}>파일 업로드</Button>
             </Upload>
-          </FormItemWrapper>
+          </FormItemWrapper> */}
+          <Upload
+            name="logo"
+            listType="picture"
+            beforeUpload={onChangeFileList}
+            defaultFileList={fileList}
+            onRemove={onRemoveFile}
+          >
+            {/* // defaultFileList> */}
+            <Button icon={<UploadOutlined />}>파일 업로드</Button>
+          </Upload>
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
               style={{ width: "100px" }}
