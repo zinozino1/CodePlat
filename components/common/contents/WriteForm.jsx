@@ -67,7 +67,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     ? useState(post.content)
     : useState("");
   const onChangeDescription = useCallback((e) => {
-    setDescription(e);
+    setDescription(e.replace(/(<([^>]+)>)/gi, ""));
   }, []);
 
   const [fileList, setFileList] = useState([]);
@@ -295,7 +295,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
 
     const formData = new FormData();
     fileList.forEach((file) => formData.append("files", file));
-    console.log(fileList);
+    //console.log(fileList);
     //formData.append()
     // formData.append("")
     // 여기부터 작업하면 댐
@@ -305,6 +305,8 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     formData.append("content", description);
     formData.append("tag", JSON.stringify(tags));
     formData.append("field", filter);
+
+    console.log({ title, description, tags, filter, fileList });
 
     // dispatch(
     //   writePostRequestAction({
@@ -359,10 +361,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     }
   }, [title, description, tags, post, filter]);
 
-  useEffect(() => {
-    console.log(title);
-    console.log(description);
-  }, [title, description]);
+  // useEffect(() => {
+  //   console.log(title);
+  //   console.log(description);
+  // }, [title, description]);
 
   return (
     <>
