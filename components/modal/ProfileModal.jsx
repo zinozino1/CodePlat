@@ -1,7 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
 import { useSelector } from "react-redux";
+import ChatModal from "./ChatModal";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -26,6 +27,8 @@ const ProfileModal = ({ writer }) => {
   const { me } = useSelector((state) => state.user);
   // console.log(me.id);
   // console.log(writer.id);
+
+  const [isChat, setIsChat] = useState(false);
 
   const onSendLetter = useCallback(() => {
     // if (!me) {
@@ -80,10 +83,11 @@ const ProfileModal = ({ writer }) => {
         </span>
       </RowWrapper>
       <RowWrapper className="btn-wrapper">
-        {me && me.id !== writer.id && (
-          <Button type="primary" className="note-btn" onClick={onSendLetter}>
-            쪽지 보내기
-          </Button>
+        {me && me._id !== writer._id && (
+          // <Button type="primary" className="note-btn" onClick={onSendLetter}>
+          //   쪽지 보내기
+          // </Button>
+          <ChatModal />
         )}
       </RowWrapper>
     </ProfileWrapper>

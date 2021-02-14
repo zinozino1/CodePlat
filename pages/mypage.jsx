@@ -1,56 +1,76 @@
-import React from "react";
-import { Divider, Row, Col, Button, Form } from "antd";
+import React, { useCallback, useState } from "react";
+import { Divider, Row, Col, Button, Form, Menu } from "antd";
+import {
+  AppstoreOutlined,
+  MailOutlined,
+  SettingOutlined,
+  CalendarOutlined,
+  LinkOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import MypageLayout from "../components/layout/MypageLayout";
 import EditProfileForm from "../components/mypage/EditProfileForm";
 import MyActivityTemplate from "../components/mypage/MyActivityTemplate";
 import SkillFilterForm from "../components/common/contents/SkillFilterForm";
 import styled from "styled-components";
 import Head from "next/head";
+import EditProfile from "../components/mypage/EditProfile";
 
-const ProfileReviseFormWrapper = styled.div`
+const MenuWrapper = styled.div`
   display: flex;
-  .edit-profile-form {
-    flex: 2;
-    /* border: 1px solid black; */
-    padding: 20px;
+  .menu-bar {
+    flex: 1;
+    border: 1px solid red;
+    width: 200px;
   }
-  .skill-filter-form {
-    flex: 3;
-    /* //  border: 1px solid black; */
-    padding: 20px;
-  }
-  @media (max-width: 768px) {
-    display: block;
+  .menu-content {
+    flex: 4;
+    border: 1px solid black;
   }
 `;
 
 const mypage = () => {
+  const [currentMenu, setCurrentMenu] = useState("profile");
+  const onChangeCurrentMenu = useCallback((e) => {
+    setCurrentMenu(e.key);
+  }, []);
+
   return (
     <>
       <Head>
         <meta charSet="utf-8"></meta>
         <title>마이페이지</title>
       </Head>
+
       <MypageLayout>
-        <ProfileReviseFormWrapper>
-          <div className="edit-profile-form">
-            <EditProfileForm />
+        <MenuWrapper>
+          <div className="menu-bar">
+            <Menu
+              style={{ height: "90vh", border: "1px solid black" }}
+              defaultSelectedKeys={["profile"]}
+              //defaultOpenKeys={["sub1"]}
+              onClick={onChangeCurrentMenu}
+            >
+              <Menu.Item key="profile" icon={<UserOutlined />}>
+                프로필 수정
+              </Menu.Item>
+              <Menu.Item key="activity" icon={<AppstoreOutlined />}>
+                내 활동
+              </Menu.Item>
+              <Menu.Item key="note" icon={<MailOutlined />}>
+                쪽지함
+              </Menu.Item>
+            </Menu>
           </div>
-          <div className="skill-filter-form">
-            <SkillFilterForm />
+          <div className="menu-content">
+            {currentMenu === "profile" && <EditProfile />}
+            {currentMenu === "activity" && <MyActivityTemplate />}
+            {currentMenu === "note" && <div>note</div>}
+
+            {/* <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
+            <MyActivityTemplate></MyActivityTemplate> */}
           </div>
-        </ProfileReviseFormWrapper>
-        <div
-          style={{
-            textAlign: "center",
-            //padding: "10px",
-            // border: "1px solid red",
-          }}
-        >
-          <Button type="primary">저장하기</Button>
-        </div>
-        <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
-        <MyActivityTemplate></MyActivityTemplate>
+        </MenuWrapper>
       </MypageLayout>
     </>
   );

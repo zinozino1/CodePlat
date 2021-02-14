@@ -6,6 +6,9 @@ import styled from "styled-components";
 const EditProfileFormWrapper = styled(Form)`
   @media (max-width: 900px) {
     width: 100%;
+    .profile-card {
+      margin: 0 auto;
+    }
   }
 `;
 
@@ -27,7 +30,12 @@ const EditProfileForm = () => {
   return (
     <EditProfileFormWrapper>
       <div className="site-card-border-less-wrapper">
-        <Card title="프로필 수정" bordered={true} style={{ width: 300 }}>
+        <Card
+          title="프로필 수정"
+          bordered={true}
+          style={{ width: 300 }}
+          className="profile-card"
+        >
           <RegisterInputItemWrapper
             name="nickname"
             label="닉네임"

@@ -12,11 +12,13 @@ const SkillFilterFormWrapper = styled.div`
   margin: 0 auto;
   width: 900px;
   ${(props) =>
-    (props.type === "register" || props.type === "write") &&
+    (props.type === "register" ||
+      props.type === "write" ||
+      props.type === "mypage") &&
     css`
       width: 100%;
     `}
-  @media (max-width: 900px) {
+  @media (max-width: 1268px) {
     width: 100%;
   }
 `;
