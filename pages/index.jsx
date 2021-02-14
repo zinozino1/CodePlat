@@ -13,7 +13,7 @@ import {
 } from "../reducers/post";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
-import { setUserRequestAction } from "../reducers/user";
+import { setUserRequestAction, SET_USER_REQUEST } from "../reducers/user";
 import axios from "axios";
 
 const Content = Layout.Content;
@@ -54,7 +54,7 @@ const index = () => {
 
   useEffect(() => {
     //dispatch(mainLoadPostsReqeustAction());
-    // console.log("rerender");
+    console.log("rerender");
     //dispatch(setUserRequestAction());
     return () => {
       dispatch(initializePostsAction());
@@ -150,16 +150,20 @@ const index = () => {
   );
 };
 
+// 프론트 서버에서 실행되는 코드
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    // const cookie = context.req ? context.req.headers.cookie : "";
-    // axios.defaults.headers.Cookie = "";
-    // if (context.req && cookie) {
-    //   axios.defaults.headers.Cookie = cookie;
-    // }
+    console.log("fuc");
+    //console.log(context);
+    const cookie = context.req ? context.req.headers.cookie : "";
+    axios.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      axios.defaults.headers.Cookie = cookie;
+      //axios.defaults.withCredentials = true;
+    }
     context.store.dispatch(setUserRequestAction());
-    // context.store.dispatch(END);
     context.store.dispatch(mainLoadPostsReqeustAction());
+    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

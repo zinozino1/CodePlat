@@ -20,11 +20,13 @@ import { register, login, setUser, logout } from "../lib/api/user";
 function* setUserSaga(action) {
   try {
     const res = yield call(setUser);
-    if (!res.data.user.nickname) {
+
+    if (!res.data.user) {
       yield put({ type: SET_USER_SUCCESS, user: null });
     } else {
       yield put({ type: SET_USER_SUCCESS, user: res.data.user });
     }
+    //yield put({ type: SET_USER_SUCCESS, user: res.data.user });
   } catch (error) {
     console.log(error);
     yield put({ type: SET_USER_FAILURE });

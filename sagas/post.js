@@ -114,7 +114,7 @@ function* loadPostsSaga(action) {
 function* mainLoadPostsSaga(action) {
   try {
     const res = yield call(mainLoadPosts);
-    //console.log(res);
+    console.log(res);
     const { study, project, forum } = res.data.posts;
     yield put({
       type: MAIN_LOAD_POSTS_SUCCESS,

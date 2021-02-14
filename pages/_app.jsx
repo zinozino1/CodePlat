@@ -14,7 +14,7 @@ const App = ({ Component }) => {
 
   // useEffect(() => {
   //   dispatch(setUserRequestAction());
-  // }, [Component]);
+  // }, []);
 
   return (
     <>

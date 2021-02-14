@@ -251,7 +251,7 @@ const RegisterInputForm = ({ router }) => {
         axios
           .post("/api/join/optionForm", formData, config)
           .then((res) => {
-            dispatch(setUserRequestAction());
+            //dispatch(setUserRequestAction());
             setNicknameExistError(false);
             setEmailExistError(false);
             setProgress(2);
@@ -277,7 +277,7 @@ const RegisterInputForm = ({ router }) => {
         axios
           .post("/api/join/optionForm", formData, config)
           .then((res) => {
-            dispatch(setUserRequestAction());
+            //dispatch(setUserRequestAction());
             setNicknameExistError(false);
             router.push("/");
           })
