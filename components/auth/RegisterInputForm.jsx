@@ -28,6 +28,8 @@ import axios from "axios";
 import { withRouter } from "next/router";
 import { setUserRequestAction } from "../../reducers/user";
 import FormData from "form-data";
+import firebase from "../../firebase";
+import shortid from "shortid";
 
 const { Option } = Select;
 
@@ -142,17 +144,32 @@ const RegisterInputForm = ({ router }) => {
     axios.post("/api/join/optionForm", formData, config);
   }, [userId, skill, githubUrl]);
 
-  const onClickLocalButton = useCallback(() => {
+  const onClickLocalButton = useCallback(async () => {
     if (formError) return;
-    axios
+    await axios
       .post("/api/join", { email, nickname, password })
-      .then((res) => {
+      .then(async (res) => {
         //console.log(res);
         setUserId(res.data.userId);
         setEmailExistError(false);
         setNicknameExistError(false);
         setRegisterType("local");
         setProgress(1);
+
+        // firebase 유저 저장 of local회원가입
+        let createdUser = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password);
+        console.log("createdUser", createdUser);
+        await createdUser.user.updateProfile({
+          displayName: nickname,
+          type: "local",
+        });
+        await firebase.database().ref("users").child(createdUser.user.uid).set({
+          nickname: createdUser.user.displayName,
+          email: createdUser.user.email,
+          type: createdUser.user.type,
+        });
       })
       .catch((err) => {
         if (err.response.data.error.name === "UserExistsError") {
@@ -250,11 +267,26 @@ const RegisterInputForm = ({ router }) => {
         formData.append("email", email);
         axios
           .post("/api/join/optionForm", formData, config)
-          .then((res) => {
+          .then(async (res) => {
             //dispatch(setUserRequestAction());
             setNicknameExistError(false);
             setEmailExistError(false);
             setProgress(2);
+            let createdUser = await firebase
+              .auth()
+              .createUserWithEmailAndPassword(email, "");
+            console.log("createdUser", createdUser);
+            await createdUser.user.updateProfile({
+              displayName: nickname,
+            });
+            await firebase
+              .database()
+              .ref("users")
+              .child(createdUser.user.uid)
+              .set({
+                nickname: createdUser.user.displayName,
+                type: "social",
+              });
           })
           .catch((error) => {
             console.log(error.response.data.message);
@@ -276,12 +308,32 @@ const RegisterInputForm = ({ router }) => {
         formData.append("githubUrl", githubUrl);
         axios
           .post("/api/join/optionForm", formData, config)
-          .then((res) => {
+          .then(async (res) => {
             //dispatch(setUserRequestAction());
             setNicknameExistError(false);
+            let createdUser = await firebase
+              .auth()
+              .createUserWithEmailAndPassword(
+                `${nickname}@anonymous.com`,
+                shortid.generate(),
+              );
+            console.log("createdUser", createdUser);
+            await createdUser.user.updateProfile({
+              displayName: nickname,
+            });
+            await firebase
+              .database()
+              .ref("users")
+              .child(createdUser.user.uid)
+              .set({
+                email: createdUser.user.email,
+                nickname: createdUser.user.displayName,
+                type: "social",
+              });
             router.push("/");
           })
           .catch((error) => {
+            console.log(error);
             setNicknameExistError(true);
             formData.delete("type");
             formData.delete("nickname");
@@ -290,6 +342,7 @@ const RegisterInputForm = ({ router }) => {
           });
       }
     },
+
     [nickname, skill, githubUrl],
   );
 
