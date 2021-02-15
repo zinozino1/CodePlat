@@ -69,7 +69,7 @@ const mypage = () => {
           <div className="menu-content">
             {currentMenu === "profile" && <EditProfile />}
             {currentMenu === "activity" && <MyActivityTemplate />}
-            {/* {currentMenu === "note" && <ChatContainer />} */}
+            {currentMenu === "note" && <ChatContainer />}
 
             {/* <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
             <MyActivityTemplate></MyActivityTemplate> */}

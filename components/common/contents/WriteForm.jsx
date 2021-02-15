@@ -182,20 +182,47 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       alert("내용을 5글자 이상 써주세요.");
       return;
     }
+    const formData = new FormData();
+    fileList.forEach((file) => formData.append("files", file));
+    //console.log(fileList);
+    //formData.append()
+    // formData.append("")
+    // 여기부터 작업하면 댐
+    formData.append("type", "forum");
+    formData.append("writer", me._id);
+    formData.append("title", title);
+    formData.append("content", description);
+    formData.append("techStack", JSON.stringify(skill));
+    formData.append("field", filter);
+    formData.append("recruitment", peopleNumber);
+    formData.append("location", location);
+
+    console.log({
+      title,
+      description,
+
+      filter,
+      fileList,
+      peopleNumber,
+      fileList,
+      location,
+      skill,
+    });
 
     dispatch(
-      writePostRequestAction({
-        type: router.route.split("/")[2],
-        writer: me._id,
-        title,
-        content: description,
-        recruitment: peopleNumber,
-        location,
-        techStack: skill,
-        field: router.route.split("/")[2],
-      }),
+      writePostRequestAction(
+        formData,
+        // type: router.route.split("/")[2],
+        // writer: me._id,
+        // title,
+        // content: description,
+        // recruitment: peopleNumber,
+        // location,
+        // techStack: skill,
+        // field: router.route.split("/")[2],
+      ),
     );
-  }, [skill, title, description, peopleNumber, location, me, router]);
+  }, [skill, title, description, peopleNumber, location, me, router, fileList]);
 
   const onStudyAndProjectEdit = useCallback(() => {
     if (!me) {
@@ -300,7 +327,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     // formData.append("")
     // 여기부터 작업하면 댐
     formData.append("type", "forum");
-    formData.append("wirter", me._id);
+    formData.append("writer", me._id);
     formData.append("title", title);
     formData.append("content", description);
     formData.append("tag", JSON.stringify(tags));
@@ -308,16 +335,17 @@ const WriteForm = ({ contentType, router, isEdit }) => {
 
     console.log({ title, description, tags, filter, fileList });
 
-    // dispatch(
-    //   writePostRequestAction({
-    //     type: router.route.split("/")[2],
-    //     writer: me._id,
-    //     title,
-    //     content: description,
-    //     tag: tags,
-    //     field: filter,
-    //   }),
-    // );
+    dispatch(
+      writePostRequestAction(
+        formData,
+        // type: router.route.split("/")[2],
+        // writer: me._id,
+        // title,
+        // content: description,
+        // tag: tags,
+        // field: filter,
+      ),
+    );
   }, [title, description, tags, router, me, filter, fileList]);
 
   const onForumEdit = useCallback(() => {

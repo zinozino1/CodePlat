@@ -54,7 +54,6 @@ const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
           [{ list: "ordered" }, { list: "bullet" }],
           ["blockquote", "code-block"],
           [{ size: ["small", false, "large", "huge"] }],
-          ["clean"],
         ],
       },
     });

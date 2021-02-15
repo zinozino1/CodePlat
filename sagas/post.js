@@ -94,7 +94,7 @@ function* loadPostSaga(action) {
 function* loadPostsSaga(action) {
   try {
     const res = yield call(loadPosts, action.payload);
-    //console.log(res);
+    console.log(res);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       contentType: action.payload.type,
@@ -114,7 +114,7 @@ function* loadPostsSaga(action) {
 function* mainLoadPostsSaga(action) {
   try {
     const res = yield call(mainLoadPosts);
-    console.log(res);
+    //console.log(res);
     const { study, project, forum } = res.data.posts;
     yield put({
       type: MAIN_LOAD_POSTS_SUCCESS,
@@ -137,7 +137,7 @@ function* writePostSaga(action) {
   try {
     //yield delay(1000);
     const res = yield call(writePost, action.payload);
-    //console.log(res);
+    console.log(res);
     yield put({ type: WRITE_POST_SUCCESS });
     const post = res.data.post;
     window.location.href = `http://localhost:3000/articles/${post.type}/${post._id}`;

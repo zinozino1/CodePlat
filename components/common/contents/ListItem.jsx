@@ -139,7 +139,7 @@ const ListItem = ({ item, type }) => {
                   item.createdAt,
                 ).getFullYear()}.${
                   new Date(item.createdAt).getMonth() + 1
-                }.${new Date(item.createdAt).getDay()}`}</span>
+                }.${new Date(item.createdAt).getDate()}`}</span>
                 {/* <span className="create-time">
                   {`${new Date(item.createdAt).getHours()}:${new Date(
                     item.createdAt,
@@ -226,10 +226,10 @@ const ListItem = ({ item, type }) => {
                   {item.writer ? item.writer.nickname : "탈퇴한 회원"}
                 </span>
                 <span className="create-date">{`${new Date(
-                  item.createAt,
+                  item.createdAt,
                 ).getFullYear()}.${
-                  new Date(item.createAt).getMonth() + 1
-                }.${new Date(item.createAt).getDay()}`}</span>
+                  new Date(item.createdAt).getMonth() + 1
+                }.${new Date(item.createdAt).getDate()}`}</span>
               </div>
             </ListHeader>
             <List.Item.Meta
