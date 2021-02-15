@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { withRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
+import firebase from "../../firebase";
 
 const AntHeader = Layout.Header;
 
@@ -134,6 +135,16 @@ const Header = ({ router }) => {
   const [currentMenu, setCurrentMenu] = useState(null);
 
   const onLogout = useCallback(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            console.log("firebase logout 성공");
+          });
+      }
+    });
     dispatch(logoutRequestAction());
   }, []);
 

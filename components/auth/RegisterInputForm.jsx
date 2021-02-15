@@ -100,6 +100,8 @@ const RegisterInputForm = ({ router }) => {
   const [emailExistError, setEmailExistError] = useState(false);
   const [noneEmailUser, setNoneEmailUser] = useState(false);
 
+  const [firebaseLoading, setFirebaseLoading] = useState(false);
+
   const [imageFile, setImageFile] = useState(null);
 
   const [nickname, setNickname] = useState("");
@@ -144,6 +146,7 @@ const RegisterInputForm = ({ router }) => {
     axios.post("/api/join/optionForm", formData, config);
   }, [userId, skill, githubUrl]);
 
+  // 로컬 회원가입
   const onClickLocalButton = useCallback(async () => {
     if (formError) return;
     await axios
@@ -157,19 +160,25 @@ const RegisterInputForm = ({ router }) => {
         setProgress(1);
 
         // firebase 유저 저장 of local회원가입
+        setFirebaseLoading(true);
         let createdUser = await firebase
           .auth()
-          .createUserWithEmailAndPassword(email, password);
-        console.log("createdUser", createdUser);
+          .createUserWithEmailAndPassword(email, email);
+        //console.log("createdUser", createdUser);
         await createdUser.user.updateProfile({
           displayName: nickname,
-          type: "local",
         });
         await firebase.database().ref("users").child(createdUser.user.uid).set({
           nickname: createdUser.user.displayName,
           email: createdUser.user.email,
-          type: createdUser.user.type,
+          type: "local",
         });
+        // 회원가입 시 자동 로그인 -> 로컬은 자동로그인 안됨
+        // let SignedInUser = await firebase
+        //   .auth() // auth 서비스에 접근
+        //   .signInWithEmailAndPassword(email, email);
+        // //console.log("SignedInUser", SignedInUser);
+        // setFirebaseLoading(false);
       })
       .catch((err) => {
         if (err.response.data.error.name === "UserExistsError") {
@@ -232,7 +241,7 @@ const RegisterInputForm = ({ router }) => {
     return e && fileList;
   };
 
-  // social login 중복처리 필요
+  // social 회원가입 중복처리 필요
   const onSocialRegisterSubmit = useCallback(
     (e) => {
       if (nickname === "") {
@@ -260,6 +269,7 @@ const RegisterInputForm = ({ router }) => {
       //   }),
       // );
       if (noneEmailUser) {
+        // github, kakao
         formData.append("type", "email");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -272,10 +282,11 @@ const RegisterInputForm = ({ router }) => {
             setNicknameExistError(false);
             setEmailExistError(false);
             setProgress(2);
+
             let createdUser = await firebase
               .auth()
-              .createUserWithEmailAndPassword(email, "");
-            console.log("createdUser", createdUser);
+              .createUserWithEmailAndPassword(email, email);
+            //console.log("createdUser", createdUser);
             await createdUser.user.updateProfile({
               displayName: nickname,
             });
@@ -287,7 +298,14 @@ const RegisterInputForm = ({ router }) => {
                 nickname: createdUser.user.displayName,
                 type: "social",
               });
+            // 임마도 자동로그인 x
+            // let SignedInUser = await firebase
+            //   .auth() // auth 서비스에 접근
+            //   .signInWithEmailAndPassword(email, anonymousPassword);
+            // //console.log("SignedInUser", SignedInUser);
+            // setFirebaseLoading(false);
           })
+
           .catch((error) => {
             console.log(error.response.data.message);
             if (error.response.data.message === "email is reduplication") {
@@ -302,6 +320,7 @@ const RegisterInputForm = ({ router }) => {
             formData.delete("email");
           });
       } else {
+        // google, naver
         formData.append("type", "sns");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -311,16 +330,21 @@ const RegisterInputForm = ({ router }) => {
           .then(async (res) => {
             //dispatch(setUserRequestAction());
             setNicknameExistError(false);
+
+            setFirebaseLoading(true);
+
+            // let anonymousPassword = shortid.generate();
             let createdUser = await firebase
               .auth()
               .createUserWithEmailAndPassword(
-                `${nickname}@anonymous.com`,
-                shortid.generate(),
+                res.data.user.email,
+                res.data.user.email,
               );
-            console.log("createdUser", createdUser);
+            //console.log("createdUser", createdUser);
             await createdUser.user.updateProfile({
               displayName: nickname,
             });
+            // db 저장
             await firebase
               .database()
               .ref("users")
@@ -330,6 +354,15 @@ const RegisterInputForm = ({ router }) => {
                 nickname: createdUser.user.displayName,
                 type: "social",
               });
+            // 파이어베이스 로그인
+            let SignedInUser = await firebase
+              .auth() // auth 서비스에 접근
+              .signInWithEmailAndPassword(
+                res.data.user.email,
+                res.data.user.email,
+              );
+            //console.log("SignedInUser", SignedInUser);
+            setFirebaseLoading(false);
             router.push("/");
           })
           .catch((error) => {
@@ -719,6 +752,9 @@ const RegisterInputForm = ({ router }) => {
               가입하기
             </Button>
           </div>
+          {firebaseLoading && (
+            <div style={{ textAlign: "center" }}>잠시만 기다려주세요...</div>
+          )}
           <PushBackButton onClick={onPushBack}>뒤로가기</PushBackButton>
         </>
       )}

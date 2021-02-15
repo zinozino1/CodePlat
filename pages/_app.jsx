@@ -4,17 +4,32 @@ import "antd/dist/antd.css";
 import Head from "next/head";
 import wrapper from "../store/configureStore";
 import withReduxSaga from "next-redux-saga";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setUserRequestAction } from "../reducers/user";
 import { END } from "redux-saga";
 import axios from "axios";
+import firebase from "../firebase";
 
 const App = ({ Component }) => {
   const dispatch = useDispatch();
 
+  const { me } = useSelector((state) => state.user);
+
   // useEffect(() => {
   //   dispatch(setUserRequestAction());
   // }, []);
+
+  useEffect(async () => {
+    if (me) {
+      await firebase.auth().signInWithEmailAndPassword(me.email, me.email);
+      console.log("firebase 로그인 성공");
+    }
+    // firebase.auth().onAuthStateChanged((user) => {
+    //   console.log("firebase 새로 생성된 사용자 : ", user);
+    // });
+    let user = await firebase.auth().currentUser;
+    console.log("firebase 로그인된 user : ", user);
+  }, [me]);
 
   return (
     <>

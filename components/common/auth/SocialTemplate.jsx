@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import styled, { css } from "styled-components";
 import { Button } from "antd";
 import Link from "next/link";
@@ -35,12 +35,18 @@ const SocialLoginButton = styled(Button)`
 `;
 
 const SocialTemplate = () => {
+  const onClickSocialLogin = useCallback(() => {
+    console.log("fuck");
+  }, []);
   return (
     <>
       <SocialLoginWrapper>
         <Link href={`${SERVER_URL}/api/google`}>
           <a>
-            <SocialLoginButton className="login-google">
+            <SocialLoginButton
+              className="login-google"
+              onClick={onClickSocialLogin}
+            >
               Google
             </SocialLoginButton>
           </a>
