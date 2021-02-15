@@ -134,17 +134,17 @@ const Header = ({ router }) => {
 
   const [currentMenu, setCurrentMenu] = useState(null);
 
-  const onLogout = useCallback(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            console.log("firebase logout 성공");
-          });
-      }
-    });
+  const onLogout = useCallback(async () => {
+    let user = firebase.auth().currentUser;
+    if (user) {
+      await firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log("firebase logout 성공");
+        });
+    }
+
     dispatch(logoutRequestAction());
   }, []);
 
