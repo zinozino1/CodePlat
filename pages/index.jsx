@@ -73,6 +73,8 @@ const index = () => {
     // });
     let user = firebase.auth().currentUser;
     console.log("firebase 로그인된 user : ", user);
+
+    //firebaseSetUserRequestAction(user);
   }, [me]);
 
   return (

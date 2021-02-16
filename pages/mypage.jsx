@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Divider, Row, Col, Button, Form, Menu } from "antd";
 import {
   AppstoreOutlined,
@@ -20,6 +20,9 @@ import wrapper from "../store/configureStore";
 import { setUserRequestAction } from "../reducers/user";
 import { END } from "redux-saga";
 import client from "../lib/api/client";
+import firebase from "../firebase";
+import { useSelector } from "react-redux";
+import shortid from "shortid";
 
 const { SubMenu } = Menu;
 
@@ -45,10 +48,44 @@ const MenuWrapper = styled.div`
 `;
 
 const mypage = () => {
+  const { me } = useSelector((state) => state.user);
   const [currentMenu, setCurrentMenu] = useState("profile");
   const onChangeCurrentMenu = useCallback((e) => {
     setCurrentMenu(e.key);
   }, []);
+
+  const [chatRoomsRef, setChatRoomsRef] = useState(
+    firebase.database().ref("chatRooms"),
+  );
+
+  const [chatRooms, setChatRooms] = useState([]);
+  const [myChatRooms, setMyChatRooms] = useState([]);
+
+  const addChatRoomListener = () => {
+    let chatRoomsArray = [];
+
+    chatRoomsRef.on("child_added", (DataSnapShot) => {
+      chatRoomsArray.push(DataSnapShot.val());
+      // charRooms
+      //console.log(chatRoomsArray);
+      setChatRooms(chatRoomsArray);
+    });
+  };
+
+  const loadChatRooms = useCallback(() => {
+    setMyChatRooms(chatRooms);
+  }, [chatRooms]);
+
+  useEffect(() => {
+    addChatRoomListener();
+  }, []);
+
+  useEffect(() => {
+    console.log(chatRooms);
+    //console.log(chatRooms.length);
+  }, [chatRooms]);
+
+  if (!me) return null;
 
   return (
     <>
@@ -76,12 +113,51 @@ const mypage = () => {
               {/* <Menu.Item key="note" icon={<MailOutlined />}>
                 채팅
               </Menu.Item> */}
-              <SubMenu key="note" icon={<MailOutlined />} title="쪽지함">
-                {/* 유저 닉네임을 key로 해서 렌더링 필요 */}
-                <Menu.Item key="a">option1</Menu.Item>
+              <SubMenu
+                key="note"
+                icon={<MailOutlined />}
+                title="쪽지함"
+                onTitleClick={loadChatRooms}
+              >
+                {myChatRooms === [] ? (
+                  <Menu.Item>로딩중...</Menu.Item>
+                ) : (
+                  <>
+                    {myChatRooms.map((v, i) => {
+                      let flag = false;
+                      v.users.forEach((s, j) => {
+                        if (s.clientId === me._id) flag = true;
+                      });
+                      if (flag) {
+                        return (
+                          <Menu.Item
+                            key={
+                              v.users.filter((s, j) => {
+                                if (s.nickname !== me.nickname) {
+                                  return s;
+                                }
+                              })[0].nickname
+                            }
+                          >
+                            {
+                              v.users.filter((s, j) => {
+                                if (s.nickname !== me.nickname) {
+                                  return s;
+                                }
+                              })[0].nickname
+                            }
+                          </Menu.Item>
+                        );
+                      }
+                      flag = false;
+                    })}
+                  </>
+                )}
+
+                {/* <Menu.Item key="a">option1</Menu.Item>
                 <Menu.Item key="v">Option 2</Menu.Item>
                 <Menu.Item key="c">Option 3</Menu.Item>
-                <Menu.Item key="d">Option 4</Menu.Item>
+                <Menu.Item key="d">Option 4</Menu.Item> */}
               </SubMenu>
             </Menu>
           </div>

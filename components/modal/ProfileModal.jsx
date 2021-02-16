@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
 import { useSelector } from "react-redux";
+import firebase from "../../firebase";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -27,13 +28,85 @@ const ProfileModal = ({ writer }) => {
   // console.log(me.id);
   // console.log(writer.id);
 
-  const [isChat, setIsChat] = useState(false);
+  const [chatRoomsRef, setChatRoomsRef] = useState(
+    firebase.database().ref("chatRooms"),
+  );
 
-  const onSendLetter = useCallback(() => {
-    // if (!me) {
-    //   alert("로그인이 필요한 서비스입니다.");
-    // }
+  const [chatRooms, setChatRooms] = useState([]);
+
+  const addChatRoomListener = () => {
+    let chatRoomsArray = [];
+
+    chatRoomsRef.on("child_added", (DataSnapShot) => {
+      chatRoomsArray.push(DataSnapShot.val());
+      // charRooms
+      //console.log(chatRoomsArray);
+      setChatRooms(chatRoomsArray);
+    });
+  };
+
+  const onCreateChatRoom = useCallback(async () => {
+    let user = firebase.auth().currentUser;
+    if (user) {
+      const key = chatRoomsRef.push().key;
+      const newChatRoom = {
+        id: key,
+        users: [
+          { clientId: me._id, nickname: me.nickname },
+          { clientId: writer._id, nickname: writer.nickname },
+        ],
+      };
+      //console.log(chatRooms);
+      let chatRoomExist = false;
+      chatRooms.forEach((v, i) => {
+        let cnt = 0;
+        v.users.forEach((s, j) => {
+          //console.log(s.clientId);
+          if (
+            s.clientId === newChatRoom.users[0].clientId ||
+            s.clientId === newChatRoom.users[1].clientId
+          ) {
+            cnt++;
+          }
+        });
+        if (cnt === 2) {
+          chatRoomExist = true;
+        }
+      });
+      // let cnt = 0;
+      //console.log("cnt", cnt);
+      if (chatRooms.length === 0) {
+        alert("로딩중.. 잠시만 기다려주세요.");
+        return;
+      }
+      if (chatRoomExist) {
+        // 이미 채팅방이 있다면
+        alert("이미 채팅방이 있ㅅ브니다");
+      } else {
+        // 없다면 새로 생성
+        try {
+          await chatRoomsRef.child(key).update(newChatRoom);
+          alert("채팅방 생성완료");
+
+          //setChatRoomsRef(null);
+        } catch (error) {
+          alert("failed.");
+        }
+      }
+      chatRoomExist = false;
+    }
+  }, [chatRoomsRef, chatRooms]);
+
+  useEffect(() => {
+    addChatRoomListener();
+    // return () => {
+    //   chatRoomsRef.off();
+    // };
   }, []);
+
+  // useEffect(() => {
+  //   console.log(chatRooms);
+  // }, [chatRooms]);
 
   return (
     <ProfileWrapper>
@@ -83,7 +156,11 @@ const ProfileModal = ({ writer }) => {
       </RowWrapper>
       <RowWrapper className="btn-wrapper">
         {me && me._id !== writer._id && (
-          <Button type="primary" className="note-btn" onClick={onSendLetter}>
+          <Button
+            type="primary"
+            className="note-btn"
+            onClick={onCreateChatRoom}
+          >
             쪽지 보내기
           </Button>
         )}
