@@ -15,6 +15,7 @@ import { Locations } from "../../../lib/constant/constant";
 import wrapper from "../../../store/configureStore";
 import { setUserRequestAction } from "../../../reducers/user";
 import { END } from "redux-saga";
+import client from "../../../lib/api/client";
 
 const SelectLocationWrapper = styled.div`
   text-align: right;
@@ -127,9 +128,18 @@ const Study = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
+    //console.log(context);
+
+    const cookie = context.req ? context.req.headers.cookie : "";
+    client.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      //console.log("fuckcookie", cookie);
+      client.defaults.withCredentials = true;
+      client.defaults.headers.Cookie = cookie;
+    }
     context.store.dispatch(setUserRequestAction());
-    // 포스트 SSR 필요
-    // context.store.dispatch(mainLoadPostsReqeustAction());
+    //context.store.dispatch(mainLoadPostsReqeustAction());
+    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

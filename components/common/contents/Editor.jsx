@@ -56,7 +56,7 @@ const QuillWrapper = styled.div`
   }
 `;
 
-const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
+const Editor = ({ onChangeTitle, onChangeDescription, description, title }) => {
   //   hljs.configure({
   //     // optionally configure hljs
   //     languages: ["javascript", "ruby", "python"],
@@ -85,6 +85,8 @@ const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
       },
     });
     const quill = quillInstance.current;
+    //editor default value
+    quill.root.innerHTML = description;
     quill.on("text-change", (delta, oldDelta, source) => {
       if (source === "user") {
         onChangeDescription(quill.root.innerHTML);
@@ -128,6 +130,7 @@ const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
       <TitleInput
         placeholder="제목을 입력해주세요."
         onChange={onChangeTitle}
+        defaultValue={title}
       ></TitleInput>
       <QuillWrapper>
         <div ref={quillElement}></div>

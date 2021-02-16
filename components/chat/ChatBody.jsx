@@ -3,7 +3,7 @@ import styled from "styled-components";
 import firebase from "../../firebase";
 
 const ChatBodyWrapper = styled.div`
-  height: 40vh;
+  height: 60vh;
   margin: 30px;
   overflow: auto;
   .stranger {
@@ -27,7 +27,7 @@ const ChatBody = () => {
   const users = firebase.database().ref("users");
 
   useEffect(() => {
-    console.log(users.ref);
+    //console.log(users.ref);
   }, [users]);
 
   return (
@@ -48,7 +48,7 @@ const ChatBody = () => {
         <span className="stranger-content">안녕하세요</span>
       </div>
       <div className="me">
-        <span className="me-content">반갑습니다</span>
+        <span className="me-content">반갑습니다ㅋㅋㅋㅋㅋㅋㅋㅋ</span>
       </div>
       <div className="stranger">
         <span className="stranger-content">안녕하세요</span>
@@ -57,7 +57,7 @@ const ChatBody = () => {
         <span className="me-content">반갑습니다</span>
       </div>
       <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
+        <span className="stranger-content">안녕하세요111111111</span>
       </div>
       <div className="me">
         <span className="me-content">반갑습니다</span>

@@ -2,7 +2,6 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
 import { useSelector } from "react-redux";
-import ChatModal from "./ChatModal";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -84,10 +83,9 @@ const ProfileModal = ({ writer }) => {
       </RowWrapper>
       <RowWrapper className="btn-wrapper">
         {me && me._id !== writer._id && (
-          // <Button type="primary" className="note-btn" onClick={onSendLetter}>
-          //   쪽지 보내기
-          // </Button>
-          <ChatModal />
+          <Button type="primary" className="note-btn" onClick={onSendLetter}>
+            쪽지 보내기
+          </Button>
         )}
       </RowWrapper>
     </ProfileWrapper>

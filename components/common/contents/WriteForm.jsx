@@ -72,7 +72,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     setDescription(e);
   }, []);
 
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = isEdit
+    ? useState(post.fileUrl)
+    : useState([]);
 
   const onChangeFileList = useCallback(
     (e) => {
@@ -335,7 +337,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     formData.append("tag", JSON.stringify(tags));
     formData.append("field", filter);
 
-    console.log({ title, description, tags, filter, fileList });
+    //console.log({ title, description, tags, filter, fileList });
 
     dispatch(
       writePostRequestAction(
@@ -367,34 +369,35 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       alert("내용을 5글자 이상 써주세요.");
       return;
     }
-    let editConfirm = confirm("수정하시겠습니까?");
-    if (editConfirm) {
-      axios
-        .put(`api/post/update`, {
-          id: post._id,
-          title,
-          content: description,
-          tag: tags,
-          field: filter,
-        })
-        .then(() => {
-          //alert("수정성공");
-          Router.push(
-            `http://localhost:3000/articles/${post.type}/${post._id}`,
-          );
-        })
-        .catch((error) => {
-          alert("수정실패");
-        });
-    } else {
-      return;
-    }
+    console.log({ title, description, tags, filter, fileList });
+    // let editConfirm = confirm("수정하시겠습니까?");
+    // if (editConfirm) {
+    //   axios
+    //     .put(`api/post/update`, {
+    //       id: post._id,
+    //       title,
+    //       content: description,
+    //       tag: tags,
+    //       field: filter,
+    //     })
+    //     .then(() => {
+    //       //alert("수정성공");
+    //       Router.push(
+    //         `http://localhost:3000/articles/${post.type}/${post._id}`,
+    //       );
+    //     })
+    //     .catch((error) => {
+    //       alert("수정실패");
+    //     });
+    // } else {
+    //   return;
+    // }
   }, [title, description, tags, post, filter]);
 
-  useEffect(() => {
-    console.log(title);
-    console.log(description);
-  }, [title, description]);
+  // useEffect(() => {
+  //   console.log(title);
+  //   console.log(description);
+  // }, [title, description]);
 
   return (
     <>
@@ -460,6 +463,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             onChangeDescription={onChangeDescription}
             onChangeTitle={onChangeTitle}
             description={description}
+            title={title}
           />
           {/* <FormItemWrapper>
             <div style={{ marginBottom: "7px" }}>
@@ -545,6 +549,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             onChangeDescription={onChangeDescription}
             onChangeTitle={onChangeTitle}
             description={description}
+            title={title}
           />
 
           <Upload

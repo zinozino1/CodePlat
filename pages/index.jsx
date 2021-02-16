@@ -16,6 +16,7 @@ import wrapper from "../store/configureStore";
 import { setUserRequestAction, SET_USER_REQUEST } from "../reducers/user";
 import axios from "axios";
 import firebase from "../firebase";
+import client from "../lib/api/client";
 
 const Content = Layout.Content;
 
@@ -55,7 +56,7 @@ const index = () => {
 
   useEffect(() => {
     //dispatch(mainLoadPostsReqeustAction());
-    console.log("rerender");
+    //console.log("rerender");
     //dispatch(setUserRequestAction());
     return () => {
       dispatch(initializePostsAction());
@@ -70,7 +71,7 @@ const index = () => {
     // firebase.auth().onAuthStateChanged((user) => {
     //   console.log("firebase 새로 생성된 사용자 : ", user);
     // });
-    let user = await firebase.auth().currentUser;
+    let user = firebase.auth().currentUser;
     console.log("firebase 로그인된 user : ", user);
   }, [me]);
 
@@ -166,13 +167,14 @@ const index = () => {
 // 프론트 서버에서 실행되는 코드
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    console.log("fuc");
     //console.log(context);
+
     const cookie = context.req ? context.req.headers.cookie : "";
-    axios.defaults.headers.Cookie = "";
+    client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      axios.defaults.headers.Cookie = cookie;
-      //axios.defaults.withCredentials = true;
+      //console.log("fuckcookie", cookie);
+      client.defaults.withCredentials = true;
+      client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
     context.store.dispatch(mainLoadPostsReqeustAction());

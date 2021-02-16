@@ -8,6 +8,10 @@ import {
   initializePostAction,
 } from "../../../reducers/post";
 import { withRouter } from "next/router";
+import wrapper from "../../../store/configureStore";
+import { setUserRequestAction } from "../../../reducers/user";
+import { END } from "redux-saga";
+import client from "../../../lib/api/client";
 
 const PostEdit = ({ router }) => {
   const dispatch = useDispatch();
@@ -37,5 +41,24 @@ const PostEdit = ({ router }) => {
     </>
   );
 };
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async (context) => {
+    //console.log(context);
+
+    const cookie = context.req ? context.req.headers.cookie : "";
+    client.defaults.headers.Cookie = "";
+    if (context.req && cookie) {
+      //console.log("fuckcookie", cookie);
+      client.defaults.withCredentials = true;
+      client.defaults.headers.Cookie = cookie;
+    }
+    context.store.dispatch(setUserRequestAction());
+    //context.store.dispatch(mainLoadPostsReqeustAction());
+    //context.store.dispatch(END);
+    context.store.dispatch(END);
+    await context.store.sagaTask.toPromise();
+  },
+);
 
 export default withRouter(PostEdit);

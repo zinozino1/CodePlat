@@ -7,6 +7,7 @@ import { logoutRequestAction } from "../../reducers/user";
 import { SERVER_URL } from "../../lib/constant/constant";
 import ProfileModal from "../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
+import firebase from "../../firebase";
 
 const CardWrapper = styled.div`
   padding: 20px;
@@ -25,7 +26,16 @@ const MyProfile = ({ me }) => {
 
   const { logoutLoading } = useSelector((state) => state.user);
 
-  const onLogout = useCallback(() => {
+  const onLogout = useCallback(async () => {
+    let user = firebase.auth().currentUser;
+    if (user) {
+      await firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          console.log("firebase logout 성공");
+        });
+    }
     dispatch(logoutRequestAction());
   }, []);
 
