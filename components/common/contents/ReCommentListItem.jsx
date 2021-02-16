@@ -100,7 +100,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
       let updateConfirm = confirm("수정하시겠습니까?");
       if (updateConfirm) {
         axios
-          .put(`/api/comment/update`, {
+          .patch(`/api/comments`, {
             commentId: reComment._id,
             content: editReCommentText,
             secretComment: isReEditSecret,

@@ -226,10 +226,10 @@ const ListItem = ({ item, type }) => {
                   {item.writer ? item.writer.nickname : "탈퇴한 회원"}
                 </span>
                 <span className="create-date">{`${new Date(
-                  item.createdAt,
+                  item.createAt,
                 ).getFullYear()}.${
-                  new Date(item.createdAt).getMonth() + 1
-                }.${new Date(item.createdAt).getDate()}`}</span>
+                  new Date(item.createAt).getMonth() + 1
+                }.${new Date(item.createAt).getDate()}`}</span>
               </div>
             </ListHeader>
             <List.Item.Meta

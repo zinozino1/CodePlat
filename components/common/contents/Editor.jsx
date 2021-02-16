@@ -1,10 +1,32 @@
+// import "../../../lib/util/highlight.js";
+
 import React, { useRef, useEffect, useCallback } from "react";
 
 // import "quill/dist/quill.bubble.css";
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
+
+//import "highlight.js/monokai-sublime.min.css";
 import "quill/dist/quill.snow.css";
 import styled from "styled-components";
 import wrapper from "../../../store/configureStore";
 import { END } from "redux-saga";
+
+hljs.configure({
+  languages: [
+    "javascript",
+    "ruby",
+    "python",
+    "rust",
+    "c",
+    "c++",
+    "go",
+    "java",
+    "rust",
+    "kotlin",
+    "typescript",
+  ],
+});
 
 const EditorBlock = styled.div`
   /* 페이지 위 아래 여백 지정 */
@@ -35,6 +57,10 @@ const QuillWrapper = styled.div`
 `;
 
 const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
+  //   hljs.configure({
+  //     // optionally configure hljs
+  //     languages: ["javascript", "ruby", "python"],
+  //   });
   const Quill = typeof window === "object" ? require("quill") : () => false;
   const quillElement = useRef(null); // Quill을 적용할 DivElement를 설정
   const quillInstance = useRef(null); // Quill 인스턴스를 설정
@@ -45,6 +71,7 @@ const Editor = ({ onChangeTitle, onChangeDescription, description }) => {
       theme: "snow",
       placeholder: "내용을 입력해주세요.",
       modules: {
+        syntax: { highlight: (text) => hljs.highlightAuto(text).value },
         // 더 많은 옵션
         // https://quilljs.com/docs/modules/toolbar/ 참고
         toolbar: [

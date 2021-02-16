@@ -52,8 +52,17 @@ const PostViewerContentWrapper = styled.div`
   }
   .post-content {
     /* border: 1px solid black; */
-    font-weight: 300;
+    font-weight: 400;
+    font-size: 16px;
     padding: 20px 0;
+
+    .ql-syntax {
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      border-radius: 4px;
+      font-family: "Liberation Mono", Menlo, Courier, monospace;
+    }
   }
 
   .comment-list-wrapper {
@@ -131,7 +140,7 @@ const PostViewerContent = ({ post, contentType }) => {
       )}
 
       <div className="post-content">
-        <p>{post.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>
 
       <div className="comment-list-wrapper">

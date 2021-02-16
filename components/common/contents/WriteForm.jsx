@@ -66,8 +66,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   const [description, setDescription] = isEdit
     ? useState(post.content)
     : useState("");
+
   const onChangeDescription = useCallback((e) => {
-    setDescription(e.replace(/(<([^>]+)>)/gi, ""));
+    // setDescription(e.replace(/(<([^>]+)>)/gi, ""));
+    setDescription(e);
   }, []);
 
   const [fileList, setFileList] = useState([]);
@@ -188,7 +190,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     //formData.append()
     // formData.append("")
     // 여기부터 작업하면 댐
-    formData.append("type", "forum");
+    formData.append("type", contentType);
     formData.append("writer", me._id);
     formData.append("title", title);
     formData.append("content", description);
@@ -389,10 +391,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     }
   }, [title, description, tags, post, filter]);
 
-  // useEffect(() => {
-  //   console.log(title);
-  //   console.log(description);
-  // }, [title, description]);
+  useEffect(() => {
+    console.log(title);
+    console.log(description);
+  }, [title, description]);
 
   return (
     <>

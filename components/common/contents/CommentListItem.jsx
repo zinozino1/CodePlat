@@ -189,7 +189,7 @@ const CommentListItem = ({ item, post }) => {
       let updateConfirm = confirm("수정하시겠습니까?");
       if (updateConfirm) {
         axios
-          .put(`/api/comment/update`, {
+          .patch(`/api/comments`, {
             commentId: comment._id,
             content: editCommentText,
             secretComment: isEditSecret,
@@ -250,8 +250,8 @@ const CommentListItem = ({ item, post }) => {
           if (parent && parent.isDelete && childInParentLength === 1) {
             parentId = parent._id;
 
-            axios.delete(`/api/comment/${parentId}/delete`).then(() => {
-              axios.delete(`/api/comment/${id}/delete`).then(() => {
+            axios.delete(`/api/comments/${parentId}`).then(() => {
+              axios.delete(`/api/comments/${id}`).then(() => {
                 Router.push(
                   `http://localhost:3000/articles/${post.type}/${post._id}`,
                 );
