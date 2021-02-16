@@ -65,10 +65,13 @@ const mypage = () => {
     let chatRoomsArray = [];
 
     chatRoomsRef.on("child_added", (DataSnapShot) => {
+      console.log("snapshot:", DataSnapShot.val());
+
       chatRoomsArray.push(DataSnapShot.val());
       // charRooms
       //console.log(chatRoomsArray);
-      setChatRooms(chatRoomsArray);
+      // 새로운 배열을 넣을 때에는 스프레드연산자 꼭 사용
+      setChatRooms([...chatRoomsArray]);
     });
   };
 
@@ -80,10 +83,11 @@ const mypage = () => {
     addChatRoomListener();
   }, []);
 
-  useEffect(() => {
-    console.log(chatRooms);
-    //console.log(chatRooms.length);
-  }, [chatRooms]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setMyChatRooms([...chatRooms]);
+  //   }, 700);
+  // }, [chatRooms]);
 
   if (!me) return null;
 
@@ -117,48 +121,67 @@ const mypage = () => {
                 key="note"
                 icon={<MailOutlined />}
                 title="쪽지함"
-                onTitleClick={loadChatRooms}
+                //onTitleClick={loadChatRooms}
               >
-                {myChatRooms === [] ? (
-                  <Menu.Item>로딩중...</Menu.Item>
-                ) : (
-                  <>
-                    {myChatRooms.map((v, i) => {
-                      let flag = false;
-                      v.users.forEach((s, j) => {
-                        if (s.clientId === me._id) flag = true;
-                      });
-                      if (flag) {
-                        return (
-                          <Menu.Item
-                            key={
-                              v.users.filter((s, j) => {
-                                if (s.nickname !== me.nickname) {
-                                  return s;
-                                }
-                              })[0].nickname
-                            }
-                          >
-                            {
-                              v.users.filter((s, j) => {
-                                if (s.nickname !== me.nickname) {
-                                  return s;
-                                }
-                              })[0].nickname
-                            }
-                          </Menu.Item>
-                        );
-                      }
-                      flag = false;
-                    })}
-                  </>
-                )}
-
-                {/* <Menu.Item key="a">option1</Menu.Item>
-                <Menu.Item key="v">Option 2</Menu.Item>
-                <Menu.Item key="c">Option 3</Menu.Item>
-                <Menu.Item key="d">Option 4</Menu.Item> */}
+                {/* <>
+                  {chatRooms.map((v, i) => {
+                    let flag = false;
+                    v.users.forEach((s, j) => {
+                      if (s.clientId === me._id) flag = true;
+                    });
+                    if (flag) {
+                      return (
+                        <Menu.Item
+                          key={
+                            v.users.filter((s, j) => {
+                              if (s.nickname !== me.nickname) {
+                                return s;
+                              }
+                            })[0].nickname
+                          }
+                          onClick={() => {
+                            console.log(v);
+                          }}
+                        >
+                          {
+                            v.users.filter((s, j) => {
+                              if (s.nickname !== me.nickname) {
+                                return s;
+                              }
+                            })[0].nickname
+                          }
+                        </Menu.Item>
+                      );
+                    }
+                    flag = false;
+                  })}
+                </> */}
               </SubMenu>
+              {chatRooms.map((v, i) => {
+                let flag = false;
+                v.users.forEach((s, j) => {
+                  if (s.clientId === me._id) flag = true;
+                });
+                if (flag) {
+                  return (
+                    <Menu.Item
+                      key={shortid.generate()}
+                      onClick={() => {
+                        console.log(v);
+                      }}
+                    >
+                      {
+                        v.users.filter((s, j) => {
+                          if (s.nickname !== me.nickname) {
+                            return s;
+                          }
+                        })[0].nickname
+                      }
+                    </Menu.Item>
+                  );
+                }
+                flag = false;
+              })}
             </Menu>
           </div>
           <div className="menu-content">
