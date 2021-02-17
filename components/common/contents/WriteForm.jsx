@@ -229,7 +229,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     formData.append("title", title);
     formData.append("content", description);
     formData.append("techStack", JSON.stringify(skill));
-    formData.append("field", filter);
+
     formData.append("recruitment", peopleNumber);
     formData.append("location", location);
 
@@ -287,7 +287,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
         if (file.size) {
           formData.append("files", file);
         } else {
-          existFilePaths.push(file.url);
+          existFilePaths.push(file.url.replace(`${SERVER_URL}/`, ""));
           existFileNames.push(file.name);
         }
       });
@@ -299,8 +299,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       formData.append("id", post._id);
       formData.append("title", title);
       formData.append("content", description);
+      formData.append("recruitment", peopleNumber);
+      formData.append("location", location);
+      formData.append("techStack", JSON.stringify(skill));
 
-      formData.append("field", filter);
       formData.append("filePath", JSON.stringify(existFilePaths));
       formData.append("fileName", JSON.stringify(existFileNames));
       axios
@@ -335,7 +337,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     //     console.log(error);
     //     alert("수정실패");
     //   });
-  }, [skill, title, description, peopleNumber, location, post]);
+  }, [skill, title, description, peopleNumber, location, post, mergedFiles]);
 
   // 포럼 state
   const [filter, setFilter] = isEdit ? useState(post.field) : useState("자유");
@@ -421,10 +423,12 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       const formData = new FormData();
       let existFilePaths = [];
       let existFileNames = [];
+      let tmp = [];
       mergedFiles.forEach((file) => {
         if (file.size) {
           // 새로운거
-
+          console.log("새로운거");
+          tmp.push(file);
           formData.append("files", file);
         } else {
           // 기존에 있던거
@@ -432,7 +436,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           existFileNames.push(file.name);
         }
       });
-      //console.log(fileList);
+      console.log(tmp);
+      console.log(existFilePaths);
+      console.log(existFileNames);
       //formData.append()
       // formData.append("")
       // 여기부터 작업하면 댐
