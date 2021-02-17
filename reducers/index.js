@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import user from "./user";
 import post from "./post";
 import skill from "./skill";
+import chat from "./chat";
 
 // const rootReducer = combineReducers({
 //   index: (state = {}, action) => {
@@ -28,6 +29,7 @@ const rootReducer = (state, action) => {
         user,
         post,
         skill,
+        chat,
       });
       return combineReducer(state, action);
     }

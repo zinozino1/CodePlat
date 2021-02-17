@@ -1,4 +1,9 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import { Divider, Row, Col, Button, Form, Menu } from "antd";
 import {
   AppstoreOutlined,
@@ -21,8 +26,12 @@ import { setUserRequestAction } from "../reducers/user";
 import { END } from "redux-saga";
 import client from "../lib/api/client";
 import firebase from "../firebase";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import shortid from "shortid";
+import {
+  setCurrentChatRoomAction,
+  initializeChatRoomAction,
+} from "../reducers/chat";
 
 const { SubMenu } = Menu;
 
@@ -49,6 +58,7 @@ const MenuWrapper = styled.div`
 
 const mypage = () => {
   const { me } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [currentMenu, setCurrentMenu] = useState("profile");
   const onChangeCurrentMenu = useCallback((e) => {
     setCurrentMenu(e.key);
@@ -59,13 +69,18 @@ const mypage = () => {
   );
 
   const [chatRooms, setChatRooms] = useState([]);
-  const [myChatRooms, setMyChatRooms] = useState([]);
+  //const [myChatRooms, setMyChatRooms] = useState([]);
+
+  const onSetCurrentChatRoom = useCallback((data) => {
+    console.log(data);
+    dispatch(setCurrentChatRoomAction(data));
+  }, []);
 
   const addChatRoomListener = () => {
     let chatRoomsArray = [];
 
     chatRoomsRef.on("child_added", (DataSnapShot) => {
-      console.log("snapshot:", DataSnapShot.val());
+      //console.log("snapshot:", DataSnapShot.val());
 
       chatRoomsArray.push(DataSnapShot.val());
       // charRooms
@@ -75,12 +90,22 @@ const mypage = () => {
     });
   };
 
-  const loadChatRooms = useCallback(() => {
-    setMyChatRooms(chatRooms);
-  }, [chatRooms]);
+  // const loadChatRooms = useCallback(() => {
+  //   setMyChatRooms(chatRooms);
+  // }, [chatRooms]);
+
+  // useLayoutEffect(() => {
+  //   addChatRoomListener();
+  //   return () => {
+  //     initializeChatRoomAction();
+  //   };
+  // }, []);
 
   useEffect(() => {
     addChatRoomListener();
+    return () => {
+      initializeChatRoomAction();
+    };
   }, []);
 
   // useEffect(() => {
@@ -123,7 +148,7 @@ const mypage = () => {
                 title="쪽지함"
                 //onTitleClick={loadChatRooms}
               >
-                {/* <>
+                <>
                   {chatRooms.map((v, i) => {
                     let flag = false;
                     v.users.forEach((s, j) => {
@@ -140,7 +165,7 @@ const mypage = () => {
                             })[0].nickname
                           }
                           onClick={() => {
-                            console.log(v);
+                            onSetCurrentChatRoom(v);
                           }}
                         >
                           {
@@ -155,9 +180,10 @@ const mypage = () => {
                     }
                     flag = false;
                   })}
-                </> */}
+                </>
               </SubMenu>
-              {chatRooms.map((v, i) => {
+
+              {/* {chatRooms.map((v, i) => {
                 let flag = false;
                 v.users.forEach((s, j) => {
                   if (s.clientId === me._id) flag = true;
@@ -165,6 +191,7 @@ const mypage = () => {
                 if (flag) {
                   return (
                     <Menu.Item
+                      style={{ marginLeft: "20px" }}
                       key={shortid.generate()}
                       onClick={() => {
                         console.log(v);
@@ -181,7 +208,7 @@ const mypage = () => {
                   );
                 }
                 flag = false;
-              })}
+              })} */}
             </Menu>
           </div>
           <div className="menu-content">
