@@ -423,12 +423,12 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       const formData = new FormData();
       let existFilePaths = [];
       let existFileNames = [];
-      let tmp = [];
+
       mergedFiles.forEach((file) => {
         if (file.size) {
           // 새로운거
           console.log("새로운거");
-          tmp.push(file);
+
           formData.append("files", file);
         } else {
           // 기존에 있던거
@@ -436,9 +436,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           existFileNames.push(file.name);
         }
       });
-      console.log(tmp);
-      console.log(existFilePaths);
-      console.log(existFileNames);
+      // console.log(tmp);
+      // console.log(existFilePaths);
+      // console.log(existFileNames);
       //formData.append()
       // formData.append("")
       // 여기부터 작업하면 댐
@@ -465,7 +465,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     } else {
       return;
     }
-  }, [title, description, tags, post, filter]);
+  }, [title, description, tags, post, filter, mergedFiles]);
 
   // useEffect(() => {
   //   console.log(title);

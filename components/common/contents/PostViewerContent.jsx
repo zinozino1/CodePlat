@@ -78,6 +78,21 @@ const PostViewerContentWrapper = styled.div`
 const PostViewerContent = ({ post, contentType }) => {
   const { me } = useSelector((state) => state.user);
 
+  const mergeFiles = () => {
+    let mergedFiles = [];
+
+    for (let i = 0; i < post.fileUrl.length; i++) {
+      let newFile = {};
+      newFile.url = `${SERVER_URL}/${post.fileUrl[i]}`;
+      newFile.thumbUrl = `${SERVER_URL}/${post.fileUrl[i]}`;
+      newFile.name = post.fileName[i];
+      newFile.uid = i;
+      newFile.status = "done";
+      mergedFiles.push(newFile);
+    }
+    return mergedFiles;
+  };
+
   return (
     <PostViewerContentWrapper>
       <div className="post-title">
@@ -151,18 +166,13 @@ const PostViewerContent = ({ post, contentType }) => {
             </div>
           );
         })} */}
-        {/* <Upload
-            name="logo"
-            listType="picture"
-            //beforeUpload={onChangeFileList}
-            defaultFileList={fileList.map((v,i)=>{
-              return {uid:i, name:i, }
-            })}
-            //onRemove={onRemoveFile}
-          >
-            
-            
-          </Upload> */}
+        <Upload
+          name="logo"
+          listType="picture"
+          //beforeUpload={onChangeFileList}
+          defaultFileList={mergeFiles()}
+          //onRemove={onRemoveFile}
+        ></Upload>
       </div>
 
       <div className="comment-list-wrapper">
