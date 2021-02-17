@@ -86,7 +86,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     ? useState(post.fileUrl)
     : useState([]);
 
-  const [fileNames, setFileNames] = useState(post.fileName);
+  const [fileNames, setFileNames] = isEdit
+    ? useState(post.fileName)
+    : useState([]);
 
   const mergeFiles = () => {
     let mergedFiles = [];
@@ -278,15 +280,31 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     }
     let editConfirm = confirm("수정하시겠습니까?");
     if (editConfirm) {
+      const formData = new FormData();
+      let existFilePaths = [];
+      let existFileNames = [];
+      mergedFiles.forEach((file) => {
+        if (file.size) {
+          formData.append("files", file);
+        } else {
+          existFilePaths.push(file.url);
+          existFileNames.push(file.name);
+        }
+      });
+      //console.log(fileList);
+      //formData.append()
+      // formData.append("")
+      // 여기부터 작업하면 댐
+      formData.append("type", contentType);
+      formData.append("id", post._id);
+      formData.append("title", title);
+      formData.append("content", description);
+
+      formData.append("field", filter);
+      formData.append("filePath", JSON.stringify(existFilePaths));
+      formData.append("fileName", JSON.stringify(existFileNames));
       axios
-        .put(`api/post/update`, {
-          id: post._id,
-          title,
-          content: description,
-          recruitment: peopleNumber,
-          location,
-          techStack: skill,
-        })
+        .patch(`api/posts`, formData)
         .then(() => {
           //alert("수정성공");
           Router.push(
@@ -379,7 +397,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     );
   }, [title, description, tags, router, me, filter, mergedFiles]);
 
-  const onForumEdit = useCallback(async () => {
+  const onForumEdit = useCallback(() => {
     if (!me) {
       alert("로그인이 필요한 서비스입니다.");
       return;
@@ -401,7 +419,19 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     let editConfirm = confirm("수정하시겠습니까?");
     if (editConfirm) {
       const formData = new FormData();
-      mergedFiles.forEach((file) => formData.append("files", file));
+      let existFilePaths = [];
+      let existFileNames = [];
+      mergedFiles.forEach((file) => {
+        if (file.size) {
+          // 새로운거
+
+          formData.append("files", file);
+        } else {
+          // 기존에 있던거
+          existFilePaths.push(file.url.replace(`${SERVER_URL}/`, ""));
+          existFileNames.push(file.name);
+        }
+      });
       //console.log(fileList);
       //formData.append()
       // formData.append("")
@@ -412,8 +442,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       formData.append("content", description);
       formData.append("tag", JSON.stringify(tags));
       formData.append("field", filter);
+      formData.append("filePath", JSON.stringify(existFilePaths));
+      formData.append("fileName", JSON.stringify(existFileNames));
 
-      await axios
+      axios
         .patch(`api/posts`, formData)
         .then(() => {
           //alert("수정성공");
@@ -516,7 +548,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             name="logo"
             listType="picture"
             beforeUpload={onChangeFileList}
-            defaultFileList={fileList}
+            defaultFileList={mergeFiles()}
             onRemove={onRemoveFile}
           >
             {/* // defaultFileList> */}
