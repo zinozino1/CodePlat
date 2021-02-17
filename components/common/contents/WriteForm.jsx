@@ -379,7 +379,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     );
   }, [title, description, tags, router, me, filter, mergedFiles]);
 
-  const onForumEdit = useCallback(() => {
+  const onForumEdit = useCallback(async () => {
     if (!me) {
       alert("로그인이 필요한 서비스입니다.");
       return;
@@ -398,28 +398,35 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     }
     console.log({ title, description, tags, filter, mergedFiles });
 
-    // let editConfirm = confirm("수정하시겠습니까?");
-    // if (editConfirm) {
-    //   axios
-    //     .put(`api/post/update`, {
-    //       id: post._id,
-    //       title,
-    //       content: description,
-    //       tag: tags,
-    //       field: filter,
-    //     })
-    //     .then(() => {
-    //       //alert("수정성공");
-    //       Router.push(
-    //         `http://localhost:3000/articles/${post.type}/${post._id}`,
-    //       );
-    //     })
-    //     .catch((error) => {
-    //       alert("수정실패");
-    //     });
-    // } else {
-    //   return;
-    // }
+    let editConfirm = confirm("수정하시겠습니까?");
+    if (editConfirm) {
+      const formData = new FormData();
+      mergedFiles.forEach((file) => formData.append("files", file));
+      //console.log(fileList);
+      //formData.append()
+      // formData.append("")
+      // 여기부터 작업하면 댐
+      formData.append("type", "forum");
+      formData.append("id", post._id);
+      formData.append("title", title);
+      formData.append("content", description);
+      formData.append("tag", JSON.stringify(tags));
+      formData.append("field", filter);
+
+      await axios
+        .patch(`api/posts`, formData)
+        .then(() => {
+          //alert("수정성공");
+          Router.push(
+            `http://localhost:3000/articles/${post.type}/${post._id}`,
+          );
+        })
+        .catch((error) => {
+          alert("수정실패");
+        });
+    } else {
+      return;
+    }
   }, [title, description, tags, post, filter]);
 
   // useEffect(() => {
