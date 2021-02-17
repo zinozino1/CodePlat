@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import firebase from "../../firebase";
 import { useSelector } from "react-redux";
 
@@ -22,6 +22,31 @@ const ChatBodyWrapper = styled.div`
     padding: 3px 10px;
     border-radius: 4px;
   }
+`;
+
+const MessageWrapper = styled.div`
+  /* border: 1px solid black; */
+  padding: 5px;
+  ${(props) =>
+    props.type === "me"
+      ? css`
+          text-align: right;
+          span {
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 4px;
+            background: #fee500;
+          }
+        `
+      : css`
+          span {
+            padding: 5px;
+            border: 1px solid black;
+            border-radius: 4px;
+            background: #222;
+            color: #fff;
+          }
+        `}
 `;
 
 const ChatBody = ({ chatRoomKey }) => {
@@ -61,7 +86,19 @@ const ChatBody = ({ chatRoomKey }) => {
     <ChatBodyWrapper>
       {messages.length > 0 &&
         messages.map((v, i) => {
-          return <div key={v.timestamp}>{v.content}</div>;
+          if (v.user.clientId === me._id) {
+            return (
+              <MessageWrapper type="me" key={v.timestamp}>
+                <span>{v.content}</span>
+              </MessageWrapper>
+            );
+          } else {
+            return (
+              <MessageWrapper key={v.timestamp} type="opponent">
+                <span>{v.content}</span>
+              </MessageWrapper>
+            );
+          }
         })}
     </ChatBodyWrapper>
   );
