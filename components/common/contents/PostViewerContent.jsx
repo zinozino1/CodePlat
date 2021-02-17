@@ -10,6 +10,7 @@ import {
   Button,
   Comment,
   Divider,
+  Upload,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
@@ -141,6 +142,27 @@ const PostViewerContent = ({ post, contentType }) => {
 
       <div className="post-content">
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      </div>
+      <div>
+        {/* {post.fileUrl.map((v, i) => {
+          return (
+            <div key={i}>
+              <a href={`http://localhost:4000/${v}`}>{v}</a>
+            </div>
+          );
+        })} */}
+        {/* <Upload
+            name="logo"
+            listType="picture"
+            //beforeUpload={onChangeFileList}
+            defaultFileList={fileList.map((v,i)=>{
+              return {uid:i, name:i, }
+            })}
+            //onRemove={onRemoveFile}
+          >
+            
+            
+          </Upload> */}
       </div>
 
       <div className="comment-list-wrapper">

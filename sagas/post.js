@@ -135,9 +135,9 @@ function* mainLoadPostsSaga(action) {
 
 function* writePostSaga(action) {
   try {
-    //yield delay(1000);
+    // yield delay(1000);
     const res = yield call(writePost, action.payload);
-    console.log(res);
+    // console.log(res);
     yield put({ type: WRITE_POST_SUCCESS });
     const post = res.data.post;
     window.location.href = `http://localhost:3000/articles/${post.type}/${post._id}`;

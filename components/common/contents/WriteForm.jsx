@@ -3,9 +3,13 @@ import styled from "styled-components";
 
 import SkillFilterForm from "./SkillFilterForm";
 import { Select, Input, Upload, Button, Tag, Tooltip, Form } from "antd";
-import { UploadOutlined, SlidersFilled } from "@ant-design/icons";
+import {
+  UploadOutlined,
+  SlidersFilled,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { Locations } from "../../../lib/constant/constant";
+import { Locations, SERVER_URL } from "../../../lib/constant/constant";
 import useInput from "../../../hooks/useInput";
 import TagBox from "./TagBox";
 import { writePostRequestAction } from "../../../reducers/post";
@@ -32,6 +36,12 @@ const FormItemWrapper = styled.div`
 
 const Label = styled.span`
   font-weight: 500;
+`;
+
+const EditFileList = styled.div`
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  padding: 8px;
 `;
 
 // const files = new FormData();
@@ -76,26 +86,46 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     ? useState(post.fileUrl)
     : useState([]);
 
+  const [fileNames, setFileNames] = useState(post.fileName);
+
+  const mergeFiles = () => {
+    let mergedFiles = [];
+    for (let i = 0; i < fileList.length; i++) {
+      let newFile = {};
+      newFile.url = `${SERVER_URL}/${fileList[i]}`;
+      newFile.thumbUrl = `${SERVER_URL}/${fileList[i]}`;
+      newFile.name = fileNames[i];
+      newFile.uid = i;
+      newFile.status = "done";
+      mergedFiles.push(newFile);
+    }
+    return mergedFiles;
+  };
+
+  const [mergedFiles, setMergedFiles] = useState(mergeFiles());
+
   const onChangeFileList = useCallback(
     (e) => {
       //console.log(e);
-      setFileList(fileList.concat(e));
+      //setFileList(fileList.concat(e));
       // console.log(file);
+
+      setMergedFiles(mergedFiles.concat(e));
     },
-    [fileList],
+    [mergedFiles],
   );
 
   const onRemoveFile = useCallback(
     (e) => {
-      setFileList(
-        fileList.filter((v, i) => {
+      setMergedFiles(
+        mergedFiles.filter((v, i) => {
           if (v.uid !== e.uid) {
             return { ...v };
           }
         }),
       );
     },
-    [fileList],
+    [mergedFiles],
   );
 
   // const onPreview = async (file) => {
@@ -187,7 +217,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       return;
     }
     const formData = new FormData();
-    fileList.forEach((file) => formData.append("files", file));
+    mergedFiles.forEach((file) => formData.append("files", file));
     //console.log(fileList);
     //formData.append()
     // formData.append("")
@@ -200,18 +230,6 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     formData.append("field", filter);
     formData.append("recruitment", peopleNumber);
     formData.append("location", location);
-
-    console.log({
-      title,
-      description,
-
-      filter,
-      fileList,
-      peopleNumber,
-      fileList,
-      location,
-      skill,
-    });
 
     dispatch(
       writePostRequestAction(
@@ -226,7 +244,16 @@ const WriteForm = ({ contentType, router, isEdit }) => {
         // field: router.route.split("/")[2],
       ),
     );
-  }, [skill, title, description, peopleNumber, location, me, router, fileList]);
+  }, [
+    skill,
+    title,
+    description,
+    peopleNumber,
+    location,
+    me,
+    router,
+    mergedFiles,
+  ]);
 
   const onStudyAndProjectEdit = useCallback(() => {
     if (!me) {
@@ -325,7 +352,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     }
 
     const formData = new FormData();
-    fileList.forEach((file) => formData.append("files", file));
+    mergedFiles.forEach((file) => formData.append("files", file));
     //console.log(fileList);
     //formData.append()
     // formData.append("")
@@ -350,7 +377,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
         // field: filter,
       ),
     );
-  }, [title, description, tags, router, me, filter, fileList]);
+  }, [title, description, tags, router, me, filter, mergedFiles]);
 
   const onForumEdit = useCallback(() => {
     if (!me) {
@@ -369,7 +396,8 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       alert("내용을 5글자 이상 써주세요.");
       return;
     }
-    console.log({ title, description, tags, filter, fileList });
+    console.log({ title, description, tags, filter, mergedFiles });
+
     // let editConfirm = confirm("수정하시겠습니까?");
     // if (editConfirm) {
     //   axios
@@ -398,6 +426,10 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   //   console.log(title);
   //   console.log(description);
   // }, [title, description]);
+
+  useEffect(() => {
+    console.log(mergedFiles);
+  }, [mergedFiles]);
 
   return (
     <>
@@ -551,12 +583,11 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             description={description}
             title={title}
           />
-
           <Upload
             name="logo"
             listType="picture"
             beforeUpload={onChangeFileList}
-            defaultFileList={fileList}
+            defaultFileList={mergeFiles()}
             onRemove={onRemoveFile}
           >
             {/* // defaultFileList> */}
