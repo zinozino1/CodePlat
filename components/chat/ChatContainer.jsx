@@ -2,11 +2,11 @@ import React from "react";
 import ChatBody from "./ChatBody";
 import ChatForm from "./ChatForm";
 
-const ChatContainer = () => {
+const ChatContainer = ({ chatRoomKey }) => {
   return (
     <div>
-      <ChatBody />
-      <ChatForm />
+      <ChatBody chatRoomKey={chatRoomKey} />
+      <ChatForm chatRoomKey={chatRoomKey} />
     </div>
   );
 };

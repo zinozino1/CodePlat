@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { Input, Button } from "antd";
 import { UpCircleOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import firebase from "../../firebase";
 
 const ChatFormWrapper = styled.div`
   margin: 30px;
@@ -18,14 +20,58 @@ const ButtonWrapper = styled.div`
   flex: 1;
 `;
 
-const ChatForm = () => {
+const ChatForm = ({ chatRoomKey }) => {
+  const { me } = useSelector((state) => state.user);
+  const { currentChatRoom } = useSelector((state) => state.chat);
+  const [content, setContent] = useState("");
+
+  const messagesRef = firebase.database().ref("messages");
+
+  const createMessage = () => {
+    const message = {
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+      user: {
+        clientId: currentChatRoom.users.filter((v, i) => {
+          //console.log(v);
+          if (v.clientId === me._id) {
+            return v;
+          }
+        })[0].clientId,
+        name: me.nickname,
+      },
+      content,
+    };
+    //console.log(message.user.clientId);
+    return message;
+  };
+
+  const onChangeContent = useCallback((e) => {
+    //console.log(e.target.value);
+    setContent(e.target.value);
+  }, []);
+
+  const onSubmit = useCallback(async () => {
+    if (content === "") {
+      alert("메시지를 입력해주세요.");
+      return;
+    }
+    try {
+      await messagesRef.child(currentChatRoom.id).push().set(createMessage());
+      setContent("");
+    } catch (error) {
+      console.log(error);
+      alert("오류 발생");
+      setContent("");
+    }
+  }, [content, messagesRef, chatRoomKey]);
+
   return (
     <ChatFormWrapper>
       <InputWrapper>
-        <Input />
+        <Input onChange={onChangeContent} value={content} />
       </InputWrapper>
       <ButtonWrapper>
-        <Button style={{ width: "100%" }}>
+        <Button style={{ width: "100%" }} onClick={onSubmit}>
           {/* <UpCircleOutlined /> */}
           전송
         </Button>

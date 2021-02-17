@@ -71,8 +71,10 @@ const mypage = () => {
   const [chatRooms, setChatRooms] = useState([]);
   //const [myChatRooms, setMyChatRooms] = useState([]);
 
+  const [chatRoomKey, setChatRoomKey] = useState("");
+
   const onSetCurrentChatRoom = useCallback((data) => {
-    console.log(data);
+    //console.log(data);
     dispatch(setCurrentChatRoomAction(data));
   }, []);
 
@@ -165,6 +167,7 @@ const mypage = () => {
                             })[0].nickname
                           }
                           onClick={() => {
+                            setChatRoomKey(v.id);
                             onSetCurrentChatRoom(v);
                           }}
                         >
@@ -215,7 +218,7 @@ const mypage = () => {
             {currentMenu === "profile" && <EditProfile />}
             {currentMenu === "activity" && <MyActivityTemplate />}
             {currentMenu !== "profile" && currentMenu !== "activity" && (
-              <ChatContainer />
+              <ChatContainer chatRoomKey={chatRoomKey} />
             )}
 
             {/* <div style={{ border: "0.2px solid white", margin: "10px" }}></div>

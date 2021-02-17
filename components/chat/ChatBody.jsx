@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import firebase from "../../firebase";
+import { useSelector } from "react-redux";
 
 const ChatBodyWrapper = styled.div`
   height: 60vh;
@@ -23,87 +24,45 @@ const ChatBodyWrapper = styled.div`
   }
 `;
 
-const ChatBody = () => {
-  const users = firebase.database().ref("users");
+const ChatBody = ({ chatRoomKey }) => {
+  //console.log(chatRoomKey);
+  const { me } = useSelector((state) => state.user);
+  const { currentChatRoom } = useSelector((state) => state.chat);
+  //console.log(currentChatRoom);
+
+  const [messages, setMessages] = useState([]);
+
+  const messagesRef = firebase.database().ref("messages");
+
+  const addMessagesListener = () => {
+    let messagesArray = [];
+    messagesRef.child(currentChatRoom.id).on("child_added", (DataSnapShot) => {
+      //console.log("snapshot:", DataSnapShot.val());
+      messagesArray.push(DataSnapShot.val());
+      setMessages([...messagesArray]);
+    });
+  };
 
   useEffect(() => {
-    //console.log(users.ref);
-  }, [users]);
+    //console.log("새로운 거 시작");
+    addMessagesListener();
+    return () => {
+      //console.log("unmount.");
+      setMessages([]);
+      messagesRef.off();
+    };
+  }, [chatRoomKey]);
+
+  useEffect(() => {
+    //console.log(messages);
+  }, [messages]);
 
   return (
     <ChatBodyWrapper>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다ㅋㅋㅋㅋㅋㅋㅋㅋ</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요111111111</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
-      <div className="stranger">
-        <span className="stranger-content">안녕하세요</span>
-      </div>
-      <div className="me">
-        <span className="me-content">반갑습니다</span>
-      </div>
+      {messages.length > 0 &&
+        messages.map((v, i) => {
+          return <div key={v.timestamp}>{v.content}</div>;
+        })}
     </ChatBodyWrapper>
   );
 };

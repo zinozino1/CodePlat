@@ -25,13 +25,10 @@ export const initializeChatRoomAction = createAction(INITIALIZE_CHAT_ROOM);
 
 const chatReducer = handleActions(
   {
-    [SET_CURRENT_CHAT_ROOM]: (state, action) => {
-      console.log(action);
-      return {
-        ...state,
-        currentChatRoom: action.payload,
-      };
-    },
+    [SET_CURRENT_CHAT_ROOM]: (state, action) => ({
+      ...state,
+      currentChatRoom: action.payload,
+    }),
     [INITIALIZE_CHAT_ROOM]: (state, action) => ({
       ...state,
       currentChatRoom: null,
