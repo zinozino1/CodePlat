@@ -142,7 +142,11 @@ const ProfileModal = ({ writer }) => {
             Github
           </Tag>
         </span>
-        <span>{writer.githubUrl}</span>
+        {me && me.secretGithub ? (
+          <span style={{ color: "#999" }}>비공개</span>
+        ) : (
+          <span>{writer.githubUrl}</span>
+        )}
       </RowWrapper>
       <RowWrapper>
         <span>

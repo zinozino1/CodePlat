@@ -74,8 +74,8 @@ const EditProfileForm = ({
               defaultValue={me && me.githubUrl}
             />
             <Checkbox
+              onChange={onToggleGitSecret}
               defaultChecked={me && me.secretGithub}
-              onClick={onToggleGitSecret}
             >
               비공개
             </Checkbox>

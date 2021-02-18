@@ -265,17 +265,21 @@ const PostViewerHeader = ({ post, contentType }) => {
             <span className="post-views">{post.views}</span>
             <MessageOutlined />
             <span className="post-comments">{post.comments.length}</span>
-            {contentType === "forum" && (
-              <>
-                <LikeOutlined />
-                <span className="post-forum-likes">{post.likes.length}</span>
-                <TagsOutlined />
-                <span className="post-forum-scraps">{post.scraps.length}</span>
-              </>
-            )}
+            {/* {contentType === "forum" && ( */}
+            <>
+              {contentType === "forum" && (
+                <>
+                  <LikeOutlined />
+                  <span className="post-forum-likes">{post.likes.length}</span>
+                </>
+              )}
+              <TagsOutlined />
+              <span className="post-forum-scraps">{post.scraps.length}</span>
+            </>
+            {/* )} */}
           </div>
           <div className="post-btns">
-            {me && contentType == "forum" && (
+            {me && (
               <>
                 <Button className="scrap-btn" onClick={onScrap}>
                   {isScraped ? (

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Card, Radio, Button } from "antd";
 import List from "../common/contents/List";
 import styled from "styled-components";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const MyActivityWrapper = styled.div`
   display: flex;
@@ -29,59 +31,72 @@ const MyActivityWrapper = styled.div`
 `;
 
 const MyActivityTemplate = () => {
-  const [currentBtn, setCurrentBtn] = useState("study");
-  const onClickBtn = useCallback((e) => {
-    setCurrentBtn(e.target.value);
-    console.log(e.target.value);
+  const { me } = useSelector((state) => state.user);
+  const [currentType, setCurrentType] = useState("study");
+  const onClickTypeBtn = useCallback((e) => {
+    setCurrentType(e.target.value);
   }, []);
 
   const [currTab, setCurrTab] = useState({
-    key: "scrap",
-    tab: "스크랩",
+    key: "post",
+    tab: "게시글",
   });
 
   const onTabChange = (key, type) => {
-    console.log(key, type);
     setCurrTab({ [type]: key });
   };
 
   const tabListTitle = [
     {
-      key: "scrap",
-      tab: "스크랩",
-    },
-    {
       key: "post",
       tab: "게시글",
     },
     {
-      key: "comment",
+      key: "comments",
       tab: "댓글",
     },
+    {
+      key: "scraps",
+      tab: "스크랩",
+    },
   ];
-  const contentListTitle = {
-    scrap: <p>{currentBtn}스크랩</p>, //<List data ={} type ={currentBtn}></List>
-    post: <p>{currentBtn}게시글</p>, //<List data ={} type ={currentBtn}></List>
-    comment: <p>{currentBtn}댓글</p>, //<List data ={} type ={currentBtn}></List>
-  };
+
+  const [contents, setContents] = useState(null);
+
+  useEffect(() => {
+    if (me) {
+      console.log({ currentType, key: currTab.key });
+      axios
+        .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
+        .then((res) => {
+          console.log(res.data);
+          //setContents(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [currentType, currTab, me]);
+
+  //if (!contents) return null;
 
   return (
     <MyActivityWrapper>
       <div className="activity_type">
-        <Radio.Group onChange={onClickBtn} defaultValue="study">
+        <Radio.Group onChange={onClickTypeBtn} defaultValue="study">
           <div>
-            <Radio.Button value="study" onChange={onClickBtn}>
+            <Radio.Button value="study" onChange={onClickTypeBtn}>
               스터디
             </Radio.Button>
           </div>
           <div>
-            <Radio.Button value="project" onChange={onClickBtn}>
+            <Radio.Button value="project" onChange={onClickTypeBtn}>
               프로젝트
             </Radio.Button>
           </div>
           <div>
-            <Radio.Button value="forum" onChange={onClickBtn}>
-              커뮤니티
+            <Radio.Button value="forum" onChange={onClickTypeBtn}>
+              포럼
             </Radio.Button>
           </div>
         </Radio.Group>
@@ -97,9 +112,7 @@ const MyActivityTemplate = () => {
           onTabChange={(key) => {
             onTabChange(key, "key");
           }}
-        >
-          {contentListTitle[currTab.key]}
-        </Card>
+        ></Card>
       </div>
     </MyActivityWrapper>
   );

@@ -86,6 +86,11 @@ const ListItem = ({ item, type }) => {
                 text={item.comments.length}
                 key="list-vertical-comment-o"
               />,
+              <IconText
+                icon={TagsOutlined}
+                text={item.scraps.length}
+                key="list-vertical-scrap-o"
+              />,
             ]}
           >
             <ListHeader>

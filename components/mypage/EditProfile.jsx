@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../lib/constant/constant";
 import shortid from "shortid";
 import useToggle from "../../hooks/useToggle";
+import { message } from "antd";
 //import { profileEdit } from "../../lib/api/post";
 
 import axios from "axios";
@@ -42,7 +43,10 @@ const EditProfile = () => {
   const onChangeGithubId = useCallback((e) => {
     setGithubId(e.target.value);
   }, []);
-  const [gitSecret, onToggleGitSecret] = useToggle(false);
+  const [gitSecret, setGitSecret] = useState(false);
+  const onToggleGitSecret = useCallback(() => {
+    setGitSecret(!gitSecret);
+  }, [gitSecret]);
 
   const [profileImage, setProfileImage] = useState(null);
 
@@ -55,6 +59,16 @@ const EditProfile = () => {
   }, []);
 
   const [loading, setLoading] = useState(false);
+
+  const submitDoneMessage = () => {
+    message.success({
+      content: "저장 완료!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
 
   const onSubmit = useCallback(() => {
     // axios
@@ -76,7 +90,8 @@ const EditProfile = () => {
     axios
       .patch(`/api/users`, formData, config)
       .then((res) => {
-        console.log(res.data.user);
+        // console.log(res.data.user);
+        submitDoneMessage();
       })
       .catch((err) => {
         console.log(err);
@@ -96,9 +111,13 @@ const EditProfile = () => {
     setGithubId(me.githubId);
   }, [me]);
 
+  // useEffect(() => {
+  //   console.log(profileImage);
+  // }, [profileImage]);
+
   useEffect(() => {
-    console.log(profileImage);
-  }, [profileImage]);
+    setGitSecret(me.secretGithub);
+  }, [me]);
 
   if (!me) return null;
 
