@@ -59,6 +59,7 @@ const MyProfile = ({ me }) => {
               <Avatar
                 style={{ cursor: "pointer" }}
                 src={
+                  me.avatarUrl !== "" &&
                   me.avatarUrl && (
                     <Image src={`${SERVER_URL}/${me.avatarUrl}`} />
                   )

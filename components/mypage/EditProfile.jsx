@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import EditProfileForm from "./EditProfileForm";
 import SkillFilterForm from "../common/contents/SkillFilterForm";
-import { Button } from "antd";
+import { Button, Card } from "antd";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../lib/constant/constant";
 import shortid from "shortid";
@@ -18,12 +18,12 @@ const ProfileReviseFormWrapper = styled.div`
   padding: 2rem 0;
   .edit-profile-form {
     flex: 1;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 20px;
   }
   .skill-filter-form {
     flex: 2;
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 20px;
   }
   @media (max-width: 900px) {
@@ -138,7 +138,14 @@ const EditProfile = () => {
           />
         </div>
         <div className="skill-filter-form">
-          <SkillFilterForm type="mypage" values={me.techStack} isEdit={true} />
+          <Card title="관심 기술 수정" bordered={true}>
+            {" "}
+            <SkillFilterForm
+              type="mypage"
+              values={me.techStack}
+              isEdit={true}
+            />
+          </Card>
         </div>
       </ProfileReviseFormWrapper>
       <div

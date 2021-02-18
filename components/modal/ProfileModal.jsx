@@ -148,7 +148,7 @@ const ProfileModal = ({ writer }) => {
           <span>{writer.githubUrl}</span>
         )}
       </RowWrapper>
-      <RowWrapper>
+      {/* <RowWrapper>
         <span>
           <Tag className="tag-partial" color="#ccc">
             평점
@@ -157,7 +157,7 @@ const ProfileModal = ({ writer }) => {
         <span>
           <Rate allowHalf disabled defaultValue={(writer.rating = 0)} />
         </span>
-      </RowWrapper>
+      </RowWrapper> */}
       <RowWrapper className="btn-wrapper">
         {me && me._id !== writer._id && (
           <Button

@@ -69,6 +69,7 @@ const MyActivityTemplate = () => {
       axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
+          console.log(res.data.posts);
           console.log(res.data.activities);
           setContents(res.data.activities);
         })

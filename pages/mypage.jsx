@@ -39,19 +39,22 @@ const MenuWrapper = styled.div`
   display: flex;
   .menu-bar {
     flex: 1;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     width: 200px;
     height: 90vh;
   }
   .menu-content {
     flex: 4;
-    border: 1px solid black;
+    /* border: 1px solid black; */
   }
   @media (max-width: 768px) {
     flex-direction: column;
     .menu-bar {
       height: 100%;
       width: 100%;
+    }
+    .menu-content {
+      margin-bottom: 3rem;
     }
   }
 `;
@@ -131,7 +134,7 @@ const mypage = () => {
           <div className="menu-bar">
             <Menu
               mode="inline"
-              style={{ height: "100%", border: "1px solid black" }}
+              style={{ height: "100%" }}
               defaultSelectedKeys={["profile"]}
               //defaultOpenKeys={["sub1"]}
               onClick={onChangeCurrentMenu}

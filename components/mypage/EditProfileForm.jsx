@@ -29,6 +29,10 @@ const RegisterInputItemWrapper = styled(Form.Item)`
   }
 `;
 
+const ProfileItemWrapper = styled.div`
+  margin: 20px 0;
+`;
+
 const EditProfileForm = ({
   onChangeProfileImage,
   onDeleteProfileImage,
@@ -57,16 +61,16 @@ const EditProfileForm = ({
             <Input placeholder="닉네임" value={me && me.nickname} />
           </RegisterInputItemWrapper> */}
 
-          <div>
+          <ProfileItemWrapper>
             <span>닉네임</span>
             <Input
               placeholder="닉네임"
               onChange={onChangeNickname}
               defaultValue={me && me.nickname}
             />
-          </div>
+          </ProfileItemWrapper>
 
-          <div>
+          <ProfileItemWrapper>
             <span>깃허브</span>
             <Input
               placeholder="깃허브"
@@ -79,7 +83,7 @@ const EditProfileForm = ({
             >
               비공개
             </Checkbox>
-          </div>
+          </ProfileItemWrapper>
           {/* <RegisterInputItemWrapper
             name="github"
             label="Github"
@@ -91,28 +95,31 @@ const EditProfileForm = ({
               <Checkbox>비공개</Checkbox>
             </div>
           </RegisterInputItemWrapper> */}
-          <div>
-            <span>프로필 사진 변경</span>
+          <ProfileItemWrapper>
+            <div>프로필 사진 변경</div>
             <Upload
               name="logo"
               listType="picture"
+              accept="image/*"
               beforeUpload={onChangeProfileImage}
               maxCount={1}
-              defaultFileList={[
-                {
-                  uid: shortid.generate(),
-                  url: `${SERVER_URL}/${me.avatarUrl}`,
-                  thumbUrl: `${SERVER_URL}/${me.avatarUrl}`,
-                  name: me.avatarUrl,
-                  status: "done",
-                },
-              ]}
+              defaultFileList={
+                me.avatarUrl && [
+                  {
+                    uid: shortid.generate(),
+                    url: `${SERVER_URL}/${me.avatarUrl}`,
+                    thumbUrl: `${SERVER_URL}/${me.avatarUrl}`,
+                    name: me.avatarUrl,
+                    status: "done",
+                  },
+                ]
+              }
               onRemove={onDeleteProfileImage}
             >
               {/* // defaultFileList> */}
               <Button icon={<UploadOutlined />}>이미지 변경</Button>
             </Upload>
-          </div>
+          </ProfileItemWrapper>
 
           <Button block>비밀번호 변경</Button>
         </Card>

@@ -131,7 +131,9 @@ const ListItem = ({ item, type }) => {
                     icon={<UserOutlined />}
                     width={100}
                     src={
-                      item.writer && (
+                      item.writer &&
+                      item.writer.avatarUrl !== "" &&
+                      item.writer.avatarUrl && (
                         <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
                       )
                     }
@@ -221,7 +223,9 @@ const ListItem = ({ item, type }) => {
                     size={24}
                     icon={<UserOutlined />}
                     src={
-                      item.writer && (
+                      item.writer &&
+                      item.writer.avatarUrl !== "" &&
+                      item.writer.avatarUrl && (
                         <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
                       )
                     }
