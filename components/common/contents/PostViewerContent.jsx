@@ -168,11 +168,18 @@ const PostViewerContent = ({ post, contentType }) => {
         })} */}
         <Upload
           name="logo"
-          listType="picture"
+          //listType="picture"
           //beforeUpload={onChangeFileList}
           defaultFileList={mergeFiles()}
           //onRemove={onRemoveFile}
         ></Upload>
+        {mergeFiles().map((v, i) => (
+          <div key={i}>
+            <a href={v.url} download>
+              {v.name}
+            </a>
+          </div>
+        ))}
       </div>
 
       <div className="comment-list-wrapper">

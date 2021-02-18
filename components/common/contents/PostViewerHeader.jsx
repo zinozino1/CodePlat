@@ -9,6 +9,8 @@ import {
   UserOutlined,
   TagsOutlined,
   LikeFilled,
+  TagFilled,
+  TagsFilled,
 } from "@ant-design/icons";
 import {
   List,
@@ -26,6 +28,7 @@ import {
   deletePostRequestAction,
   likePostRequestAction,
   unLikePostRequestAction,
+  postUnScrapRequestAction,
 } from "../../../reducers/post";
 import { useDispatch, useSelector } from "react-redux";
 import { SERVER_URL } from "../../../lib/constant/constant";
@@ -123,6 +126,16 @@ const PostViewerHeader = ({ post, contentType }) => {
       : false,
   ); //useState(false);
 
+  const [isScraped, setIsScraped] = useState(
+    post.scraps.some((v, i) => {
+      if (me && v.userId === me._id) {
+        return true;
+      }
+    })
+      ? true
+      : false,
+  );
+
   const onToggleLike = useCallback(() => {
     setLike(!like);
     if (like) {
@@ -149,9 +162,28 @@ const PostViewerHeader = ({ post, contentType }) => {
     }
   }, [like, me, post]);
 
-  const onScrap = useCallback((id) => {
-    dispatch(postScrapRequestAction(id));
-  }, []);
+  const onScrap = useCallback(() => {
+    setIsScraped(!isScraped);
+    if (isScraped) {
+      //console.log("이미 스크랩된 게시글임");
+      dispatch(
+        postUnScrapRequestAction({
+          postId: post._id,
+          type: contentType,
+          id: post.scraps.find((v, i) => {
+            if (v.userId === me._id) {
+              return true;
+            }
+          })._id,
+          user: me,
+        }),
+      );
+    } else {
+      dispatch(
+        postScrapRequestAction({ id: post._id, type: contentType, user: me }),
+      );
+    }
+  }, [post, isScraped, me]);
 
   const onPostDelete = useCallback(
     (deleteType) => {
@@ -245,13 +277,14 @@ const PostViewerHeader = ({ post, contentType }) => {
           <div className="post-btns">
             {me && contentType == "forum" && (
               <>
-                <Button
-                  className="scrap-btn"
-                  onClick={() => {
-                    onScrap(post.id);
-                  }}
-                >
-                  <TagsOutlined />
+                <Button className="scrap-btn" onClick={onScrap}>
+                  {isScraped ? (
+                    <TagsFilled
+                      style={{ marginRight: "3px", color: "#1a91fe" }}
+                    />
+                  ) : (
+                    <TagsOutlined style={{ marginRight: "3px" }} />
+                  )}
                 </Button>
               </>
             )}

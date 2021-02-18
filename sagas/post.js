@@ -46,6 +46,9 @@ import {
   UNLIKE_COMMENT_REQUEST,
   UNLIKE_COMMENT_SUCCESS,
   UNLIKE_COMMENT_FAILURE,
+  POST_UNSCRAP_SUCCESS,
+  POST_UNSCRAP_FAILURE,
+  POST_UNSCRAP_REQUEST,
   // SEARCH_POSTS_REQUEST,
   // SEARCH_POSTS_SUCCESS,
   // SEARCH_POSTS_FAILURE,
@@ -66,6 +69,8 @@ import {
   deleteCommentWithChildren,
   upLike,
   unLike,
+  postScrap,
+  postUnScrap,
   // searchPosts,
   // filterSearch,
 } from "../lib/api/post";
@@ -77,7 +82,7 @@ function* loadPostSaga(action) {
     const { postId } = action.payload;
 
     const res = yield call(loadPost, postId);
-    console.log(res);
+    //console.log(res);
     yield put({
       type: LOAD_POST_SUCCESS,
       post: res.data.post,
@@ -152,13 +157,31 @@ function* writePostSaga(action) {
 
 function* postScrapSaga(action) {
   try {
-    // console.log(action.payload);
-    yield delay(1000);
-    yield put({ type: POST_SCRAP_SUCCESS });
+    //console.log(action.payload);
+    const res = yield call(postScrap, action.payload);
+    //yield delay(1000);
+    //console.log(action.payload);
+    yield put({ type: POST_SCRAP_SUCCESS, scrap: res.data.scrap });
   } catch (error) {
     console.log(error);
     yield put({
       type: POST_SCRAP_FAILURE,
+      error: error.response.data,
+    });
+  }
+}
+
+function* postUnScrapSaga(action) {
+  try {
+    //console.log(action.payload);
+    yield call(postUnScrap, action.payload);
+    //yield delay(1000);
+    //console.log(action.payload);
+    yield put({ type: POST_UNSCRAP_SUCCESS, scrapId: action.payload.id });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: POST_UNSCRAP_FAILURE,
       error: error.response.data,
     });
   }
@@ -333,6 +356,7 @@ export function* watchPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPostSaga);
   yield throttle(2000, WRITE_POST_REQUEST, writePostSaga);
   yield takeLatest(POST_SCRAP_REQUEST, postScrapSaga);
+  yield takeLatest(POST_UNSCRAP_REQUEST, postUnScrapSaga);
   yield throttle(2000, ADD_COMMENT_REQUEST, addCommentSaga);
   yield takeLatest(LOAD_FORUM_POSTS_REQUEST, loadForumPostsSaga);
   yield takeLatest(DELETE_POST_REQUEST, deletePostSaga);

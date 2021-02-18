@@ -30,6 +30,9 @@ const initialState = {
   postScrapLoading: false,
   postScrapDone: false,
   postScrapError: null,
+  postUnScrapLoading: false,
+  postUnScrapDone: false,
+  postUnScrapError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -89,6 +92,10 @@ export const WRITE_POST_FAILURE = "post/WRITE_POST_FAILURE";
 export const POST_SCRAP_REQUEST = "post/POST_SCRAP_REQUEST";
 export const POST_SCRAP_SUCCESS = "post/POST_SCRAP_SUCCESS";
 export const POST_SCRAP_FAILURE = "post/POST_SCRAP_FAILURE";
+
+export const POST_UNSCRAP_REQUEST = "post/POST_UNSCRAP_REQUEST";
+export const POST_UNSCRAP_SUCCESS = "post/POST_UNSCRAP_SUCCESS";
+export const POST_UNSCRAP_FAILURE = "post/POST_UNSCRAP_FAILURE";
 
 export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
@@ -157,6 +164,11 @@ export const writePostRequestAction = createAction(
 
 export const postScrapRequestAction = createAction(
   POST_SCRAP_REQUEST,
+  (data) => data,
+);
+
+export const postUnScrapRequestAction = createAction(
+  POST_UNSCRAP_REQUEST,
   (data) => data,
 );
 
@@ -323,12 +335,42 @@ const postReducer = handleActions(
       postScrapLoading: false,
       postScrapDone: true,
       postScrapError: null,
+      post: {
+        ...state.post,
+        scraps: [...state.post.scraps].concat(action.scrap),
+      },
     }),
     [POST_SCRAP_FAILURE]: (state, action) => ({
       ...state,
       postScrapLoading: false,
       postScrapDone: false,
       postScrapError: action.error,
+    }),
+    [POST_UNSCRAP_REQUEST]: (state, action) => ({
+      ...state,
+      postUnScrapLoading: true,
+      postUnScrapDone: false,
+      postUnScrapError: null,
+    }),
+    [POST_UNSCRAP_SUCCESS]: (state, action) => ({
+      ...state,
+      postUnScrapLoading: false,
+      postUnScrapDone: true,
+      postUnScrapError: null,
+      post: {
+        ...state.post,
+        scraps: [...state.post.scraps].filter((v, i) => {
+          if (v._id !== action.scrapId) {
+            return { ...v };
+          }
+        }),
+      },
+    }),
+    [POST_UNSCRAP_FAILURE]: (state, action) => ({
+      ...state,
+      postUnScrapLoading: false,
+      postUnScrapDone: false,
+      postUnScrapError: action.error,
     }),
     [ADD_COMMENT_REQUEST]: (state, action) => ({
       ...state,
