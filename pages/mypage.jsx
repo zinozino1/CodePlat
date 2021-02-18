@@ -104,6 +104,7 @@ const mypage = () => {
   // }, []);
 
   useEffect(() => {
+    //chatRoomsRef.off()?
     addChatRoomListener();
     return () => {
       initializeChatRoomAction();
