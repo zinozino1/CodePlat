@@ -90,7 +90,7 @@ const EditProfile = () => {
     axios
       .patch(`/api/users`, formData, config)
       .then((res) => {
-        // console.log(res.data.user);
+        console.log(res.data.user);
         submitDoneMessage();
       })
       .catch((err) => {
@@ -116,7 +116,10 @@ const EditProfile = () => {
   // }, [profileImage]);
 
   useEffect(() => {
-    setGitSecret(me.secretGithub);
+    if (me) {
+      setGitSecret(me.secretGithub);
+      setGithubId(me.githubUrl);
+    }
   }, [me]);
 
   if (!me) return null;

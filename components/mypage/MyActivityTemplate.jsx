@@ -69,8 +69,8 @@ const MyActivityTemplate = () => {
       axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
-          console.log(res.data);
-          //setContents(res.data);
+          console.log(res.data.activities);
+          setContents(res.data.activities);
         })
         .catch((err) => {
           console.log(err);
@@ -78,7 +78,7 @@ const MyActivityTemplate = () => {
     }
   }, [currentType, currTab, me]);
 
-  //if (!contents) return null;
+  if (!contents) return null;
 
   return (
     <MyActivityWrapper>
@@ -112,7 +112,20 @@ const MyActivityTemplate = () => {
           onTabChange={(key) => {
             onTabChange(key, "key");
           }}
-        ></Card>
+        >
+          {currTab.key === "post" &&
+            contents.map((v, i) => {
+              return <div key={i}>{v._id}</div>;
+            })}
+          {currTab.key === "comments" &&
+            contents.map((v, i) => {
+              return <div key={i}>{v.content}</div>;
+            })}
+          {currTab.key === "scraps" &&
+            contents.map((v, i) => {
+              return <div key={i}>{v._id}</div>;
+            })}
+        </Card>
       </div>
     </MyActivityWrapper>
   );
