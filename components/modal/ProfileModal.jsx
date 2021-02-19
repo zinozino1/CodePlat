@@ -75,10 +75,10 @@ const ProfileModal = ({ writer }) => {
       });
       // let cnt = 0;
       //console.log("cnt", cnt);
-      if (chatRooms.length === 0) {
-        alert("로딩중.. 잠시만 기다려주세요.");
-        return;
-      }
+      // if (chatRooms.length === 0) {
+      //   alert("로딩중.. 잠시만 기다려주세요.");
+      //   return;
+      // }
       if (chatRoomExist) {
         // 이미 채팅방이 있다면
         alert("이미 채팅방이 있ㅅ브니다");

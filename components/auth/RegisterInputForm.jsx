@@ -256,6 +256,7 @@ const RegisterInputForm = ({ router }) => {
         headers: {
           Accept: "application/json",
           enctype: "multipart/form-data",
+          // withCredentials: true,
         },
       };
       // formData.append(
@@ -278,6 +279,23 @@ const RegisterInputForm = ({ router }) => {
         axios
           .post("/api/join/optionForm", formData, config)
           .then(async (res) => {
+            if (res.data.message === "email is reduplication") {
+              setEmailExistError(true);
+              formData.delete("type");
+              formData.delete("nickname");
+              formData.delete("techStack");
+              formData.delete("githubUrl");
+              formData.delete("email");
+              return;
+            } else if (res.data.message === "nickname is reduplication") {
+              setNicknameExistError(true);
+              formData.delete("type");
+              formData.delete("nickname");
+              formData.delete("techStack");
+              formData.delete("githubUrl");
+              formData.delete("email");
+              return;
+            }
             //dispatch(setUserRequestAction());
             setNicknameExistError(false);
             setEmailExistError(false);
@@ -307,12 +325,12 @@ const RegisterInputForm = ({ router }) => {
           })
 
           .catch((error) => {
-            console.log(error.response.data.message);
-            if (error.response.data.message === "email is reduplication") {
-              setEmailExistError(true);
-            } else {
-              setNicknameExistError(true);
-            }
+            alert("에러 발생.");
+            // if (error.response.data.message === "email is reduplication") {
+            //   setEmailExistError(true);
+            // } else {
+            //   setNicknameExistError(true);
+            // }
             formData.delete("type");
             formData.delete("nickname");
             formData.delete("techStack");
@@ -321,6 +339,7 @@ const RegisterInputForm = ({ router }) => {
           });
       } else {
         // google, naver
+        console.log(nickname, skill, githubUrl);
         formData.append("type", "sns");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -329,6 +348,7 @@ const RegisterInputForm = ({ router }) => {
           .post("/api/join/optionForm", formData, config)
           .then(async (res) => {
             //dispatch(setUserRequestAction());
+            //console.log(res.data);
             setNicknameExistError(false);
 
             setFirebaseLoading(true);
