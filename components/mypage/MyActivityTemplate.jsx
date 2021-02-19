@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Radio, Button } from "antd";
+import { Card, Radio, Button, Pagination } from "antd";
 import List from "../common/contents/List";
 import styled from "styled-components";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import shortid from "shortid";
+import Link from "next/link";
+import moment from "moment";
 
 const MyActivityWrapper = styled.div`
   display: flex;
@@ -30,10 +33,19 @@ const MyActivityWrapper = styled.div`
   }
 `;
 
+const MyCommentWrapper = styled.div`
+  margin: 20px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+`;
+
 const MyActivityTemplate = () => {
   const { me } = useSelector((state) => state.user);
   const [currentType, setCurrentType] = useState("study");
+
   const onClickTypeBtn = useCallback((e) => {
+    setContents(null);
+    setPosts(null);
     setCurrentType(e.target.value);
   }, []);
 
@@ -43,6 +55,8 @@ const MyActivityTemplate = () => {
   });
 
   const onTabChange = (key, type) => {
+    setContents(null);
+    setPosts(null);
     setCurrTab({ [type]: key });
   };
 
@@ -61,30 +75,46 @@ const MyActivityTemplate = () => {
     },
   ];
 
-  const [contents, setContents] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const [contents, setContents] = useState(null);
+  const [posts, setPosts] = useState(null);
+
+  useEffect(async () => {
     if (me) {
+      setLoading(true);
+
       console.log({ currentType, key: currTab.key });
-      axios
+      await axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
-          console.log(res.data.posts);
-          console.log(res.data.activities);
+          console.log(res.data);
+          //console.log("activities : ", res.data.activities);
           setContents(res.data.activities);
+          if (res.data.posts) {
+            setPosts(res.data.posts);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
+
+      setLoading(false);
     }
   }, [currentType, currTab, me]);
 
+  useEffect(() => {
+    console.log("contents : ", contents);
+    console.log("posts : ", posts);
+  }, [contents, posts]);
+
   if (!contents) return null;
+  if (loading) return null;
 
   return (
     <MyActivityWrapper>
       <div className="activity_type">
-        <Radio.Group onChange={onClickTypeBtn} defaultValue="study">
+        <Radio.Group onChange={onClickTypeBtn} defaultValue={currentType}>
           <div>
             <Radio.Button value="study" onChange={onClickTypeBtn}>
               스터디
@@ -114,18 +144,66 @@ const MyActivityTemplate = () => {
             onTabChange(key, "key");
           }}
         >
-          {currTab.key === "post" &&
-            contents.map((v, i) => {
-              return <div key={i}>{v._id}</div>;
-            })}
+          {currTab.key === "post" && (
+            //   contents.map((v, i) => {
+            //     return <div key={i}>{v.title}</div>;
+            //   })
+            <div
+              style={{
+                overflow: "auto",
+                height: "59vh",
+              }}
+            >
+              <List data={contents} type={currentType} />
+              {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
+            </div>
+          )}
           {currTab.key === "comments" &&
             contents.map((v, i) => {
-              return <div key={i}>{v.content}</div>;
+              let flag = false;
+              let post = null;
+
+              posts.forEach((s, j) => {
+                if (v.postId === s._id) {
+                  flag = true;
+                  // postTitle = s.title;
+                  post = s;
+                }
+              });
+              if (flag) {
+                return (
+                  <MyCommentWrapper key={i}>
+                    <div>
+                      <span style={{ fontSize: "16px", fontWeight: "500" }}>
+                        {v.content}
+                      </span>
+                    </div>
+                    <div>
+                      <Link href={`articles/${post.type}/${post._id}`}>
+                        <a>{post.title}</a>
+                      </Link>{" "}
+                      글에 남긴 댓글
+                    </div>
+                    <div>
+                      <span style={{ color: "#999", fontSize: "10px" }}>
+                        {moment(v.createdAt).format("MM/DD HH:mm")}
+                      </span>
+                    </div>
+                  </MyCommentWrapper>
+                );
+              }
             })}
-          {currTab.key === "scraps" &&
-            contents.map((v, i) => {
-              return <div key={i}>{v._id}</div>;
-            })}
+          {currTab.key === "scraps" && (
+            <div
+              style={{
+                overflow: "auto",
+                height: "59vh",
+              }}
+            >
+              {/* <List data={contents} type={currentType} /> */}
+              {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
+            </div>
+          )}
         </Card>
       </div>
     </MyActivityWrapper>

@@ -98,7 +98,7 @@ const ChatBody = ({ chatRoomKey }) => {
 
   const scrollToBottom = useCallback(() => {
     scrollRef.current.scrollIntoView({
-      behavior: "smooth",
+      // behavior: "smooth",
       block: "end",
       inline: "nearest",
     });
