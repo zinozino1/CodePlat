@@ -11,6 +11,8 @@ import {
   Comment,
   Divider,
   Upload,
+  Dropdown,
+  Menu,
 } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
@@ -166,20 +168,26 @@ const PostViewerContent = ({ post, contentType }) => {
             </div>
           );
         })} */}
-        <Upload
+        {/* <Upload
           name="logo"
           //listType="picture"
           //beforeUpload={onChangeFileList}
           defaultFileList={mergeFiles()}
           //onRemove={onRemoveFile}
-        ></Upload>
-        {mergeFiles().map((v, i) => (
-          <div key={i}>
-            <a href={v.url} download>
-              {v.name}
-            </a>
-          </div>
-        ))}
+        ></Upload> */}
+
+        <div>
+          {mergeFiles().length > 0 && (
+            <div style={{ textAlign: "right", color: "#999" }}>첨부파일</div>
+          )}
+          {mergeFiles().map((v, i) => (
+            <div key={i} style={{ textAlign: "right", fontSize: "13px" }}>
+              <a href={v.url} download>
+                {v.name}
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="comment-list-wrapper">

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import shortid from "shortid";
 import { SERVER_URL } from "../../lib/constant/constant";
 import { UploadOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 const EditProfileFormWrapper = styled(Form)`
   @media (max-width: 900px) {
@@ -120,8 +121,11 @@ const EditProfileForm = ({
               <Button icon={<UploadOutlined />}>이미지 변경</Button>
             </Upload>
           </ProfileItemWrapper>
-
-          <Button block>비밀번호 변경</Button>
+          <Link href="/auth/passwordUpdate">
+            <a>
+              <Button block>비밀번호 변경</Button>
+            </a>
+          </Link>
         </Card>
       </div>
     </EditProfileFormWrapper>

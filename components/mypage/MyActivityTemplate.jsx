@@ -200,7 +200,7 @@ const MyActivityTemplate = () => {
                 height: "59vh",
               }}
             >
-              {/* <List data={contents} type={currentType} /> */}
+              <List data={posts} type={currentType} />
               {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
             </div>
           )}
