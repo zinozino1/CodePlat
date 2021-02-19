@@ -271,6 +271,7 @@ const RegisterInputForm = ({ router }) => {
       // );
       if (noneEmailUser) {
         // github, kakao
+
         formData.append("type", "email");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -325,6 +326,7 @@ const RegisterInputForm = ({ router }) => {
           })
 
           .catch((error) => {
+            console.log(error);
             alert("에러 발생.");
             // if (error.response.data.message === "email is reduplication") {
             //   setEmailExistError(true);
