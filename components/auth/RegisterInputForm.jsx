@@ -349,6 +349,14 @@ const RegisterInputForm = ({ router }) => {
         axios
           .post("/api/join/optionForm", formData, config)
           .then(async (res) => {
+            if (res.data.message === "nickname is reduplication") {
+              setNicknameExistError(true);
+              formData.delete("type");
+              formData.delete("nickname");
+              formData.delete("techStack");
+              formData.delete("githubUrl");
+              return;
+            }
             //dispatch(setUserRequestAction());
             //console.log(res.data);
             setNicknameExistError(false);
@@ -388,8 +396,9 @@ const RegisterInputForm = ({ router }) => {
             router.push("/");
           })
           .catch((error) => {
+            alert("에러 발생.");
             console.log(error);
-            setNicknameExistError(true);
+
             formData.delete("type");
             formData.delete("nickname");
             formData.delete("techStack");
