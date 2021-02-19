@@ -11,12 +11,12 @@ const ChatFormWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
   flex: 7;
 `;
 
 const ButtonWrapper = styled.div`
-  border: 1px solid black;
+  /* border: 1px solid black; */
   flex: 1;
 `;
 
@@ -65,10 +65,20 @@ const ChatForm = ({ chatRoomKey }) => {
     }
   }, [content, messagesRef, chatRoomKey]);
 
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter") {
+      onSubmit();
+    }
+  };
+
   return (
     <ChatFormWrapper>
       <InputWrapper>
-        <Input onChange={onChangeContent} value={content} />
+        <Input
+          onChange={onChangeContent}
+          value={content}
+          onKeyPress={handleEnterPress}
+        />
       </InputWrapper>
       <ButtonWrapper>
         <Button style={{ width: "100%" }} onClick={onSubmit}>

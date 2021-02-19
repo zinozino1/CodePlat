@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled, { css } from "styled-components";
 import firebase from "../../firebase";
 import { useSelector } from "react-redux";
+import moment from "moment";
 
 const ChatBodyWrapper = styled.div`
-  height: 60vh;
+  /* height: 60vh;
   margin: 30px;
-  overflow: auto;
+  overflow: auto; */
   .stranger {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 5px;
   }
   .me {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     text-align: right;
     padding: 5px;
   }
   .me-content,
   .stranger-content {
-    border: 1px solid black;
+    /* border: 1px solid black; */
     padding: 3px 10px;
     border-radius: 4px;
   }
@@ -27,24 +28,49 @@ const ChatBodyWrapper = styled.div`
 const MessageWrapper = styled.div`
   /* border: 1px solid black; */
   padding: 5px;
+
+  .message-timestamp {
+    font-size: 10px;
+    color: #999;
+    margin: 0 5px;
+  }
   ${(props) =>
     props.type === "me"
       ? css`
           text-align: right;
-          span {
+          .message-content {
+            ${(props) =>
+              props.wordbreak === "true" &&
+              css`
+                display: inline-block;
+                width: 200px;
+                word-wrap: break-word;
+              `}
+
+            text-align: left;
+
             padding: 5px;
-            border: 1px solid black;
+            /* border: 1px solid black; */
             border-radius: 4px;
             background: #fee500;
           }
         `
       : css`
-          span {
+          .message-content {
+            ${(props) =>
+              props.wordbreak === "true" &&
+              css`
+                display: inline-block;
+                width: 200px;
+                word-wrap: break-word;
+              `}
+
+            text-align: left;
             padding: 5px;
-            border: 1px solid black;
+            /* border: 1px solid black; */
             border-radius: 4px;
-            background: #222;
-            color: #fff;
+            background: #fff;
+            color: #111;
           }
         `}
 `;
@@ -54,6 +80,8 @@ const ChatBody = ({ chatRoomKey }) => {
   const { me } = useSelector((state) => state.user);
   const { currentChatRoom } = useSelector((state) => state.chat);
   //console.log(currentChatRoom);
+
+  const scrollRef = useRef();
 
   const [messages, setMessages] = useState([]);
 
@@ -68,6 +96,14 @@ const ChatBody = ({ chatRoomKey }) => {
     });
   };
 
+  const scrollToBottom = useCallback(() => {
+    scrollRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }, [messages]);
+
   useEffect(() => {
     //console.log("새로운 거 시작");
     addMessagesListener();
@@ -79,28 +115,46 @@ const ChatBody = ({ chatRoomKey }) => {
   }, [chatRoomKey]);
 
   useEffect(() => {
-    //console.log(messages);
+    scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {}, [messages]);
+
   return (
-    <ChatBodyWrapper>
-      {messages.length > 0 &&
-        messages.map((v, i) => {
-          if (v.user.clientId === me._id) {
-            return (
-              <MessageWrapper type="me" key={v.timestamp}>
-                <span>{v.content}</span>
-              </MessageWrapper>
-            );
-          } else {
-            return (
-              <MessageWrapper key={v.timestamp} type="opponent">
-                <span>{v.content}</span>
-              </MessageWrapper>
-            );
-          }
-        })}
-    </ChatBodyWrapper>
+    <div style={{ height: "60vh", margin: "30px", overflow: "auto" }}>
+      <ChatBodyWrapper ref={scrollRef}>
+        {messages.length > 0 &&
+          messages.map((v, i) => {
+            if (v.user.clientId === me._id) {
+              return (
+                <MessageWrapper
+                  type="me"
+                  key={v.timestamp}
+                  wordbreak={v.content.length > 10 ? "true" : "false"}
+                >
+                  <span className="message-timestamp">
+                    {moment(v.timestamp).format("MM/DD HH:mm")}
+                  </span>
+                  <span className="message-content">{v.content}</span>
+                </MessageWrapper>
+              );
+            } else {
+              return (
+                <MessageWrapper
+                  key={v.timestamp}
+                  type="opponent"
+                  wordbreak={v.content.length > 10 ? "true" : "false"}
+                >
+                  <span className="message-content">{v.content}</span>
+                  <span className="message-timestamp">
+                    {moment(v.timestamp).format("MM/DD HH:mm")}
+                  </span>
+                </MessageWrapper>
+              );
+            }
+          })}
+      </ChatBodyWrapper>
+    </div>
   );
 };
 
