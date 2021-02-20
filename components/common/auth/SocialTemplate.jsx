@@ -35,9 +35,9 @@ const SocialLoginButton = styled(Button)`
 `;
 
 const SocialTemplate = () => {
-  const onClickSocialLogin = useCallback(() => {
-    console.log("fuck");
-  }, []);
+  // const onClickSocialLogin = useCallback(() => {
+  //   console.log("fuck");
+  // }, []);
   return (
     <>
       <SocialLoginWrapper>
@@ -45,7 +45,7 @@ const SocialTemplate = () => {
           <a>
             <SocialLoginButton
               className="login-google"
-              onClick={onClickSocialLogin}
+              // onClick={onClickSocialLogin}
             >
               Google
             </SocialLoginButton>
@@ -66,6 +66,7 @@ const SocialTemplate = () => {
             </SocialLoginButton>
           </a>
         </Link>
+        w
         <Link href={`${SERVER_URL}/api/kakao`}>
           <a>
             <SocialLoginButton className="login-kakao">Kakao</SocialLoginButton>

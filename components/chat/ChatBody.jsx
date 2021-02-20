@@ -4,10 +4,22 @@ import firebase from "../../firebase";
 import { useSelector } from "react-redux";
 import moment from "moment";
 
+const ChatContainer = styled.div`
+  height: 60vh;
+  margin: 30px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0 5px;
+  padding-top: 20px;
+  background: #eee;
+`;
+
 const ChatBodyWrapper = styled.div`
   /* height: 60vh;
   margin: 30px;
   overflow: auto; */
+
   .stranger {
     /* border: 1px solid black; */
     padding: 5px;
@@ -121,7 +133,15 @@ const ChatBody = ({ chatRoomKey }) => {
   useEffect(() => {}, [messages]);
 
   return (
-    <div style={{ height: "60vh", margin: "30px", overflow: "auto" }}>
+    <ChatContainer
+    // style={{
+    //   height: "60vh",
+    //   margin: "30px",
+    //   overflow: "auto",
+    //   border: "1px solid black",
+    //   padding: "20px 5px",
+    // }}
+    >
       <ChatBodyWrapper ref={scrollRef}>
         {messages.length > 0 &&
           messages.map((v, i) => {
@@ -154,7 +174,7 @@ const ChatBody = ({ chatRoomKey }) => {
             }
           })}
       </ChatBodyWrapper>
-    </div>
+    </ChatContainer>
   );
 };
 

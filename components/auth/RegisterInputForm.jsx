@@ -652,7 +652,7 @@ const RegisterInputForm = ({ router }) => {
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
-            <Upload name="logo" listType="picture">
+            <Upload name="logo" listType="picture" accept="image/*">
               <Button icon={<UploadOutlined />}>파일 업로드</Button>
             </Upload>
           </RegisterInputItemWrapper>
@@ -769,7 +769,7 @@ const RegisterInputForm = ({ router }) => {
           >
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
-            <Upload name="logo" listType="picture">
+            <Upload name="logo" listType="picture" accept="image/*">
               <Button icon={<UploadOutlined />}>파일 업로드</Button>
             </Upload>
           </RegisterInputItemWrapper>

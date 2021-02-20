@@ -111,6 +111,7 @@ const mypage = () => {
     addChatRoomListener();
     return () => {
       initializeChatRoomAction();
+      chatRoomsRef.off();
     };
   }, []);
 

@@ -88,7 +88,7 @@ const MyActivityTemplate = () => {
       await axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
-          console.log(res.data);
+          //console.log(res.data);
           //console.log("activities : ", res.data.activities);
           setContents(res.data.activities);
           if (res.data.posts) {
@@ -103,10 +103,10 @@ const MyActivityTemplate = () => {
     }
   }, [currentType, currTab, me]);
 
-  useEffect(() => {
-    console.log("contents : ", contents);
-    console.log("posts : ", posts);
-  }, [contents, posts]);
+  // useEffect(() => {
+  //   console.log("contents : ", contents);
+  //   console.log("posts : ", posts);
+  // }, [contents, posts]);
 
   if (!contents) return null;
   if (loading) return null;

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
 import { useSelector } from "react-redux";
 import firebase from "../../firebase";
+import Router, { withRouter } from "next/router";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -81,16 +82,18 @@ const ProfileModal = ({ writer }) => {
       // }
       if (chatRoomExist) {
         // 이미 채팅방이 있다면
-        alert("이미 채팅방이 있ㅅ브니다");
+        // alert("이미 채팅방이 있ㅅ브니다");
+
+        Router.push(`/mypage`);
       } else {
         // 없다면 새로 생성
         try {
           await chatRoomsRef.child(key).update(newChatRoom);
           alert("채팅방 생성완료");
-
+          Router.push(`/mypage`);
           //setChatRoomsRef(null);
         } catch (error) {
-          alert("failed.");
+          alert("오류발생! 다시 시도해주세요.");
         }
       }
       chatRoomExist = false;
@@ -173,4 +176,4 @@ const ProfileModal = ({ writer }) => {
   );
 };
 
-export default ProfileModal;
+export default withRouter(ProfileModal);
