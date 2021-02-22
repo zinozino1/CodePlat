@@ -25,7 +25,10 @@ const ChatForm = ({ chatRoomKey }) => {
   const { currentChatRoom } = useSelector((state) => state.chat);
   const [content, setContent] = useState("");
 
-  const messagesRef = firebase.database().ref("messages");
+  const [messagesRef, setMessagesRef] = useState(
+    firebase.database().ref("messages"),
+  );
+  // const messagesRef = firebase.database().ref("messages");
 
   const createMessage = () => {
     const message = {

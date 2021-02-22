@@ -5,7 +5,7 @@ import ChatForm from "./ChatForm";
 const ChatContainer = ({ chatRoomKey }) => {
   return (
     <div>
-      <ChatBody chatRoomKey={chatRoomKey} />
+      <ChatBody chatRoomKey={chatRoomKey} key={chatRoomKey} />
       <ChatForm chatRoomKey={chatRoomKey} />
     </div>
   );

@@ -58,13 +58,17 @@ const EditProfileForm = ({
           );
           let user = firebase.auth().currentUser;
           if (user) {
-            await firebase
-              .auth()
+            await user
               .delete()
-              .then(() => {
+              .then(async () => {
+                await firebase.database().ref("users").child(user.uid).remove();
                 console.log("firebase 탈퇴 성공");
+              })
+              .catch((err) => {
+                console.log(err);
               });
           }
+
           Router.push(`/`);
         })
         .catch((err) => {

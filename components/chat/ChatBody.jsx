@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { Component } from "react";
 import styled, { css } from "styled-components";
 import firebase from "../../firebase";
-import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
-import { setCurrentChatRoomAction } from "../../reducers/chat";
+import { connect } from "react-redux";
 
 const ChatContainer = styled.div`
   height: 60vh;
@@ -88,116 +87,103 @@ const MessageWrapper = styled.div`
         `}
 `;
 
-let parentKey = null;
+export class ChatBody extends Component {
+  messagesEnd = React.createRef();
 
-const ChatBody = ({ chatRoomKey }) => {
-  //console.log(chatRoomKey);
-  const { me } = useSelector((state) => state.user);
-  const { currentChatRoom } = useSelector((state) => state.chat);
-  const dispatch = useDispatch();
-  //console.log(currentChatRoom);
-
-  const scrollRef = useRef();
-
-  const [messages, setMessages] = useState([]);
-
-  const messagesRef = firebase.database().ref("messages");
-
-  const addMessagesListener = () => {
-    console.log("key", chatRoomKey);
-    //let currentChatRoomId = currentChatRoom.id;
-    let messagesArray = [];
-    messagesRef.child(currentChatRoom.id).on("child_added", (DataSnapShot) => {
-      //console.log("snapshot:", DataSnapShot.val());
-      // //parentKey = DataSnapShot.ref_.parent.key;
-      // console.log("currnet : ", currentChatRoom.id);
-      // console.log("parent : ", DataSnapShot.ref_.parent.key);
-      if (DataSnapShot.ref_.parent.key === chatRoomKey) {
-        messagesArray.push(DataSnapShot.val());
-
-        // console.log("currnet : ", chatRoomKey);
-        // console.log("parent : ", DataSnapShot.ref_.parent.key);
-
-        setMessages([...messagesArray]);
-        //dispatch(setCurrentChatRoomAction(currentChatRoom));
-      }
-    });
+  state = {
+    messages: [],
+    messagesRef: firebase.database().ref("messages"),
   };
 
-  const scrollToBottom = useCallback(() => {
-    scrollRef.current.scrollIntoView({
-      // behavior: "smooth",
+  componentDidMount() {
+    const { chatRoom } = this.props;
+    const { me } = this.props;
+
+    if (chatRoom) {
+      this.addMessagesListeners(chatRoom.id);
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.messagesEnd) {
+      this.messagesEnd.scrollIntoView({ block: "end", inline: "nearest" });
+    }
+  }
+
+  componentWillUnmount() {
+    this.state.messagesRef.off();
+    this.messagesEnd = null;
+  }
+
+  addMessagesListeners = (chatRoomId) => {
+    let messagesArray = [];
+    this.setState({ messages: [] });
+    this.state.messagesRef
+      .child(chatRoomId)
+      .on("child_added", (DataSnapshot) => {
+        messagesArray.push(DataSnapshot.val());
+
+        this.setState({
+          messages: messagesArray,
+        });
+      });
+  };
+
+  scrollToBottom = () => {
+    this.scrollRef.current.scrollIntoView({
       block: "end",
       inline: "nearest",
     });
-  }, [messages]);
+  };
 
-  useEffect(() => {
-    console.log("새로운 거 시작");
-    if (currentChatRoom) {
-      addMessagesListener();
-    }
-    return () => {
-      console.log("unmount.");
-      setMessages([]);
-      messagesRef.off();
-    };
-  }, [chatRoomKey, currentChatRoom]);
+  renderMessages = (messages) =>
+    messages.length > 0 &&
+    messages.map((v, i) => {
+      const { me } = this.props;
+      if (v.user.clientId === me._id) {
+        return (
+          <MessageWrapper
+            type="me"
+            key={v.timestamp}
+            wordbreak={v.content.length > 10 ? "true" : "false"}
+          >
+            <span className="message-timestamp">
+              {moment(v.timestamp).format("MM/DD HH:mm")}
+            </span>
+            <span className="message-content">{v.content}</span>
+          </MessageWrapper>
+        );
+      } else {
+        return (
+          <MessageWrapper
+            key={v.timestamp}
+            type="opponent"
+            wordbreak={v.content.length > 10 ? "true" : "false"}
+          >
+            <span className="message-content">{v.content}</span>
+            <span className="message-timestamp">
+              {moment(v.timestamp).format("MM/DD HH:mm")}
+            </span>
+          </MessageWrapper>
+        );
+      }
+    });
+  render() {
+    const { messages } = this.state;
+    return (
+      <ChatContainer>
+        {this.renderMessages(messages)}
+        <div ref={(node) => (this.messagesEnd = node)} />
+      </ChatContainer>
+    );
+  }
+}
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  // useEffect(() => {
-  //   console.log(currentChatRoom);
-  // }, [currentChatRoom]);
-
-  // if (currentChatRoom && parentKey !== currentChatRoom.id) return null;
-
-  return (
-    <ChatContainer
-    // style={{
-    //   height: "60vh",
-    //   margin: "30px",
-    //   overflow: "auto",
-    //   border: "1px solid black",
-    //   padding: "20px 5px",
-    // }}
-    >
-      <ChatBodyWrapper ref={scrollRef}>
-        {messages.length > 0 &&
-          messages.map((v, i) => {
-            if (v.user.clientId === me._id) {
-              return (
-                <MessageWrapper
-                  type="me"
-                  key={v.timestamp}
-                  wordbreak={v.content.length > 10 ? "true" : "false"}
-                >
-                  <span className="message-timestamp">
-                    {moment(v.timestamp).format("MM/DD HH:mm")}
-                  </span>
-                  <span className="message-content">{v.content}</span>
-                </MessageWrapper>
-              );
-            } else {
-              return (
-                <MessageWrapper
-                  key={v.timestamp}
-                  type="opponent"
-                  wordbreak={v.content.length > 10 ? "true" : "false"}
-                >
-                  <span className="message-content">{v.content}</span>
-                  <span className="message-timestamp">
-                    {moment(v.timestamp).format("MM/DD HH:mm")}
-                  </span>
-                </MessageWrapper>
-              );
-            }
-          })}
-      </ChatBodyWrapper>
-    </ChatContainer>
-  );
+const mapStateToProps = (state) => {
+  return {
+    me: state.user.me,
+    chatRoom: state.chat.currentChatRoom,
+  };
 };
 
-export default ChatBody;
+export default connect(mapStateToProps)(ChatBody);

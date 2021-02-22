@@ -48,6 +48,8 @@ export const REGISTER_REQUEST = "user/REGISTER_REQUEST"; // 제거예정
 export const REGISTER_SUCCESS = "user/REGISTER_SUCCESS";
 export const REGISTER_FAILURE = "user/REGISTER_FAILURE";
 
+export const SET_CURRENT_OPPONENT = "user/SET_CURRENT_OPPONENT";
+
 // action creator
 
 export const setUserRequestAction = createAction(
@@ -60,6 +62,11 @@ export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
 
 export const registerRequestAction = createAction(
   REGISTER_REQUEST,
+  (data) => data,
+);
+
+export const setCurrentOpponentRequestAction = createAction(
+  SET_CURRENT_OPPONENT,
   (data) => data,
 );
 
@@ -142,6 +149,17 @@ const userReducer = handleActions(
       registerLoading: false,
       registerSuccess: false,
       registerFailure: null,
+    }),
+    [SET_CURRENT_OPPONENT]: (state, action) => ({
+      ...state,
+      me: {
+        ...state.me,
+        opponent: action.payload.users.filter((v, i) => {
+          if (v.nickname !== state.me.nickname) {
+            return v;
+          }
+        })[0].nickname,
+      },
     }),
   },
   initialState,
