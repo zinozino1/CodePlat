@@ -51,7 +51,7 @@ const EditProfileForm = ({
     let deleteConfirm = confirm("정말 회원 탈퇴를 진행하시겠습니까?");
     if (deleteConfirm) {
       axios
-        .delete(`/api/users?id=${me._id}`)
+        .delete(`/api/users/${me._id}`)
         .then(async (res) => {
           alert(
             "회원 탈퇴 처리가 정상적으로 처리되었습니다. CodePlat을 이용해주셔서 감사합니다.",
