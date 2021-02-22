@@ -106,9 +106,9 @@ const ProfileModal = ({ writer }) => {
 
   useEffect(() => {
     addChatRoomListener();
-    // return () => {
-    //   chatRoomsRef.off();
-    // };
+    return () => {
+      chatRoomsRef.off();
+    };
   }, []);
 
   // useEffect(() => {

@@ -4,8 +4,10 @@ import Header from "../../components/common/Header";
 import AuthLayout from "../../components/layout/AuthLayout";
 import { Form, Input, Button } from "antd";
 import Footer from "../../components/common/Footer";
+import axios from "axios";
+import { withRouter } from "next/router";
 
-const passwordSearch = () => {
+const passwordSearch = ({ router }) => {
   const [newPassword, setNewPassword] = useState("");
   const onChangeNewPassword = useCallback((e) => {
     setNewPassword(e.target.value);
@@ -14,7 +16,17 @@ const passwordSearch = () => {
   const onChangeNewPasswordConfirm = useCallback((e) => {
     setNewPasswordConfirm(e.target.value);
   }, []);
-  const onSubmit = useCallback(() => {}, []);
+  const onSubmit = useCallback(() => {
+    const email = router.query.email;
+    axios
+      .patch(`/api/changePassword`, { email, password: newPassword })
+      .then((res) => {
+        alert("비밀번호가 변경되었습니다.");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [router]);
   return (
     <>
       <Head>
@@ -93,9 +105,8 @@ const passwordSearch = () => {
           </Form>
         </div>
       </AuthLayout>
-      <Footer />
     </>
   );
 };
 
-export default passwordSearch;
+export default withRouter(passwordSearch);

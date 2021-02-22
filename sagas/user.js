@@ -38,6 +38,8 @@ function* loginSaga(action) {
     const res = yield call(login, action.payload);
     yield put({ type: LOG_IN_SUCCESS, user: res.data.user });
   } catch (error) {
+    console.log(error);
+    // alert("이메일 인증을 완료해주세요.");
     yield put({ type: LOG_IN_FAILURE, error: error.response.data });
   }
 }
@@ -46,6 +48,7 @@ function* logoutSaga(action) {
   try {
     yield call(logout);
     yield put({ type: LOG_OUT_SUCCESS });
+    window.location.href = `http://localhost:3000`;
   } catch (error) {
     console.log(error);
     yield put({ type: LOG_OUT_FAILURE, error: error.response.data });

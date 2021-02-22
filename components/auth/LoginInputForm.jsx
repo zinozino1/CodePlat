@@ -35,6 +35,7 @@ const LoginInputForm = () => {
     if (email == "" || password == "") {
       return;
     }
+
     dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
 

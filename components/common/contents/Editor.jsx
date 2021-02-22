@@ -96,6 +96,7 @@ const Editor = ({ onChangeTitle, onChangeDescription, description, title }) => {
     //quillInstance.current.getModule("toolbar");
     // const toolbar = quill.getModule("toolbar");
     // toolbar.addHandler("image", onClickImageBtn);
+    return () => {};
   }, [onChangeDescription]);
 
   //   const onClickImageBtn = useCallback(

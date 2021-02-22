@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled, { css } from "styled-components";
 import firebase from "../../firebase";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
+import { setCurrentChatRoomAction } from "../../reducers/chat";
 
 const ChatContainer = styled.div`
   height: 60vh;
@@ -93,6 +94,7 @@ const ChatBody = ({ chatRoomKey }) => {
   //console.log(chatRoomKey);
   const { me } = useSelector((state) => state.user);
   const { currentChatRoom } = useSelector((state) => state.chat);
+  const dispatch = useDispatch();
   //console.log(currentChatRoom);
 
   const scrollRef = useRef();
@@ -102,19 +104,22 @@ const ChatBody = ({ chatRoomKey }) => {
   const messagesRef = firebase.database().ref("messages");
 
   const addMessagesListener = () => {
-    let currentChatRoomId = currentChatRoom.id;
+    console.log("key", chatRoomKey);
+    //let currentChatRoomId = currentChatRoom.id;
     let messagesArray = [];
     messagesRef.child(currentChatRoom.id).on("child_added", (DataSnapShot) => {
-      //console.log("snapshot:", DataSnapShot.ref_.parent.key);
-      //parentKey = DataSnapShot.ref_.parent.key;
-      // console.log("currnet : ", currentChatRoom.id);
-      // console.log("parent : ", DataSnapShot.ref_.parent.key);
-      if (currentChatRoomId === DataSnapShot.ref_.parent.key) {
+      //console.log("snapshot:", DataSnapShot.val());
+      // //parentKey = DataSnapShot.ref_.parent.key;
+      console.log("currnet : ", currentChatRoom.id);
+      console.log("parent : ", DataSnapShot.ref_.parent.key);
+      if (DataSnapShot.ref_.parent.key === chatRoomKey) {
         messagesArray.push(DataSnapShot.val());
-        // console.log("currnet : ", currentChatRoom.id);
-        // console.log("parent : ", DataSnapShot.ref_.parent.key);
+
+        console.log("currnet : ", chatRoomKey);
+        console.log("parent : ", DataSnapShot.ref_.parent.key);
 
         setMessages([...messagesArray]);
+        //dispatch(setCurrentChatRoomAction(currentChatRoom));
       }
     });
   };
@@ -128,10 +133,10 @@ const ChatBody = ({ chatRoomKey }) => {
   }, [messages]);
 
   useEffect(() => {
-    //console.log("새로운 거 시작");
+    console.log("새로운 거 시작");
     addMessagesListener();
     return () => {
-      //console.log("unmount.");
+      console.log("unmount.");
       setMessages([]);
       messagesRef.off();
     };

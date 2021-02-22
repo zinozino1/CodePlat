@@ -80,9 +80,9 @@ const mypage = () => {
 
   const [chatRoomKey, setChatRoomKey] = useState("");
 
-  const onSetCurrentChatRoom = useCallback((data) => {
+  const onSetCurrentChatRoom = useCallback((chatRoom) => {
     //console.log(data);
-    dispatch(setCurrentChatRoomAction(data));
+    dispatch(setCurrentChatRoomAction(chatRoom));
   }, []);
 
   // 알림
@@ -168,6 +168,7 @@ const mypage = () => {
       setChatRooms([...chatRoomsArray]);
       //addNotificationListener(DataSnapShot.key); // chatroom id insert
     });
+    //dispatch(setCurrentChatRoomAction(chatRoomsArray[0]));
   };
 
   // const loadChatRooms = useCallback(() => {
