@@ -60,9 +60,9 @@ const EditProfileForm = ({
           if (user) {
             await firebase
               .auth()
-              .signOut()
+              .delete()
               .then(() => {
-                console.log("firebase logout 성공");
+                console.log("firebase 탈퇴 성공");
               });
           }
           Router.push(`/`);
