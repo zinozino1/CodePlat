@@ -66,7 +66,7 @@ const SocialTemplate = () => {
             </SocialLoginButton>
           </a>
         </Link>
-        w
+
         <Link href={`${SERVER_URL}/api/kakao`}>
           <a>
             <SocialLoginButton className="login-kakao">Kakao</SocialLoginButton>

@@ -185,7 +185,7 @@ const Header = ({ router }) => {
         {me && (
           <BadgeWrapper>
             <Badge count={99} overflowCount={10} offset={[20, 0]}>
-              <Link href="#">
+              <Link href="/mypage">
                 <a className="head-example">
                   <BellOutlined />
                 </a>

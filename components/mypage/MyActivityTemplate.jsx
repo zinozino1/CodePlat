@@ -158,41 +158,49 @@ const MyActivityTemplate = () => {
               {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
             </div>
           )}
-          {currTab.key === "comments" &&
-            contents.map((v, i) => {
-              let flag = false;
-              let post = null;
+          {currTab.key === "comments" && (
+            <div
+              style={{
+                overflow: "auto",
+                height: "59vh",
+              }}
+            >
+              {contents.map((v, i) => {
+                let flag = false;
+                let post = null;
 
-              posts.forEach((s, j) => {
-                if (v.postId === s._id) {
-                  flag = true;
-                  // postTitle = s.title;
-                  post = s;
+                posts.forEach((s, j) => {
+                  if (v.postId === s._id) {
+                    flag = true;
+                    // postTitle = s.title;
+                    post = s;
+                  }
+                });
+                if (flag) {
+                  return (
+                    <MyCommentWrapper key={i}>
+                      <div>
+                        <span style={{ fontSize: "16px", fontWeight: "500" }}>
+                          {v.content}
+                        </span>
+                      </div>
+                      <div>
+                        <Link href={`articles/${post.type}/${post._id}`}>
+                          <a>{post.title}</a>
+                        </Link>{" "}
+                        글에 남긴 댓글
+                      </div>
+                      <div>
+                        <span style={{ color: "#999", fontSize: "10px" }}>
+                          {moment(v.createdAt).format("MM/DD HH:mm")}
+                        </span>
+                      </div>
+                    </MyCommentWrapper>
+                  );
                 }
-              });
-              if (flag) {
-                return (
-                  <MyCommentWrapper key={i}>
-                    <div>
-                      <span style={{ fontSize: "16px", fontWeight: "500" }}>
-                        {v.content}
-                      </span>
-                    </div>
-                    <div>
-                      <Link href={`articles/${post.type}/${post._id}`}>
-                        <a>{post.title}</a>
-                      </Link>{" "}
-                      글에 남긴 댓글
-                    </div>
-                    <div>
-                      <span style={{ color: "#999", fontSize: "10px" }}>
-                        {moment(v.createdAt).format("MM/DD HH:mm")}
-                      </span>
-                    </div>
-                  </MyCommentWrapper>
-                );
-              }
-            })}
+              })}
+            </div>
+          )}
           {currTab.key === "scraps" && (
             <div
               style={{

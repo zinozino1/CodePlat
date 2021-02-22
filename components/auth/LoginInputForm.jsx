@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Divider } from "antd";
+import { Form, Input, Button, Checkbox, Divider, Modal } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { loginRequestAction } from "../../reducers/user";
 import Router, { withRouter } from "next/router";
 import SocialTemplate from "../common/auth/SocialTemplate";
 import useInput from "../../hooks/useInput";
+import axios from "axios";
 
 const LoginInputForm = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const LoginInputForm = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [searchEmail, setSearchEmail] = useState("");
 
   const onChangeEmail = useCallback((e) => {
     setEmail(e.target.value);
@@ -34,6 +37,35 @@ const LoginInputForm = () => {
     }
     dispatch(loginRequestAction({ email, password }));
   }, [email, password]);
+
+  const showModal = useCallback((e) => {
+    setIsModalVisible(true);
+  }, []);
+
+  const closeModal = useCallback((e) => {
+    setIsModalVisible(false);
+  }, []);
+
+  const onChangeSearchEmail = useCallback((e) => {
+    setSearchEmail(e.target.value);
+  }, []);
+
+  const onSearchPasswordSubmit = useCallback(() => {
+    axios
+      .post(`/api/forgotPassword`, { email: searchEmail })
+      .then((res) => {
+        if (res.data.message === "유저 정보가 없습니다") {
+          alert("가입된 이메일이 아닙니다!");
+          return;
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    alert("가입하신 이메일로 링크를 보내드렸습니다.");
+    setIsModalVisible(false);
+    //console.log(searchEmail);
+  }, [searchEmail]);
 
   useEffect(() => {
     if (loginError == "Incorrect email") {
@@ -158,6 +190,50 @@ const LoginInputForm = () => {
           <Link href="/auth/register">
             <a style={{ textDecoration: "underline" }}>회원가입</a>
           </Link>
+        </Form.Item>
+        <Form.Item style={{ textAlign: "center" }}>
+          비밀번호를 잊으셨나요?
+          <a style={{ textDecoration: "underline" }} onClick={showModal}>
+            비밀번호 찾기
+          </a>
+          <Modal
+            title="비밀번호 찾기"
+            visible={isModalVisible}
+            onOk={closeModal}
+            onCancel={closeModal}
+          >
+            <p>
+              비밀번호를 잊으셨나요? 가입한 이메일을 통해 비밀번호 수정 링크가
+              전송됩니다.
+            </p>
+            <Form>
+              <Form.Item
+                name="email"
+                rules={[
+                  {
+                    type: "email",
+                    message: "이메일 형식으로 입력해주세요.",
+                  },
+                  {
+                    required: true,
+                    message: "이메일을 입력해주세요.",
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="가입된 이메일을 입력해주세요."
+                  onChange={onChangeSearchEmail}
+                />
+              </Form.Item>
+              <Form.Item>
+                <div style={{ textAlign: "center", margin: "20px 0" }}>
+                  <Button onClick={onSearchPasswordSubmit}>
+                    비밀번호 찾기
+                  </Button>
+                </div>
+              </Form.Item>
+            </Form>
+          </Modal>
         </Form.Item>
         <Form.Item style={{ textAlign: "center" }}>
           <Link href="/">

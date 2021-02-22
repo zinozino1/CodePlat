@@ -87,6 +87,8 @@ const MessageWrapper = styled.div`
         `}
 `;
 
+let parentKey = null;
+
 const ChatBody = ({ chatRoomKey }) => {
   //console.log(chatRoomKey);
   const { me } = useSelector((state) => state.user);
@@ -100,11 +102,20 @@ const ChatBody = ({ chatRoomKey }) => {
   const messagesRef = firebase.database().ref("messages");
 
   const addMessagesListener = () => {
+    let currentChatRoomId = currentChatRoom.id;
     let messagesArray = [];
     messagesRef.child(currentChatRoom.id).on("child_added", (DataSnapShot) => {
-      //console.log("snapshot:", DataSnapShot.val());
-      messagesArray.push(DataSnapShot.val());
-      setMessages([...messagesArray]);
+      //console.log("snapshot:", DataSnapShot.ref_.parent.key);
+      //parentKey = DataSnapShot.ref_.parent.key;
+      // console.log("currnet : ", currentChatRoom.id);
+      // console.log("parent : ", DataSnapShot.ref_.parent.key);
+      if (currentChatRoomId === DataSnapShot.ref_.parent.key) {
+        messagesArray.push(DataSnapShot.val());
+        // console.log("currnet : ", currentChatRoom.id);
+        // console.log("parent : ", DataSnapShot.ref_.parent.key);
+
+        setMessages([...messagesArray]);
+      }
     });
   };
 
@@ -130,7 +141,11 @@ const ChatBody = ({ chatRoomKey }) => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {}, [messages]);
+  useEffect(() => {
+    console.log(currentChatRoom);
+  }, [currentChatRoom]);
+
+  // if (currentChatRoom && parentKey !== currentChatRoom.id) return null;
 
   return (
     <ChatContainer

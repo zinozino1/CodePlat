@@ -1,9 +1,11 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
 import { Rate, Button, Tag } from "antd";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase";
 import Router, { withRouter } from "next/router";
+import { setCurrentChatRoomAction } from "../../reducers/chat";
+import Link from "next/link";
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -26,6 +28,7 @@ const RowWrapper = styled.div`
 
 const ProfileModal = ({ writer }) => {
   const { me } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   // console.log(me.id);
   // console.log(writer.id);
 
@@ -83,12 +86,13 @@ const ProfileModal = ({ writer }) => {
       if (chatRoomExist) {
         // 이미 채팅방이 있다면
         // alert("이미 채팅방이 있ㅅ브니다");
-
+        //dispatch(setCurrentChatRoomAction(newChatRoom));
         Router.push(`/mypage`);
       } else {
         // 없다면 새로 생성
         try {
           await chatRoomsRef.child(key).update(newChatRoom);
+          //dispatch(setCurrentChatRoomAction(newChatRoom));
           alert("채팅방 생성완료");
           Router.push(`/mypage`);
           //setChatRoomsRef(null);
@@ -163,6 +167,9 @@ const ProfileModal = ({ writer }) => {
       </RowWrapper> */}
       <RowWrapper className="btn-wrapper">
         {me && me._id !== writer._id && (
+          // <Link href="/mypage">
+          //   <a onClick={onCreateChatRoom}></a>
+          // </Link>
           <Button
             type="primary"
             className="note-btn"
