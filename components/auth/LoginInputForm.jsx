@@ -50,20 +50,22 @@ const LoginInputForm = () => {
     setSearchEmail(e.target.value);
   }, []);
 
-  const onSearchPasswordSubmit = useCallback(() => {
-    axios
+  const onSearchPasswordSubmit = useCallback(async () => {
+    await axios
       .post(`/api/forgotPassword`, { email: searchEmail })
       .then((res) => {
         if (res.data.message === "유저 정보가 없습니다") {
           alert("가입된 이메일이 아닙니다!");
           return;
+        } else {
+          alert("가입하신 이메일로 링크를 보내드렸습니다.");
+          setIsModalVisible(false);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-    alert("가입하신 이메일로 링크를 보내드렸습니다.");
-    setIsModalVisible(false);
+
     //console.log(searchEmail);
   }, [searchEmail]);
 
