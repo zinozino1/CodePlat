@@ -110,13 +110,13 @@ const ChatBody = ({ chatRoomKey }) => {
     messagesRef.child(currentChatRoom.id).on("child_added", (DataSnapShot) => {
       //console.log("snapshot:", DataSnapShot.val());
       // //parentKey = DataSnapShot.ref_.parent.key;
-      console.log("currnet : ", currentChatRoom.id);
-      console.log("parent : ", DataSnapShot.ref_.parent.key);
+      // console.log("currnet : ", currentChatRoom.id);
+      // console.log("parent : ", DataSnapShot.ref_.parent.key);
       if (DataSnapShot.ref_.parent.key === chatRoomKey) {
         messagesArray.push(DataSnapShot.val());
 
-        console.log("currnet : ", chatRoomKey);
-        console.log("parent : ", DataSnapShot.ref_.parent.key);
+        // console.log("currnet : ", chatRoomKey);
+        // console.log("parent : ", DataSnapShot.ref_.parent.key);
 
         setMessages([...messagesArray]);
         //dispatch(setCurrentChatRoomAction(currentChatRoom));
@@ -134,21 +134,23 @@ const ChatBody = ({ chatRoomKey }) => {
 
   useEffect(() => {
     console.log("새로운 거 시작");
-    addMessagesListener();
+    if (currentChatRoom) {
+      addMessagesListener();
+    }
     return () => {
       console.log("unmount.");
       setMessages([]);
       messagesRef.off();
     };
-  }, [chatRoomKey]);
+  }, [chatRoomKey, currentChatRoom]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    console.log(currentChatRoom);
-  }, [currentChatRoom]);
+  // useEffect(() => {
+  //   console.log(currentChatRoom);
+  // }, [currentChatRoom]);
 
   // if (currentChatRoom && parentKey !== currentChatRoom.id) return null;
 

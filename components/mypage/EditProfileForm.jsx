@@ -6,6 +6,9 @@ import shortid from "shortid";
 import { SERVER_URL } from "../../lib/constant/constant";
 import { UploadOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import axios from "axios";
+import Router from "next/router";
+import firebase from "../../firebase";
 
 const EditProfileFormWrapper = styled(Form)`
   @media (max-width: 900px) {
@@ -43,6 +46,34 @@ const EditProfileForm = ({
   gitSecret,
 }) => {
   const { me } = useSelector((state) => state.user);
+
+  const onDeleteAccount = useCallback(() => {
+    let deleteConfirm = confirm("정말 회원 탈퇴를 진행하시겠습니까?");
+    if (deleteConfirm) {
+      axios
+        .delete(`/api/users?id=${me._id}`)
+        .then(async (res) => {
+          alert(
+            "회원 탈퇴 처리가 정상적으로 처리되었습니다. CodePlat을 이용해주셔서 감사합니다.",
+          );
+          let user = firebase.auth().currentUser;
+          if (user) {
+            await firebase
+              .auth()
+              .signOut()
+              .then(() => {
+                console.log("firebase logout 성공");
+              });
+          }
+          Router.push(`/`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+    }
+  }, []);
+
   if (!me) return null;
   return (
     <EditProfileFormWrapper>
@@ -126,6 +157,14 @@ const EditProfileForm = ({
               <Button block>비밀번호 변경</Button>
             </a>
           </Link>
+          <Button
+            type="danger"
+            block
+            style={{ marginTop: "10px" }}
+            onClick={onDeleteAccount}
+          >
+            회원 탈퇴
+          </Button>
         </Card>
       </div>
     </EditProfileFormWrapper>
