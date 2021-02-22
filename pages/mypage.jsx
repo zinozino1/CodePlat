@@ -75,6 +75,8 @@ const mypage = () => {
     firebase.database().ref("chatRooms"),
   );
 
+  // const chatRoomsRef = firebase.database().ref("chatRooms");
+
   const [chatRooms, setChatRooms] = useState([]);
   //const [myChatRooms, setMyChatRooms] = useState([]);
 

@@ -18,6 +18,8 @@ const passwordSearch = ({ router }) => {
   }, []);
   const onSubmit = useCallback(() => {
     const email = router.query.email;
+    // console.log(email);
+    // console.log(newPassword);
     axios
       .patch(`/api/changePassword`, { email, password: newPassword })
       .then((res) => {
@@ -26,7 +28,7 @@ const passwordSearch = ({ router }) => {
       .catch((err) => {
         console.log(err);
       });
-  }, [router]);
+  }, [router, newPassword]);
   return (
     <>
       <Head>
