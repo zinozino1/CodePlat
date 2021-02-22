@@ -72,7 +72,7 @@ const EditProfileForm = ({
         });
     } else {
     }
-  }, []);
+  }, [me]);
 
   if (!me) return null;
   return (
