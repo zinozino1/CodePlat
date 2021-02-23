@@ -121,6 +121,14 @@ export class ChatBody extends Component {
     this.state.messagesRef
       .child(chatRoomId)
       .on("child_added", (DataSnapshot) => {
+        // console.log(DataSnapshot.ref_.parent.key);
+        // if (DataSnapshot.ref_.parent.key === chatRoomId) {
+        //   messagesArray.push(DataSnapshot.val());
+
+        //   this.setState({
+        //     messages: messagesArray,
+        //   });
+        // }
         messagesArray.push(DataSnapshot.val());
 
         this.setState({

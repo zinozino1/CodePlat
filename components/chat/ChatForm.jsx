@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { Input, Button } from "antd";
 import { UpCircleOutlined } from "@ant-design/icons";
@@ -73,6 +73,10 @@ const ChatForm = ({ chatRoomKey }) => {
       onSubmit();
     }
   };
+
+  useEffect(() => {
+    return () => messagesRef.off();
+  }, []);
 
   return (
     <ChatFormWrapper>
