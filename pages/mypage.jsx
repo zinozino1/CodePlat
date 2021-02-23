@@ -62,6 +62,11 @@ const MenuWrapper = styled.div`
 `;
 
 class mypage extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.componentCleanup = this.componentCleanup.bind(this);
+  }
   state = {
     chatRoomsRef: firebase.database().ref("chatRooms"),
     messagesRef: firebase.database().ref("messages"),
@@ -106,11 +111,11 @@ class mypage extends Component {
       //console.log(DataSnapshot.val());
       chatRoomsArray.push(DataSnapshot.val());
       this.setState({ chatRooms: chatRoomsArray });
-      this.addNotificationListener(DataSnapshot.key);
+      this.addNotificationListener(DataSnapshot.key, DataSnapshot.val());
     });
   };
 
-  addNotificationListener = (chatRoomId) => {
+  addNotificationListener = (chatRoomId, chatRoomInfo) => {
     this.state.messagesRef.child(chatRoomId).on("value", (DataSnapshot) => {
       // if (this.props.chatRoom) {
       //console.log(DataSnapshot.val());
@@ -119,16 +124,18 @@ class mypage extends Component {
         this.props.chatRoom ? this.props.chatRoom.id : "", // 현재 채팅룸 아이디
         this.state.notifications,
         DataSnapshot,
+        chatRoomInfo,
       );
       //}
     });
   };
 
-  handleNotifications = (
+  handleNotifications = async (
     chatRoomId,
     currentChatRoomId,
     notifications,
     DataSnapshot,
+    chatRoomInfo,
   ) => {
     let lastTotal = 0;
 
@@ -137,13 +144,39 @@ class mypage extends Component {
     );
 
     if (index === -1) {
-      notifications.push({
-        id: chatRoomId,
-        total: DataSnapshot.numChildren(),
-        lastKnownTotal: DataSnapshot.numChildren(),
-        count: 0,
-      });
+      // 초기 렌더링
+      // 여기서 디비 로직?
+      let firebaseSnapshot = null;
+      await firebase
+        .database()
+        .ref(`/chatRooms/${chatRoomId}/${this.props.me.nickname}`)
+        .once("value")
+        .then((snapshot) => {
+          //console.log(snapshot.val());
+          firebaseSnapshot = snapshot.val();
+        });
+      //let firebaseData = this.state.chatRoomsRef.child(this.props.me.nickname);
+      if (firebaseSnapshot) {
+        //console.log("있음");
+        notifications.push({
+          id: chatRoomId,
+          total: firebaseSnapshot.total,
+          lastKnownTotal: firebaseSnapshot.lastKnownTotal,
+          count: firebaseSnapshot.count,
+        });
+      } else {
+        //console.log("없음");
+        notifications.push({
+          id: chatRoomId,
+          total: DataSnapshot.numChildren(),
+          lastKnownTotal: DataSnapshot.numChildren(),
+          count: 0,
+        });
+      }
+
+      //console.log(chatRoomInfo);
     } else {
+      // 업데이트
       if (chatRoomId !== currentChatRoomId) {
         lastTotal = notifications[index].lastKnownTotal;
 
@@ -156,11 +189,11 @@ class mypage extends Component {
 
       notifications[index].total = DataSnapshot.numChildren();
     }
-
+    //console.log(notifications);
     this.setState({ notifications });
   };
 
-  clearNotifications = (currentChatRoomId) => {
+  clearNotifications = async (currentChatRoomId) => {
     // console.log("실행.");
     // console.log("chat room id", currentChatRoomId);
     let index = this.state.notifications.findIndex(
@@ -174,6 +207,10 @@ class mypage extends Component {
       ].total;
       updatedNotifications[index].count = 0;
       this.setState({ notifications: updatedNotifications });
+      await this.state.chatRoomsRef
+        .child(currentChatRoomId)
+        .child(this.props.me.nickname)
+        .remove();
     }
   };
 
@@ -198,7 +235,35 @@ class mypage extends Component {
     this.setState({ firstLoad: false });
   };
 
+  componentCleanup = () => {
+    // 새로고침시에도 파이어베이스에 저장
+    let lastKnown = [];
+    this.state.notifications.forEach((notification, i) => {
+      if (notification.total !== notification.lastKnownTotal) {
+        lastKnown.push({
+          chatRoomId: notification.id,
+          user: this.props.me.nickname,
+          total: notification.total,
+          lastKnownTotal: notification.lastKnownTotal,
+          count: notification.count,
+        });
+      }
+    });
+    if (lastKnown) {
+      lastKnown.forEach(async (v, i) => {
+        //const key = this.state.chatRoomsRef.child(v.chatRoomId).push().key;
+        await this.state.chatRoomsRef
+          .child(v.chatRoomId)
+          .child(this.props.me.nickname)
+          .update({ ...v });
+      });
+    }
+    // return "FUck";
+    // // alert("F");
+  };
+
   componentDidMount() {
+    window.addEventListener("beforeunload", this.componentCleanup);
     //console.log(this.state.me);
     //console.log(this.props.chatRoom);
     //console.log(this.state.notifications);
@@ -206,6 +271,32 @@ class mypage extends Component {
   }
 
   componentWillUnmount() {
+    // 다른 페이지로 갈 경우 파이어베이스에 읽지않은 메시지 저장
+    //this.componentCleanup();
+    window.removeEventListener("beforeunload", this.componentCleanup);
+    //console.log(this.state.notifications, "저장해버리겠습니다~");
+    let lastKnown = [];
+    this.state.notifications.forEach((notification, i) => {
+      if (notification.total !== notification.lastKnownTotal) {
+        lastKnown.push({
+          chatRoomId: notification.id,
+          user: this.props.me.nickname,
+          total: notification.total,
+          lastKnownTotal: notification.lastKnownTotal,
+          count: notification.count,
+        });
+      }
+    });
+    if (lastKnown) {
+      lastKnown.forEach(async (v, i) => {
+        //const key = this.state.chatRoomsRef.child(v.chatRoomId).push().key;
+        await this.state.chatRoomsRef
+          .child(v.chatRoomId)
+          .child(this.props.me.nickname)
+          .update({ ...v });
+      });
+    }
+    //console.log("lastknwon", lastKnown);
     this.state.chatRoomsRef.off();
 
     this.state.chatRooms.forEach((chatRoom) => {
@@ -309,7 +400,7 @@ class mypage extends Component {
                     })}
                   </>
                 </SubMenu>
-                {chatRooms.map((v, i) => {
+                {/* {chatRooms.map((v, i) => {
                   let flag = false;
                   v.users.forEach((s, j) => {
                     if (me && s.clientId === me._id) flag = true;
@@ -363,7 +454,7 @@ class mypage extends Component {
                     );
                   }
                   flag = false;
-                })}
+                })} */}
               </Menu>
             </div>
             <div className="menu-content">
