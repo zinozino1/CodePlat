@@ -96,6 +96,7 @@ export class ChatBody extends Component {
   };
 
   componentDidMount() {
+    //console.log(this.state.messagesRef);
     const { chatRoom } = this.props;
     const { me } = this.props;
 
