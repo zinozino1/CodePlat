@@ -77,7 +77,7 @@ const ChatForm = ({ chatRoomKey }) => {
           });
           // console.log(data.val());
         });
-      console.log("상대방 닉네임은 ", opponentNickname);
+      //console.log("상대방 닉네임은 ", opponentNickname);
       let opponentUid = null;
 
       await firebase
@@ -89,7 +89,7 @@ const ChatForm = ({ chatRoomKey }) => {
           //console.log("상대방의 정보는", data.val());
           opponentUid = Object.keys(data.val())[0];
         });
-      console.log("상대방 uid는", opponentUid);
+      //console.log("상대방 uid는", opponentUid);
 
       let opponentInfo = null;
       await firebase
@@ -99,7 +99,7 @@ const ChatForm = ({ chatRoomKey }) => {
         .once("value", function (data) {
           opponentInfo = data.val();
         });
-      console.log("상대방 정보는 ", opponentInfo);
+      //console.log("상대방 정보는 ", opponentInfo);
 
       let isExistOpponentLeave = null;
       await firebase
@@ -112,7 +112,7 @@ const ChatForm = ({ chatRoomKey }) => {
             isExistOpponentLeave = data.val()[opponentNickname];
           }
         });
-      console.log("상대방 나간 흔적이 있니?", isExistOpponentLeave);
+      //console.log("상대방 나간 흔적이 있니?", isExistOpponentLeave);
 
       // 상대방이 마이페이지에 없을 때
       if (!opponentInfo.isInMypage) {
@@ -130,7 +130,7 @@ const ChatForm = ({ chatRoomKey }) => {
               lastKnownTotal: isExistOpponentLeave.lastKnownTotal,
             });
         } else {
-          // 상대방이 모두 읽은채로 마이페이지 벗어난 경우 = 초기
+          // 상대방이 모두 읽은채로 마이페이지 벗어난 경우 = 초기상태 정의
           await firebase
             .database()
             .ref("chatRooms")
