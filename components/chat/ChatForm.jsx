@@ -59,6 +59,9 @@ const ChatForm = ({ chatRoomKey }) => {
       return;
     }
     try {
+      // 여기서 작업하면 댐 상대방이 마이페이지 밖에 있는 것을 판단해야함
+      // user -> isInMypage : boolean
+      // 채팅방의 상대방이 마이페이지 바깥에 있다면 상대방 firebase의 lastknown업데이트 하면 댐
       await messagesRef.child(currentChatRoom.id).push().set(createMessage());
       setContent("");
     } catch (error) {

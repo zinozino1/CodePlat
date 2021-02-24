@@ -143,6 +143,19 @@ const Header = ({ router }) => {
         .then(() => {
           console.log("firebase logout 성공");
         });
+      let firebaseMe = null;
+      await firebase
+        .database()
+        .ref("users")
+        .child(user.uid)
+        .once("value", function (data) {
+          firebaseMe = data.val();
+        });
+      await firebase
+        .database()
+        .ref("users")
+        .child(user.uid)
+        .update({ ...firebaseMe, isInMypage: false });
     }
 
     dispatch(logoutRequestAction());

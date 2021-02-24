@@ -158,6 +158,7 @@ class mypage extends Component {
       //let firebaseData = this.state.chatRoomsRef.child(this.props.me.nickname);
       if (firebaseSnapshot) {
         //console.log("있음");
+        // 빨간거 안읽은 채로 마이페이지 벗어났다가 다시 들온 경우
         notifications.push({
           id: chatRoomId,
           total: firebaseSnapshot.total,
@@ -166,6 +167,7 @@ class mypage extends Component {
         });
       } else {
         //console.log("없음");
+        // 빨간 거 다 읽고 마이페이지 벗어났다가 다시 들온 경우
         notifications.push({
           id: chatRoomId,
           total: DataSnapshot.numChildren(),
@@ -262,7 +264,25 @@ class mypage extends Component {
     // // alert("F");
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    // 내가 마이페이지 들어오면 파이어베이스 isInMypage = true
+    let firebaseMe = null;
+    let user = firebase.auth().currentUser;
+    await firebase
+      .database()
+      .ref("users")
+      .child(user.uid)
+      .once("value", function (data) {
+        firebaseMe = data.val();
+      });
+
+    //console.log({ ...firebaseMe });
+    await firebase
+      .database()
+      .ref("users")
+      .child(user.uid)
+      .update({ ...firebaseMe, isInMypage: true });
+
     window.addEventListener("beforeunload", this.componentCleanup);
     //console.log(this.state.me);
     //console.log(this.props.chatRoom);
@@ -270,9 +290,27 @@ class mypage extends Component {
     this.addChatRoomListener();
   }
 
-  componentWillUnmount() {
+  async componentWillUnmount() {
+    // 내가 마이페이지 나가면 파이어베이스 isInMypage = false
     // 다른 페이지로 갈 경우 파이어베이스에 읽지않은 메시지 저장
     //this.componentCleanup();
+    let firebaseMe = null;
+    let user = firebase.auth().currentUser;
+    await firebase
+      .database()
+      .ref("users")
+      .child(user.uid)
+      .once("value", function (data) {
+        firebaseMe = data.val();
+      });
+
+    //console.log({ ...firebaseMe });
+    await firebase
+      .database()
+      .ref("users")
+      .child(user.uid)
+      .update({ ...firebaseMe, isInMypage: false });
+
     window.removeEventListener("beforeunload", this.componentCleanup);
     //console.log(this.state.notifications, "저장해버리겠습니다~");
     let lastKnown = [];
