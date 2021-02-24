@@ -172,6 +172,7 @@ const RegisterInputForm = ({ router }) => {
           nickname: createdUser.user.displayName,
           email: createdUser.user.email,
           type: "local",
+          isInMypage: false,
         });
         // 회원가입 시 자동 로그인 -> 로컬은 자동로그인 안됨
         // let SignedInUser = await firebase
@@ -316,6 +317,7 @@ const RegisterInputForm = ({ router }) => {
               .set({
                 nickname: createdUser.user.displayName,
                 type: "social",
+                isInMypage: false,
               });
             // 임마도 자동로그인 x
             // let SignedInUser = await firebase
@@ -383,6 +385,7 @@ const RegisterInputForm = ({ router }) => {
                 email: createdUser.user.email,
                 nickname: createdUser.user.displayName,
                 type: "social",
+                isInMypage: false,
               });
             // 파이어베이스 로그인
             let SignedInUser = await firebase

@@ -62,21 +62,26 @@ const ProfileModal = ({ writer }) => {
       };
       //console.log(chatRooms);
       let chatRoomExist = false;
-      chatRooms.forEach((v, i) => {
-        let cnt = 0;
-        v.users.forEach((s, j) => {
-          //console.log(s.clientId);
-          if (
-            s.clientId === newChatRoom.users[0].clientId ||
-            s.clientId === newChatRoom.users[1].clientId
-          ) {
-            cnt++;
+      console.log(chatRooms);
+      if (chatRooms.length !== 0) {
+        chatRooms.forEach((v, i) => {
+          let cnt = 0;
+
+          v.users.forEach((s, j) => {
+            //console.log(s.clientId);
+            if (
+              s.clientId === newChatRoom.users[0].clientId ||
+              s.clientId === newChatRoom.users[1].clientId
+            ) {
+              cnt++;
+            }
+          });
+          if (cnt === 2) {
+            chatRoomExist = true;
           }
         });
-        if (cnt === 2) {
-          chatRoomExist = true;
-        }
-      });
+      }
+
       // let cnt = 0;
       //console.log("cnt", cnt);
       // if (chatRooms.length === 0) {

@@ -266,6 +266,9 @@ class mypage extends Component {
 
   async componentDidMount() {
     // 내가 마이페이지 들어오면 파이어베이스 isInMypage = true
+    await firebase
+      .auth()
+      .signInWithEmailAndPassword(this.props.me.email, this.props.me.email);
     let firebaseMe = null;
     let user = firebase.auth().currentUser;
     await firebase
@@ -380,62 +383,63 @@ class mypage extends Component {
                   //onTitleClick={loadChatRooms}
                 >
                   <>
-                    {chatRooms.map((v, i) => {
-                      let flag = false;
-                      v.users.forEach((s, j) => {
-                        if (me && s.clientId === me._id) flag = true;
-                      });
-                      if (flag) {
-                        return (
-                          <Menu.Item
-                            key={
-                              v.users.filter((s, j) => {
-                                if (me && s.nickname !== me.nickname) {
-                                  return s;
-                                }
-                              })[0].nickname
-                            }
-                            onClick={(e) => {
-                              //this.onChangeCurrentMenu(e);
-                              this.setChatRoomKey(v.id);
-                              this.onSetCurrentChatRoom(v);
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-between",
+                    {chatRooms &&
+                      chatRooms.map((v, i) => {
+                        let flag = false;
+                        v.users.forEach((s, j) => {
+                          if (me && s.clientId === me._id) flag = true;
+                        });
+                        if (flag) {
+                          return (
+                            <Menu.Item
+                              key={
+                                v.users.filter((s, j) => {
+                                  if (me && s.nickname !== me.nickname) {
+                                    return s;
+                                  }
+                                })[0].nickname
+                              }
+                              onClick={(e) => {
+                                //this.onChangeCurrentMenu(e);
+                                this.setChatRoomKey(v.id);
+                                this.onSetCurrentChatRoom(v);
                               }}
                             >
-                              <span style={{}}>
-                                {
-                                  v.users.filter((s, j) => {
-                                    if (me && s.nickname !== me.nickname) {
-                                      return s;
-                                    }
-                                  })[0].nickname
-                                }
-                              </span>
-                              <span>
-                                <Badge
-                                  //count={1}
-                                  count={this.getNotificationCount(v)}
-                                  style={{
-                                    borderRadius: "3px",
-                                    fontSize: "9px",
-                                    padding: "0 2px",
-                                    height: "13px",
-                                    minWidth: "13px",
-                                    lineHeight: "13px",
-                                  }}
-                                />
-                              </span>
-                            </div>
-                          </Menu.Item>
-                        );
-                      }
-                      flag = false;
-                    })}
+                              <div
+                                style={{
+                                  display: "flex",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <span style={{}}>
+                                  {
+                                    v.users.filter((s, j) => {
+                                      if (me && s.nickname !== me.nickname) {
+                                        return s;
+                                      }
+                                    })[0].nickname
+                                  }
+                                </span>
+                                <span>
+                                  <Badge
+                                    //count={1}
+                                    count={this.getNotificationCount(v)}
+                                    style={{
+                                      borderRadius: "3px",
+                                      fontSize: "9px",
+                                      padding: "0 2px",
+                                      height: "13px",
+                                      minWidth: "13px",
+                                      lineHeight: "13px",
+                                    }}
+                                  />
+                                </span>
+                              </div>
+                            </Menu.Item>
+                          );
+                        }
+                        flag = false;
+                      })}
                   </>
                 </SubMenu>
                 {/* {chatRooms.map((v, i) => {
