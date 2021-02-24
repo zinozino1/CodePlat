@@ -166,19 +166,26 @@ const Header = ({ router }) => {
   }, []);
 
   useEffect(async () => {
-    console.log("쌔거 실행");
-
     setTimeout(() => {
       let globalCount = 0;
+      let tmpChatRoomInfo = [];
       me &&
         chatRoomsRef.on("child_changed", (DataSnapshot) => {
-          console.log(DataSnapshot.val());
           if (DataSnapshot.val()[me.nickname]) {
             //console.log(DataSnapshot.val());
             //console.log(DataSnapshot.val()[me.nickname].count);
 
             //globalCount += DataSnapshot.val()[me.nickname].count;
             globalCount++;
+            setGlobalCount(globalCount);
+          } else {
+            //console.log("제거된 객체", DataSnapshot.val());
+            // 여기서 datasnapshot.val()의 채팅방 id랑 tmpchatroominfo배열 원소 중 같은 것의 count를 뺴내어 globalcount에서 뺴준다
+            tmpChatRoomInfo.forEach((v, i) => {
+              if (v.chatRoomId === DataSnapshot.val().id) {
+                globalCount -= v.count;
+              }
+            });
             setGlobalCount(globalCount);
           }
           //globalCount = 0;
@@ -189,18 +196,19 @@ const Header = ({ router }) => {
           //console.log(DataSnapshot.val());
           if (DataSnapshot.val()[me.nickname]) {
             //  globalCount += DataSnapshot.val()[me.nickname].count;
-            //console.log(DataSnapshot.val()[me.nickname].count);
+            //console.log(DataSnapshot.val());
             globalCount += DataSnapshot.val()[me.nickname].count;
+            tmpChatRoomInfo.push(DataSnapshot.val()[me.nickname]);
             setGlobalCount(globalCount);
           }
+          //console.log(tmpChatRoomInfo);
           // globalCount = 0;
         });
-
       me &&
         chatRoomsRef.on("child_removed", (DataSnapshot) => {
           console.log("removed", DataSnapshot);
         });
-    }, 500);
+    }, 700);
   }, []);
 
   useEffect(() => {

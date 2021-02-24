@@ -62,7 +62,7 @@ const ProfileModal = ({ writer }) => {
       };
       //console.log(chatRooms);
       let chatRoomExist = false;
-      console.log(chatRooms);
+      //console.log(chatRooms);
       if (chatRooms.length !== 0) {
         chatRooms.forEach((v, i) => {
           let cnt = 0;
