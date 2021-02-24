@@ -133,6 +133,10 @@ const Header = ({ router }) => {
   const { me, logoutLoading } = useSelector((state) => state.user);
 
   const [currentMenu, setCurrentMenu] = useState(null);
+  const [globalCount, setGlobalCount] = useState(0);
+  const [chatRoomsRef, setChatRoomsRef] = useState(
+    firebase.database().ref("chatRooms"),
+  );
 
   const onLogout = useCallback(async () => {
     let user = firebase.auth().currentUser;
@@ -161,11 +165,53 @@ const Header = ({ router }) => {
     dispatch(logoutRequestAction());
   }, []);
 
+  useEffect(async () => {
+    console.log("쌔거 실행");
+
+    setTimeout(() => {
+      let globalCount = 0;
+      me &&
+        chatRoomsRef.on("child_changed", (DataSnapshot) => {
+          console.log(DataSnapshot.val());
+          if (DataSnapshot.val()[me.nickname]) {
+            //console.log(DataSnapshot.val());
+            //console.log(DataSnapshot.val()[me.nickname].count);
+
+            //globalCount += DataSnapshot.val()[me.nickname].count;
+            globalCount++;
+            setGlobalCount(globalCount);
+          }
+          //globalCount = 0;
+        });
+      me &&
+        chatRoomsRef.on("child_added", (DataSnapshot) => {
+          // 초기
+          //console.log(DataSnapshot.val());
+          if (DataSnapshot.val()[me.nickname]) {
+            //  globalCount += DataSnapshot.val()[me.nickname].count;
+            //console.log(DataSnapshot.val()[me.nickname].count);
+            globalCount += DataSnapshot.val()[me.nickname].count;
+            setGlobalCount(globalCount);
+          }
+          // globalCount = 0;
+        });
+
+      me &&
+        chatRoomsRef.on("child_removed", (DataSnapshot) => {
+          console.log("removed", DataSnapshot);
+        });
+    }, 500);
+  }, []);
+
   useEffect(() => {
     const route = router.route.split("/");
 
     setCurrentMenu(`/${route[1]}/${route[2]}`);
   }, [router]);
+
+  useEffect(() => {
+    return () => chatRoomsRef.off();
+  }, []);
 
   return (
     <HeaderWrapper>
@@ -197,7 +243,7 @@ const Header = ({ router }) => {
         </MenuWrapper>
         {me && (
           <BadgeWrapper>
-            <Badge count={99} overflowCount={10} offset={[20, 0]}>
+            <Badge count={globalCount} offset={[20, 0]}>
               <Link href="/mypage">
                 <a className="head-example">
                   <BellOutlined />

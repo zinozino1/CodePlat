@@ -82,7 +82,6 @@ class mypage extends Component {
     notifications: [],
     currentMenu: "profile",
     chatRoomKey: "",
-    totalCount: 0,
   };
 
   onChangeCurrentMenu = (e) => {
@@ -279,16 +278,17 @@ class mypage extends Component {
     // return "FUck";
     // // alert("F");
   };
-  componentDidUpdate() {
-    console.log("컴포넌트 업데이트");
-    let totalCount = 0;
-    this.state.notifications.forEach((v, i) => {
-      console.log(v);
-      totalCount += v.count;
-    });
-    console.log(totalCount);
-    //this.setState({ totalCount });
-  }
+  // componentDidUpdate() {
+  //   console.log("컴포넌트 업데이트");
+  //   let totalCount = 0;
+  //   this.state.notifications.forEach((v, i) => {
+  //     console.log(v);
+  //     totalCount += v.count;
+  //   });
+  //   console.log(totalCount);
+  //   globalTotalCount = totalCount;
+  //   //this.setState({ totalCount });
+  // }
 
   async componentDidMount() {
     //console.log(this.state.totalCount);
