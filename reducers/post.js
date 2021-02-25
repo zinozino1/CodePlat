@@ -280,7 +280,7 @@ const postReducer = handleActions(
       ...state,
       loadPostsLoading: false,
       loadPostsDone: false,
-      loadPostsError: action.error,
+      //loadPostsError: action.error,
     }),
     [MAIN_LOAD_POSTS_REQUEST]: (state, action) => ({
       ...state,

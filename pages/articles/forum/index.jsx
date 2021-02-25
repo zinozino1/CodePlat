@@ -177,6 +177,7 @@ const Forum = ({ router }) => {
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
     //console.log(context);
+    //console.log("store1", context.store.getState());
 
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
@@ -186,6 +187,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
+    // context.store.dispatch(
+    //   loadForumPostsRequestAction({
+    //     type: "latest",
+    //     skip: 0,
+    //     term: "",
+    //     field: "전체",
+    //   }),
+    // );
     //context.store.dispatch(mainLoadPostsReqeustAction());
     //context.store.dispatch(END);
     context.store.dispatch(END);

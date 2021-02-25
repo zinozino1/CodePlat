@@ -111,7 +111,7 @@ function* loadPostsSaga(action) {
     yield put({
       type: LOAD_POSTS_FAILURE,
       contentType: action.payload,
-      error: error.response.data,
+      //error: error.response,
     });
   }
 }
@@ -210,7 +210,7 @@ function* addCommentSaga(action) {
 function* loadForumPostsSaga(action) {
   try {
     const res = yield call(loadForumPosts, action.payload);
-
+    console.log(res);
     yield put({
       type: LOAD_FORUM_POSTS_SUCCESS,
       forumPosts: res.data.posts,
@@ -220,7 +220,7 @@ function* loadForumPostsSaga(action) {
     console.log(error);
     yield put({
       type: LOAD_FORUM_POSTS_FAILURE,
-      //error: error.response.data,
+      error: error.response,
     });
   }
 }

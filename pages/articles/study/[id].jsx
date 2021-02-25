@@ -18,11 +18,11 @@ const StudyDetail = ({ router }) => {
   const { post } = useSelector((state) => state.post);
 
   useEffect(() => {
-    dispatch(
-      loadPostRequestAction({
-        postId: router.query.id,
-      }),
-    );
+    // dispatch(
+    //   loadPostRequestAction({
+    //     postId: router.query.id,
+    //   }),
+    // );
     return () => {
       dispatch(initializePostAction());
     };
@@ -53,6 +53,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
+    context.store.dispatch(
+      loadPostRequestAction({ postId: context.params.id }),
+    );
     //context.store.dispatch(mainLoadPostsReqeustAction());
     //context.store.dispatch(END);
     context.store.dispatch(END);

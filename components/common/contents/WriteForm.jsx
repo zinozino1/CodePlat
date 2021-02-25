@@ -102,7 +102,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       newFile.status = "done";
       mergedFiles.push(newFile);
     }
-    console.log(mergedFiles);
+    //console.log(mergedFiles);
     return mergedFiles;
   };
 

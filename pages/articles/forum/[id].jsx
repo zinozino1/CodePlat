@@ -18,15 +18,19 @@ const ForumDetail = ({ router }) => {
   const { post } = useSelector((state) => state.post);
 
   useEffect(() => {
-    dispatch(
-      loadPostRequestAction({
-        postId: router.query.id,
-      }),
-    );
+    // dispatch(
+    //   loadPostRequestAction({
+    //     postId: router.query.id,
+    //   }),
+    // );
     return () => {
       dispatch(initializePostAction());
     };
   }, [router]);
+
+  // useEffect(() => {
+  //   console.log(object);
+  // }, []);
 
   if (!post) return null;
 
@@ -45,7 +49,7 @@ const ForumDetail = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
+    //console.log("context parapns", context.params.id);
 
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
@@ -55,6 +59,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
+    context.store.dispatch(
+      loadPostRequestAction({ postId: context.params.id }),
+    );
     //context.store.dispatch(mainLoadPostsReqeustAction());
     //context.store.dispatch(END);
     context.store.dispatch(END);

@@ -71,7 +71,7 @@ const Project = ({ router }) => {
   };
 
   useEffect(() => {
-    console.log(encodeURIComponent(skill.toString()));
+    //console.log(encodeURIComponent(skill.toString()));
     dispatch(
       loadPostsReqeustAction({
         type: "project",
@@ -137,6 +137,15 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
+    // context.store.dispatch(
+    //   loadPostsReqeustAction({
+    //     type: "project",
+    //     term: "",
+    //     skip: 0,
+    //     techStack: [],
+    //     location: "전체",
+    //   }),
+    // );
     //context.store.dispatch(mainLoadPostsReqeustAction());
     //context.store.dispatch(END);
     context.store.dispatch(END);
