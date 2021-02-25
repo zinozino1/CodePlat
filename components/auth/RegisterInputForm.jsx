@@ -250,6 +250,7 @@ const RegisterInputForm = ({ router }) => {
         return;
       }
       if (noneEmailUser && email === "") {
+        console.log(noneEmailUser, email);
         alert("이메일을 입력해주세요.");
         return;
       }
@@ -442,6 +443,10 @@ const RegisterInputForm = ({ router }) => {
       //setEmail("");
     }
   }, [router]);
+
+  useEffect(() => {
+    console.log(email);
+  }, [email]);
 
   return (
     <RegisterFormWrapper {...formItemLayout} form={form} name="register">
@@ -729,9 +734,8 @@ const RegisterInputForm = ({ router }) => {
                       whitespace: true,
                     },
                   ]}
-                  onChange={onChangeEmail}
                 >
-                  <Input placeholder="email" />
+                  <Input placeholder="email" onChange={onChangeEmail} />
                 </RegisterInputItemWrapper>
               ) : (
                 <RegisterInputItemWrapper
@@ -745,9 +749,8 @@ const RegisterInputForm = ({ router }) => {
                       whitespace: true,
                     },
                   ]}
-                  onChange={onChangeEmail}
                 >
-                  <Input placeholder="email" />
+                  <Input placeholder="email" onChange={onChangeEmail} />
                 </RegisterInputItemWrapper>
               )}
             </>
