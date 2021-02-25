@@ -10,10 +10,12 @@ const SocialLoginWrapper = styled.div`
   font-weight: 300;
   .login-google {
     background: #dd4b39;
+    flex: 1;
   }
   .login-naver {
     background: #00c300;
     margin-left: 3px;
+    flex: 1;
   }
   .login-github {
     background: #333;
@@ -41,22 +43,25 @@ const SocialTemplate = () => {
   return (
     <>
       <SocialLoginWrapper>
-        <Link href={`${SERVER_URL}/api/google`}>
-          <a>
-            <SocialLoginButton
-              className="login-google"
-              // onClick={onClickSocialLogin}
-            >
-              Google
-            </SocialLoginButton>
-          </a>
-        </Link>
+        <div className="login-google">
+          <Link href={`${SERVER_URL}/api/google`}>
+            <a>
+              <SocialLoginButton
 
-        <Link href={`${SERVER_URL}/api/naver`}>
-          <a>
-            <SocialLoginButton className="login-naver">Naver</SocialLoginButton>
-          </a>
-        </Link>
+              // onClick={onClickSocialLogin}
+              >
+                Google
+              </SocialLoginButton>
+            </a>
+          </Link>
+        </div>
+        <div className="login-naver">
+          <Link href={`${SERVER_URL}/api/naver`}>
+            <a>
+              <SocialLoginButton>Naver</SocialLoginButton>
+            </a>
+          </Link>
+        </div>
       </SocialLoginWrapper>
       <SocialLoginWrapper>
         <Link href={`${SERVER_URL}/api/github`}>

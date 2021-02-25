@@ -179,8 +179,9 @@ const ProfileModal = ({ writer }) => {
             type="primary"
             className="note-btn"
             onClick={onCreateChatRoom}
+            style={{ marginTop: "20px" }}
           >
-            쪽지 보내기
+            메시지 보내기
           </Button>
         )}
       </RowWrapper>

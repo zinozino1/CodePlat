@@ -243,7 +243,11 @@ const PostViewerHeader = ({ post, contentType }) => {
                   e.stopPropagation();
                 }}
               >
-                <ProfileModal writer={post.writer}></ProfileModal>
+                {post.writer && (
+                  <ProfileModal
+                    writer={post.writer && post.writer}
+                  ></ProfileModal>
+                )}
               </div>
             }
           >
@@ -255,6 +259,7 @@ const PostViewerHeader = ({ post, contentType }) => {
               size={32}
               icon={<UserOutlined />}
               src={
+                post.writer &&
                 post.writer.avatarUrl && (
                   <Image
                     src={`${SERVER_URL}/${post.writer.avatarUrl}`}
@@ -265,7 +270,9 @@ const PostViewerHeader = ({ post, contentType }) => {
               }
             />{" "}
           </Popover>
-          <span className="user-nickname">{post.writer.nickname}</span>
+          <span className="user-nickname">
+            {post.writer ? post.writer.nickname : "탈퇴한 회원"}
+          </span>
         </div>
         <div className="post-desc">
           <div className="post-header-summary">
@@ -335,6 +342,7 @@ const PostViewerHeader = ({ post, contentType }) => {
             )}
             {me &&
               (contentType === "study" || contentType === "project") &&
+              post.writer &&
               me._id === post.writer._id && (
                 <>
                   <Button
@@ -351,7 +359,7 @@ const PostViewerHeader = ({ post, contentType }) => {
                 </>
               )}
 
-            {me && me._id === post.writer._id && (
+            {me && post.writer && me._id === post.writer._id && (
               <>
                 <Button
                   type="ghost"
@@ -365,18 +373,21 @@ const PostViewerHeader = ({ post, contentType }) => {
               </>
             )}
 
-            {me && me._id === post.writer._id && contentType === "forum" && (
-              <Button
-                type="ghost"
-                style={{ color: "tomato" }}
-                className="delete-btn"
-                onClick={() => {
-                  onPostDelete("deletePost");
-                }}
-              >
-                삭제
-              </Button>
-            )}
+            {me &&
+              post.writer &&
+              me._id === post.writer._id &&
+              contentType === "forum" && (
+                <Button
+                  type="ghost"
+                  style={{ color: "tomato" }}
+                  className="delete-btn"
+                  onClick={() => {
+                    onPostDelete("deletePost");
+                  }}
+                >
+                  삭제
+                </Button>
+              )}
           </div>
         </div>
       </PostViewerHeaderWrapper>

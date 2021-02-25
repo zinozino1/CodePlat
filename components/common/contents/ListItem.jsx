@@ -70,7 +70,8 @@ const ListItem = ({ item, type }) => {
     return (
       <Link
         href={
-          item.writer ? `/articles/${type}/${item._id}` : `/articles/${type}`
+          // item.writer ? `/articles/${type}/${item._id}` : `/articles/${type}`
+          `/articles/${type}/${item._id}`
         }
       >
         <a>

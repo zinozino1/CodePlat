@@ -406,7 +406,7 @@ class mypage extends Component {
                 <SubMenu
                   key="note"
                   icon={<MailOutlined />}
-                  title="쪽지함"
+                  title="채팅"
                   onClick={this.onChangeCurrentMenu}
                   //onTitleClick={loadChatRooms}
                 >
