@@ -31,18 +31,19 @@ const ContentTemplate = ({ forumData }) => {
         style={{ width: "100%" }}
         tabList={[
           { key: "hot", tab: "커뮤니티 인기글" },
-          { key: "scrap", tab: "스크랩" },
+          //{ key: "scrap", tab: "스크랩" },
         ]}
         activeTabKey={currTab.key}
         onTabChange={(key) => {
           onChangeTap(key, "key");
         }}
       >
-        {currTab.key == "hot" ? (
+        <HotContent forumData={forumData} />
+        {/* {currTab.key == "hot" ? (
           <HotContent forumData={forumData} />
         ) : (
           <>{me ? <ScrapContent /> : <ScrapNeedLogin />}</>
-        )}
+        )} */}
       </Card>
     </ContentTemplateWrapper>
   );

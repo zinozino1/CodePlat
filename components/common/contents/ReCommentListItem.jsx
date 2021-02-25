@@ -330,13 +330,14 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
               style={{
                 cursor: "pointer",
               }}
-              size={24}
+              size={28}
               icon={<UserOutlined />}
               src={
                 reComment.writer.avatarUrl && (
                   <Image
+                    width={28}
+                    height={28}
                     src={`${SERVER_URL}/${reComment.writer.avatarUrl}`}
-                    width={100}
                   />
                 )
               }

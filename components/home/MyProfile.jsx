@@ -71,10 +71,15 @@ const MyProfile = ({ me }) => {
             >
               <Avatar
                 style={{ cursor: "pointer" }}
+                size={32}
                 src={
                   me.avatarUrl !== "" &&
                   me.avatarUrl && (
-                    <Image width={100} src={`${SERVER_URL}/${me.avatarUrl}`} />
+                    <Image
+                      width={32}
+                      height={32}
+                      src={`${SERVER_URL}/${me.avatarUrl}`}
+                    />
                   )
                 }
                 icon={<UserOutlined />}

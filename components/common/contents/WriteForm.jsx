@@ -95,12 +95,14 @@ const WriteForm = ({ contentType, router, isEdit }) => {
     for (let i = 0; i < fileList.length; i++) {
       let newFile = {};
       newFile.url = `${SERVER_URL}/${fileList[i]}`;
+
       newFile.thumbUrl = `${SERVER_URL}/${fileList[i]}`;
       newFile.name = fileNames[i];
       newFile.uid = i;
       newFile.status = "done";
       mergedFiles.push(newFile);
     }
+    console.log(mergedFiles);
     return mergedFiles;
   };
 
@@ -437,7 +439,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       mergedFiles.forEach((file) => {
         if (file.size) {
           // 새로운거
-          console.log("새로운거");
+          //console.log("새로운거");
 
           formData.append("files", file);
         } else {
@@ -562,7 +564,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           </FormItemWrapper> */}
           <Upload
             name="logo"
-            listType="picture"
+            //listType="picture"
             beforeUpload={onChangeFileList}
             defaultFileList={mergeFiles()}
             onRemove={onRemoveFile}
@@ -640,7 +642,7 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           />
           <Upload
             name="logo"
-            listType="picture"
+            //listType="picture"
             beforeUpload={onChangeFileList}
             defaultFileList={mergeFiles()}
             onRemove={onRemoveFile}

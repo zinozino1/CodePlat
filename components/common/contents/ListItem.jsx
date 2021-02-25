@@ -129,12 +129,16 @@ const ListItem = ({ item, type }) => {
                     style={{ cursor: "pointer" }}
                     size={24}
                     icon={<UserOutlined />}
-                    width={100}
+                    //width={100}
                     src={
                       item.writer &&
                       item.writer.avatarUrl !== "" &&
                       item.writer.avatarUrl && (
-                        <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                        <Image
+                          width={24}
+                          height={24}
+                          src={`${SERVER_URL}/${item.writer.avatarUrl}`}
+                        />
                       )
                     }
                   />{" "}
@@ -227,7 +231,8 @@ const ListItem = ({ item, type }) => {
                       item.writer.avatarUrl !== "" &&
                       item.writer.avatarUrl && (
                         <Image
-                          width={100}
+                          width={24}
+                          height={24}
                           src={`${SERVER_URL}/${item.writer.avatarUrl}`}
                         />
                       )

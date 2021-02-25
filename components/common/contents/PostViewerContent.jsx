@@ -225,10 +225,15 @@ const PostViewerContent = ({ post, contentType }) => {
                   }}
                   style={{ cursor: "pointer" }}
                   icon={<UserOutlined />}
+                  size={32}
                   src={
                     me &&
                     me.avatarUrl && (
-                      <img src={`${SERVER_URL}/${me.avatarUrl}`} />
+                      <img
+                        src={`${SERVER_URL}/${me.avatarUrl}`}
+                        width={32}
+                        hieght={32}
+                      />
                     )
                   }
                 />{" "}

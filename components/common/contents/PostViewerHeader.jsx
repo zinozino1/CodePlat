@@ -252,13 +252,14 @@ const PostViewerHeader = ({ post, contentType }) => {
                 e.stopPropagation();
               }}
               style={{ cursor: "pointer" }}
-              size={24}
+              size={32}
               icon={<UserOutlined />}
               src={
                 post.writer.avatarUrl && (
                   <Image
                     src={`${SERVER_URL}/${post.writer.avatarUrl}`}
-                    width={100}
+                    width={32}
+                    height={32}
                   />
                 )
               }

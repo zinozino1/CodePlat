@@ -168,15 +168,21 @@ const CommentListItem = ({ item, post }) => {
       alert("내용을 입력해주세요.");
       return;
     }
-    dispatch(
-      addCommentRequestAction({
-        postId: post._id,
-        type: post.type,
-        content: reComment,
-        commentTo: item._id,
-        secretComment: isSecret,
-      }),
-    );
+    let submitConfirm = confirm("댓글을 등록하시겠습니까?");
+    if (submitConfirm) {
+      dispatch(
+        addCommentRequestAction({
+          postId: post._id,
+          type: post.type,
+          content: reComment,
+          commentTo: item._id,
+          secretComment: isSecret,
+        }),
+      );
+    } else {
+      return;
+    }
+
     Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
   }, [post, item, reComment, isSecret]);
 
@@ -464,7 +470,7 @@ const CommentListItem = ({ item, post }) => {
                 e.stopPropagation();
               }}
               style={{ cursor: "pointer" }}
-              size={24}
+              size={28}
               icon={<UserOutlined />}
               src={
                 !item.isDelete &&
@@ -472,7 +478,8 @@ const CommentListItem = ({ item, post }) => {
                 item.writer.avatarUrl && (
                   <Image
                     src={`${SERVER_URL}/${item.writer.avatarUrl}`}
-                    width={100}
+                    width={28}
+                    height={28}
                   />
                 )
               }
