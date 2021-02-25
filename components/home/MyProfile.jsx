@@ -74,7 +74,7 @@ const MyProfile = ({ me }) => {
                 src={
                   me.avatarUrl !== "" &&
                   me.avatarUrl && (
-                    <Image src={`${SERVER_URL}/${me.avatarUrl}`} />
+                    <Image width={100} src={`${SERVER_URL}/${me.avatarUrl}`} />
                   )
                 }
                 icon={<UserOutlined />}

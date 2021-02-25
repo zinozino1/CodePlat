@@ -218,34 +218,39 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       alert("내용을 5글자 이상 써주세요.");
       return;
     }
-    const formData = new FormData();
-    mergedFiles.forEach((file) => formData.append("files", file));
-    //console.log(fileList);
-    //formData.append()
-    // formData.append("")
-    // 여기부터 작업하면 댐
-    formData.append("type", contentType);
-    formData.append("writer", me._id);
-    formData.append("title", title);
-    formData.append("content", description);
-    formData.append("techStack", JSON.stringify(skill));
+    let submitConfirm = confirm("게시물을 등록하시겠습니까?");
+    if (submitConfirm) {
+      const formData = new FormData();
+      mergedFiles.forEach((file) => formData.append("files", file));
+      //console.log(fileList);
+      //formData.append()
+      // formData.append("")
+      // 여기부터 작업하면 댐
+      formData.append("type", contentType);
+      formData.append("writer", me._id);
+      formData.append("title", title);
+      formData.append("content", description);
+      formData.append("techStack", JSON.stringify(skill));
 
-    formData.append("recruitment", peopleNumber);
-    formData.append("location", location);
+      formData.append("recruitment", peopleNumber);
+      formData.append("location", location);
 
-    dispatch(
-      writePostRequestAction(
-        formData,
-        // type: router.route.split("/")[2],
-        // writer: me._id,
-        // title,
-        // content: description,
-        // recruitment: peopleNumber,
-        // location,
-        // techStack: skill,
-        // field: router.route.split("/")[2],
-      ),
-    );
+      dispatch(
+        writePostRequestAction(
+          formData,
+          // type: router.route.split("/")[2],
+          // writer: me._id,
+          // title,
+          // content: description,
+          // recruitment: peopleNumber,
+          // location,
+          // techStack: skill,
+          // field: router.route.split("/")[2],
+        ),
+      );
+    } else {
+      return;
+    }
   }, [
     skill,
     title,
@@ -371,32 +376,37 @@ const WriteForm = ({ contentType, router, isEdit }) => {
       return;
     }
 
-    const formData = new FormData();
-    mergedFiles.forEach((file) => formData.append("files", file));
-    //console.log(fileList);
-    //formData.append()
-    // formData.append("")
-    // 여기부터 작업하면 댐
-    formData.append("type", "forum");
-    formData.append("writer", me._id);
-    formData.append("title", title);
-    formData.append("content", description);
-    formData.append("tag", JSON.stringify(tags));
-    formData.append("field", filter);
+    let submitConfirm = confirm("게시물을 등록하시겠습니까?");
+    if (submitConfirm) {
+      const formData = new FormData();
+      mergedFiles.forEach((file) => formData.append("files", file));
+      //console.log(fileList);
+      //formData.append()
+      // formData.append("")
+      // 여기부터 작업하면 댐
+      formData.append("type", "forum");
+      formData.append("writer", me._id);
+      formData.append("title", title);
+      formData.append("content", description);
+      formData.append("tag", JSON.stringify(tags));
+      formData.append("field", filter);
 
-    //console.log({ title, description, tags, filter, fileList });
+      //console.log({ title, description, tags, filter, fileList });
 
-    dispatch(
-      writePostRequestAction(
-        formData,
-        // type: router.route.split("/")[2],
-        // writer: me._id,
-        // title,
-        // content: description,
-        // tag: tags,
-        // field: filter,
-      ),
-    );
+      dispatch(
+        writePostRequestAction(
+          formData,
+          // type: router.route.split("/")[2],
+          // writer: me._id,
+          // title,
+          // content: description,
+          // tag: tags,
+          // field: filter,
+        ),
+      );
+    } else {
+      return;
+    }
   }, [title, description, tags, router, me, filter, mergedFiles]);
 
   const onForumEdit = useCallback(() => {
@@ -472,9 +482,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
   //   console.log(description);
   // }, [title, description]);
 
-  useEffect(() => {
-    console.log(mergedFiles);
-  }, [mergedFiles]);
+  // useEffect(() => {
+  //   console.log(mergedFiles);
+  // }, [mergedFiles]);
 
   return (
     <>

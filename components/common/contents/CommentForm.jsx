@@ -25,17 +25,22 @@ const CommentForm = ({ post, router }) => {
   const onSubmit = useCallback(() => {
     // 1) 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
     // 2) 일부러 새로고침시킨다
-    setComment("");
-    dispatch(
-      // post말고 comment받는 것도 고려
-      addCommentRequestAction({
-        postId: post._id,
-        type: post.type,
-        content: comment,
-        secretComment: isSecret,
-      }),
-    );
-    Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+    let sumbitConfirm = confirm("댓글을 등록하시겠습니까?");
+    if (sumbitConfirm) {
+      setComment("");
+      dispatch(
+        // post말고 comment받는 것도 고려
+        addCommentRequestAction({
+          postId: post._id,
+          type: post.type,
+          content: comment,
+          secretComment: isSecret,
+        }),
+      );
+      Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+    } else {
+      return;
+    }
   }, [comment, post, isSecret]);
 
   return (

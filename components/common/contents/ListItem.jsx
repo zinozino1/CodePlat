@@ -219,14 +219,17 @@ const ListItem = ({ item, type }) => {
                       //console.log("아바타 클릭했음");
                     }}
                     style={{ cursor: "pointer" }}
-                    width={100}
+                    //width={100}
                     size={24}
                     icon={<UserOutlined />}
                     src={
                       item.writer &&
                       item.writer.avatarUrl !== "" &&
                       item.writer.avatarUrl && (
-                        <Image src={`${SERVER_URL}/${item.writer.avatarUrl}`} />
+                        <Image
+                          width={100}
+                          src={`${SERVER_URL}/${item.writer.avatarUrl}`}
+                        />
                       )
                     }
                   />{" "}
