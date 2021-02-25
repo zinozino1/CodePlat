@@ -99,6 +99,7 @@ const MyProfile = ({ me }) => {
             className="logout"
             onClick={onLogout}
             loading={logoutLoading}
+            // style={{ back: "#16172a" }}
           >
             로그아웃
           </Button>

@@ -36,9 +36,18 @@ const Footer = () => {
         <Row>
           <Col xs={0} lg={{ span: 6, offset: 2 }}>
             <div style={PartialStyle}>소개</div>
-            <Card style={{ width: 300 }}>
+            <Card style={{ width: 250 }}>
               <p>
-                …는 학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은 스터디
+                <span
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "500",
+                    marginRight: "5px",
+                  }}
+                >
+                  CodePlat
+                </span>
+                은 학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은 스터디
                 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다
               </p>
             </Card>

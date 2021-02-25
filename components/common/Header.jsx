@@ -226,7 +226,7 @@ const Header = ({ router }) => {
       <InnerHeader>
         <Link href="/">
           <a>
-            <LogoWrapper>Logo</LogoWrapper>
+            <LogoWrapper>CodePlat</LogoWrapper>
           </a>
         </Link>
 

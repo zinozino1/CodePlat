@@ -166,12 +166,6 @@ const LoginInputForm = () => {
           </Form.Item>
         )}
 
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-        </Form.Item>
-
         <Form.Item style={{ textAlign: "center" }}>
           <Button
             type="primary"
@@ -188,15 +182,45 @@ const LoginInputForm = () => {
           소셜 로그인
         </Divider>
         <SocialTemplate />
-        <Form.Item style={{ textAlign: "center" }}>
+
+        <Form.Item
+          style={{
+            textAlign: "center",
+            marginTop: "10px",
+            marginBottom: "0",
+          }}
+        >
+          <span style={{ color: "tomato", marginRight: "5px" }}>*</span>
           계정이 없으신가요?
           <Link href="/auth/register">
-            <a style={{ textDecoration: "underline" }}>회원가입</a>
+            <a
+              style={{
+                textDecoration: "underline",
+                marginLeft: "10px",
+                fontSize: "12px",
+                color: "#999",
+              }}
+            >
+              회원가입
+            </a>
           </Link>
         </Form.Item>
-        <Form.Item style={{ textAlign: "center" }}>
+        <Form.Item
+          style={{
+            textAlign: "center",
+          }}
+        >
+          <span style={{ color: "tomato", marginRight: "5px" }}>*</span>
           비밀번호를 잊으셨나요?
-          <a style={{ textDecoration: "underline" }} onClick={showModal}>
+          <a
+            style={{
+              textDecoration: "underline",
+              marginLeft: "10px",
+              fontSize: "12px",
+              color: "#999",
+            }}
+            onClick={showModal}
+          >
             비밀번호 찾기
           </a>
           <Modal
