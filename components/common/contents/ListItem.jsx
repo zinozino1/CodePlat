@@ -171,7 +171,10 @@ const ListItem = ({ item, type }) => {
   } else {
     return (
       <Link
-        href={item.writer ? `/articles/forum/${item._id}` : "/articles/forum"}
+        href={
+          // item.writer ? `/articles/forum/${item._id}` : "/articles/forum"
+          `/articles/${type}/${item._id}`
+        }
       >
         <a>
           <ListItemWrapper

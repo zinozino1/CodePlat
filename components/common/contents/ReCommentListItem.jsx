@@ -182,6 +182,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
         author={
           !reComment.isDelete &&
           reComment.writer &&
+          post.writer &&
           (reComment.writer._id === post.writer._id ? (
             <span style={{ color: "#1a91fe" }}>글쓴이</span>
           ) : (
@@ -276,7 +277,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                     )}
                   </CommentActivityWrapper>,
                   <CommentActivityWrapper>
-                    {me && me._id === reComment.writer._id && (
+                    {reComment.writer && me && me._id === reComment.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
                         onClick={() => {
@@ -317,7 +318,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                   e.stopPropagation();
                 }}
               >
-                {reComment.writer.constructor == Object && (
+                {reComment.writer && reComment.writer.constructor == Object && (
                   <ProfileModal writer={reComment.writer}></ProfileModal>
                 )}
               </div>
@@ -333,6 +334,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
               size={28}
               icon={<UserOutlined />}
               src={
+                reComment.writer &&
                 reComment.writer.avatarUrl && (
                   <Image
                     width={28}
@@ -345,12 +347,12 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           </Popover>
         }
         content={
-          reComment.writer.constructor == Object ? (
+          reComment.writer && reComment.writer.constructor == Object ? (
             reComment.secretComment ? (
               // 비밀댓글일 경우
               me &&
               // 내가쓴 대댓글이거나 or 루트댓글이 내가 쓴거고 대댓글이 비밀댓글일 경우
-              (reComment.writer._id === me._id ||
+              ((reComment.writer && reComment.writer._id === me._id) ||
                 post.comments.find((v, i) => {
                   if (v._id === reComment.commentTo) {
                     // console.log("루트댓글작성자의 id", v.writer._id);

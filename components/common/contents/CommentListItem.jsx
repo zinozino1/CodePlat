@@ -445,6 +445,7 @@ const CommentListItem = ({ item, post }) => {
         author={
           !item.isDelete &&
           item.writer &&
+          post.writer &&
           (item.writer._id === post.writer._id ? (
             <span style={{ color: "#1a91fe" }}>글쓴이</span>
           ) : (
@@ -459,9 +460,11 @@ const CommentListItem = ({ item, post }) => {
                   e.stopPropagation();
                 }}
               >
-                {!item.isDelete && item.writer.constructor == Object && (
-                  <ProfileModal writer={item.writer}></ProfileModal>
-                )}
+                {item.writer &&
+                  !item.isDelete &&
+                  item.writer.constructor == Object && (
+                    <ProfileModal writer={item.writer}></ProfileModal>
+                  )}
               </div>
             }
           >
@@ -493,11 +496,12 @@ const CommentListItem = ({ item, post }) => {
           //       return v._id;
           //     }
           //   }) &&
-          item.writer.constructor == Object ? (
+          item.writer && item.writer.constructor == Object ? (
             item.secretComment ? (
               // 비밀댓글일 경우
               me &&
-              (me._id === post.writer._id || item.writer._id === me._id) ? (
+              ((post.writer && me._id === post.writer._id) ||
+                item.writer._id === me._id) ? (
                 <>
                   <span>{item.content}</span>
                   <span style={{ color: "#999", fontSize: "12px" }}>

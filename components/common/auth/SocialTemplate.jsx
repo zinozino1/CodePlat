@@ -9,26 +9,25 @@ const SocialLoginWrapper = styled.div`
   margin-bottom: 3px;
   font-weight: 300;
   .login-google {
-    background: #dd4b39;
     flex: 1;
   }
   .login-naver {
-    background: #00c300;
     margin-left: 3px;
     flex: 1;
   }
   .login-github {
-    background: #333;
+    flex: 1;
   }
   .login-kakao {
-    background: #fee500;
     margin-left: 3px;
-    color: black;
+
+    flex: 1;
   }
 `;
 
 const SocialLoginButton = styled(Button)`
-  flex: 1;
+  /* flex: 1; */
+  width: 100%;
   color: #fff;
   font-size: 12px;
   &:hover {
@@ -47,8 +46,8 @@ const SocialTemplate = () => {
           <Link href={`${SERVER_URL}/api/google`}>
             <a>
               <SocialLoginButton
-
-              // onClick={onClickSocialLogin}
+                style={{ background: "#dd4b39" }}
+                // onClick={onClickSocialLogin}
               >
                 Google
               </SocialLoginButton>
@@ -58,25 +57,34 @@ const SocialTemplate = () => {
         <div className="login-naver">
           <Link href={`${SERVER_URL}/api/naver`}>
             <a>
-              <SocialLoginButton>Naver</SocialLoginButton>
+              <SocialLoginButton style={{ background: "#00c300" }}>
+                Naver
+              </SocialLoginButton>
             </a>
           </Link>
         </div>
       </SocialLoginWrapper>
       <SocialLoginWrapper>
-        <Link href={`${SERVER_URL}/api/github`}>
-          <a>
-            <SocialLoginButton className="login-github">
-              Github
-            </SocialLoginButton>
-          </a>
-        </Link>
-
-        <Link href={`${SERVER_URL}/api/kakao`}>
-          <a>
-            <SocialLoginButton className="login-kakao">Kakao</SocialLoginButton>
-          </a>
-        </Link>
+        <div className="login-github">
+          <Link href={`${SERVER_URL}/api/github`}>
+            <a>
+              <SocialLoginButton style={{ background: "#333" }}>
+                Github
+              </SocialLoginButton>
+            </a>
+          </Link>
+        </div>
+        <div className="login-kakao">
+          <Link href={`${SERVER_URL}/api/kakao`}>
+            <a>
+              <SocialLoginButton
+                style={{ background: "#fee500", color: "black" }}
+              >
+                Kakao
+              </SocialLoginButton>
+            </a>
+          </Link>
+        </div>
       </SocialLoginWrapper>
     </>
   );
