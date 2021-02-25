@@ -35,6 +35,7 @@ import { SERVER_URL } from "../../../lib/constant/constant";
 import Router from "next/router";
 import useToggle from "../../../hooks/useToggle";
 import WriteForm from "./WriteForm";
+import { message } from "antd";
 
 const PostViewerHeaderWrapper = styled.div`
   /* display: flex; */
@@ -162,10 +163,31 @@ const PostViewerHeader = ({ post, contentType }) => {
     }
   }, [like, me, post]);
 
+  const scrapDoneMessage = () => {
+    message.success({
+      content: "스크랩 완료!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
+
+  const unScrapDoneMessage = () => {
+    message.success({
+      content: "스크랩 취소!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
+
   const onScrap = useCallback(() => {
     setIsScraped(!isScraped);
     if (isScraped) {
       //console.log("이미 스크랩된 게시글임");
+      unScrapDoneMessage();
       dispatch(
         postUnScrapRequestAction({
           postId: post._id,
@@ -179,6 +201,7 @@ const PostViewerHeader = ({ post, contentType }) => {
         }),
       );
     } else {
+      scrapDoneMessage();
       dispatch(
         postScrapRequestAction({ id: post._id, type: contentType, user: me }),
       );

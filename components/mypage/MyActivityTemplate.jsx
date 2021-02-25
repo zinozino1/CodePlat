@@ -84,7 +84,7 @@ const MyActivityTemplate = () => {
     if (me) {
       setLoading(true);
 
-      console.log({ currentType, key: currTab.key });
+      //console.log({ currentType, key: currTab.key });
       await axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
