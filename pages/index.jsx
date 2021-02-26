@@ -181,6 +181,34 @@ const index = () => {
             </Col>
           ) : (
             <Col xs={24} sm={8} md={8}>
+              <Row>
+                <MainInfoWrapper>
+                  <MainInfoContent className="main-info-content">
+                    <span
+                      style={{
+                        fontSize: "24px",
+                        fontWeight: "500",
+                      }}
+                    >
+                      CodePlat
+                    </span>
+                    <p
+                      style={{
+                        color: "#999",
+                        fontSize: "12px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      "학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은
+                      스터디 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다."
+                    </p>
+                    {/* <div style={{ border: "1px solid black", height: "70%" }}>
+                      <Button>시작하기</Button>
+                    </div> */}
+                  </MainInfoContent>
+                  <MainInfoBackground className="main-info-back" />
+                </MainInfoWrapper>
+              </Row>
               {mainLoadPostsLoading ? (
                 <ListWrapper>
                   {Array(8)

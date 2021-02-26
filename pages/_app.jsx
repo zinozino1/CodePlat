@@ -35,7 +35,9 @@ const App = ({ Component }) => {
     <>
       <Head>
         <meta charSet="utf-8"></meta>
+
         <title>Logo</title>
+        {/* <link rel="shortcut icon" href="/public/favicon.ico" /> */}
       </Head>
       <Component></Component>
     </>
