@@ -106,6 +106,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
             secretComment: isReEditSecret,
           })
           .then((res) => {
+            onToggleIsEditReComment();
             Router.push(
               `http://localhost:3000/articles/${post.type}/${post._id}`,
             );

@@ -201,6 +201,7 @@ const CommentListItem = ({ item, post }) => {
             secretComment: isEditSecret,
           })
           .then((res) => {
+            onToggleIsEdit();
             Router.push(
               `http://localhost:3000/articles/${post.type}/${post._id}`,
             );
