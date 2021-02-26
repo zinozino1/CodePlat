@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addCommentRequestAction } from "../../../reducers/post";
 import Router, { withRouter } from "next/router";
 import useToggle from "../../../hooks/useToggle";
+import axios from "axios";
 
 const CommentFormWrapper = styled.div`
   .comment-input {
@@ -41,16 +42,32 @@ const CommentForm = ({ post, router }) => {
     let sumbitConfirm = confirm("댓글을 등록하시겠습니까?");
     if (sumbitConfirm) {
       setComment("");
-      dispatch(
-        // post말고 comment받는 것도 고려
-        addCommentRequestAction({
+
+      axios
+        .post(`/api/comments`, {
           postId: post._id,
           type: post.type,
           content: comment,
           secretComment: isSecret,
-        }),
-      );
-      Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+        })
+        .then((res) => {
+          Router.push(
+            `http://localhost:3000/articles/${post.type}/${post._id}`,
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      // dispatch(
+      //   // post말고 comment받는 것도 고려
+      //   addCommentRequestAction({
+      //     postId: post._id,
+      //     type: post.type,
+      //     content: comment,
+      //     secretComment: isSecret,
+      //   }),
+      // );
+      // Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
     } else {
       return;
     }
