@@ -17,6 +17,8 @@ import { setUserRequestAction, SET_USER_REQUEST } from "../reducers/user";
 import axios from "axios";
 import firebase from "../firebase";
 import client from "../lib/api/client";
+import { SERVER_URL } from "../lib/constant/constant";
+import logo from "../statics/logo.png";
 
 const Content = Layout.Content;
 
@@ -55,6 +57,7 @@ const MainInfoWrapper = styled.div`
     .main-info-content {
       position: relative;
       width: 100%;
+      height: 100%;
     }
     .main-info-back {
       display: none;
@@ -70,6 +73,9 @@ const MainInfoContent = styled.div`
   height: 400px;
   background: #fff;
   z-index: 2;
+  .logo-image {
+    width: 100%;
+  }
 `;
 
 const MainInfoBackground = styled.div`
@@ -138,24 +144,29 @@ const index = () => {
               <Row>
                 <MainInfoWrapper>
                   <MainInfoContent className="main-info-content">
-                    <span
+                    {/* <span
                       style={{
                         fontSize: "24px",
                         fontWeight: "500",
                       }}
                     >
                       CodePlat
-                    </span>
+                    </span> */}
+                    <div style={{ textAlign: "center" }}>
+                      <img className="logo-image" src={logo} alt="logo" />
+                    </div>
                     <p
                       style={{
                         color: "#999",
                         fontSize: "12px",
                         marginTop: "20px",
+                        textAlign: "center",
                       }}
                     >
                       "학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은
                       스터디 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다."
                     </p>
+
                     {/* <div style={{ border: "1px solid black", height: "70%" }}>
                       <Button>시작하기</Button>
                     </div> */}

@@ -1,6 +1,7 @@
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
+const withAssetsImport = require("next-assets-import");
 
 module.exports = withBundleAnalyzer({
   compress: true,
@@ -15,5 +16,23 @@ module.exports = withBundleAnalyzer({
         new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /^\.\/ko$/),
       ],
     };
+  },
+});
+
+module.exports = withAssetsImport({
+  urlLoaderOptions: {
+    rules: [
+      {
+        test: /\.(png|jpg|gif|mp4)$/i,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 8192,
+            },
+          },
+        ],
+      },
+    ],
   },
 });
