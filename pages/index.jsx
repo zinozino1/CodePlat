@@ -195,19 +195,15 @@ const index = () => {
               <Row>
                 <MainInfoWrapper>
                   <MainInfoContent className="main-info-content">
-                    <span
-                      style={{
-                        fontSize: "24px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      CodePlat
-                    </span>
+                    <div style={{ textAlign: "center" }}>
+                      <img className="logo-image" src={logo} alt="logo" />
+                    </div>
                     <p
                       style={{
                         color: "#999",
                         fontSize: "12px",
                         marginTop: "20px",
+                        textAlign: "center",
                       }}
                     >
                       "학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은

@@ -36,7 +36,7 @@ const ContentTemplate = ({ forumData }) => {
       <Card
         style={{ width: "100%" }}
         tabList={[
-          { key: "hot", tab: "커뮤니티 인기글" },
+          { key: "hot", tab: "포럼 인기글" },
           //{ key: "scrap", tab: "스크랩" },
         ]}
         activeTabKey={currTab.key}
