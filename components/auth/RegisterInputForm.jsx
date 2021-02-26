@@ -459,7 +459,7 @@ const RegisterInputForm = ({ router }) => {
         }}
       >
         <Link href="/">
-          <a>LOGO</a>
+          <a style={{ color: "#16172b", fontWeight: "300" }}>CodePlat</a>
         </Link>
       </div>
       <Steps
@@ -629,6 +629,11 @@ const RegisterInputForm = ({ router }) => {
               type="primary"
               htmlType="submit"
               onClick={onClickLocalButton}
+              style={{
+                background: "#313355",
+                color: "#fff",
+                border: "1px solid #313355",
+              }}
             >
               확인
             </Button>
@@ -661,7 +666,16 @@ const RegisterInputForm = ({ router }) => {
             {/* action="/upload.do" */}
             {/* beforeUpload 함수 사용해야함  */}
             <Upload name="logo" listType="picture" accept="image/*">
-              <Button icon={<UploadOutlined />}>파일 업로드</Button>
+              <Button
+                style={{
+                  background: "#313355",
+                  color: "#fff",
+                  border: "1px solid #313355",
+                }}
+                icon={<UploadOutlined />}
+              >
+                파일 업로드
+              </Button>
             </Upload>
           </RegisterInputItemWrapper>
           <StyledDivider />
@@ -670,6 +684,11 @@ const RegisterInputForm = ({ router }) => {
               type="primary"
               // htmlType="submit"
               onClick={onClickEmailVerify}
+              style={{
+                background: "#313355",
+                color: "#fff",
+                border: "1px solid #313355",
+              }}
             >
               이메일 인증
             </Button>
@@ -785,6 +804,11 @@ const RegisterInputForm = ({ router }) => {
               type="primary"
               // htmlType="submit"
               onClick={onSocialRegisterSubmit}
+              style={{
+                background: "#313355",
+                color: "#fff",
+                border: "1px solid #313355",
+              }}
             >
               가입하기
             </Button>

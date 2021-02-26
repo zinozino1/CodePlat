@@ -27,10 +27,32 @@ const RadioWrapper = styled.div`
   .ant-radio-group {
     display: flex;
     justify-content: space-between;
+
     .ant-radio-button-wrapper {
       flex: 1;
       z-index: 1;
+      &:hover {
+        color: #313355;
+      }
     }
+    .ant-radio-button-wrapper-checked {
+      color: #fff;
+      border: none;
+      background: #313355;
+      &::selection {
+        border: none;
+      }
+      &::after {
+        background: #313355 !important;
+      }
+      &::before {
+        background: none;
+      }
+      &:hover {
+        color: #fff;
+      }
+    }
+
     @media (max-width: 768px) {
       flex-direction: column;
     }

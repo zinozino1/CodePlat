@@ -10,9 +10,32 @@ const SearchContentFormWrapper = styled.div`
   width: 900px;
   display: flex;
   justify-content: flex-end;
+  .write-btn {
+    background: #fff;
+    color: #313355;
+    border: 1px solid #313355;
+  }
   .search-form {
     width: 400px;
     margin-right: 10px;
+
+    .ant-input-affix-wrapper {
+      &:hover {
+        border: 1px solid #ddd;
+      }
+    }
+
+    .ant-input-affix-wrapper-focused {
+      border-color: #fff;
+      box-shadow: none;
+      border: 1px solid #ddd;
+    }
+
+    .ant-input-search-button {
+      background: #313355;
+      color: #fff;
+      border: 1px solid #313355;
+    }
   }
   @media (max-width: 900px) {
     width: 100%;
@@ -48,7 +71,9 @@ const SearchContentForm = ({ contentType, router }) => {
       />
       <Link href={`/articles/${contentType}/write`}>
         <a>
-          <Button>글쓰기</Button>
+          <Button type="primary" className="write-btn">
+            글쓰기
+          </Button>
         </a>
       </Link>
     </SearchContentFormWrapper>

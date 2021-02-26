@@ -32,6 +32,7 @@ const SocialLoginButton = styled(Button)`
   font-size: 12px;
   &:hover {
     color: #fff;
+    border: 1px solid #fff;
   }
 `;
 

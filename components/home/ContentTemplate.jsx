@@ -12,6 +12,12 @@ const ContentTemplateWrapper = styled.div`
     background: #f0f2f6;
     padding: 10px 0;
   }
+  .ant-tabs-tab-btn {
+    color: #16172b !important;
+  }
+  .ant-tabs-ink-bar {
+    background: #999;
+  }
 `;
 
 const ContentTemplate = ({ forumData }) => {

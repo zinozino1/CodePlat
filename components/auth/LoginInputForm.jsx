@@ -171,7 +171,12 @@ const LoginInputForm = () => {
             type="primary"
             htmlType="submit"
             className="login-form-button"
-            style={{ width: "100%" }}
+            style={{
+              width: "100%",
+              background: "#313355",
+              color: "#fff",
+              border: "1px solid #313355",
+            }}
             onClick={onLogin}
             loading={loginLoading}
           >

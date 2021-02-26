@@ -81,9 +81,31 @@ const MenuItemWrapper = styled(Menu.Item)``;
 const ButtonGroup = styled.div`
   .btn-register {
     margin-left: 10px;
+    background: #313355;
+    border: 1px solid #313355;
+    &:hover {
+      border: 1px solid #16172b;
+    }
   }
   .btn-logout {
     margin-left: 10px;
+    background: #313355;
+    border: 1px solid #313355;
+    &:hover {
+      border: 1px solid #16172b;
+    }
+  }
+  .btn-login {
+    &:hover {
+      color: #313355;
+      border: 1px solid #313355;
+    }
+  }
+  .btn-mypage {
+    &:hover {
+      color: #313355;
+      border: 1px solid #313355;
+    }
   }
   @media (max-width: 768px) {
     .btn-logout {
@@ -254,7 +276,7 @@ const Header = ({ router }) => {
             <Badge count={globalCount} offset={[20, 0]}>
               <Link href="/mypage">
                 <a className="head-example">
-                  <BellOutlined />
+                  <BellOutlined style={{ color: "#fff" }} />
                 </a>
               </Link>
             </Badge>

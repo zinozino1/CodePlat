@@ -7,6 +7,19 @@ import { addCommentRequestAction } from "../../../reducers/post";
 import Router, { withRouter } from "next/router";
 import useToggle from "../../../hooks/useToggle";
 
+const CommentFormWrapper = styled.div`
+  .comment-input {
+    &:hover {
+      border: 1px solid #ddd;
+    }
+  }
+  .comment-btn {
+    background: #313355;
+    color: #fff;
+    border: 1px solid #313355;
+  }
+`;
+
 const TextAreaWrapper = styled(Input.TextArea)`
   width: 94%;
 `;
@@ -44,36 +57,40 @@ const CommentForm = ({ post, router }) => {
   }, [comment, post, isSecret]);
 
   return (
-    <Form>
-      <Form.Item>
-        <TextAreaWrapper
-          rows={3}
-          onChange={onChangeComment}
-          value={comment}
-          placeholder={
-            me ? "댓글을 작성해보세요." : "로그인이 필요한 서비스입니다."
-          }
-        />
-        <Checkbox
-          style={{ marginTop: "5px", color: "#999" }}
-          onChange={onToggleIsSecret}
-          disabled={me ? false : true}
-        >
-          비밀 댓글
-        </Checkbox>
-      </Form.Item>
-      <Form.Item>
-        <Button
-          htmlType="submit"
-          //loading={submitting}
-          onClick={onSubmit}
-          type="primary"
-          disabled={me ? false : true}
-        >
-          등록
-        </Button>
-      </Form.Item>
-    </Form>
+    <CommentFormWrapper>
+      <Form>
+        <Form.Item>
+          <TextAreaWrapper
+            className="comment-input"
+            rows={3}
+            onChange={onChangeComment}
+            value={comment}
+            placeholder={
+              me ? "댓글을 작성해보세요." : "로그인이 필요한 서비스입니다."
+            }
+          />
+          <Checkbox
+            style={{ marginTop: "5px", color: "#999" }}
+            onChange={onToggleIsSecret}
+            disabled={me ? false : true}
+          >
+            비밀 댓글
+          </Checkbox>
+        </Form.Item>
+        <Form.Item>
+          <Button
+            className="comment-btn"
+            htmlType="submit"
+            //loading={submitting}
+            onClick={onSubmit}
+            type="primary"
+            disabled={me ? false : true}
+          >
+            등록
+          </Button>
+        </Form.Item>
+      </Form>
+    </CommentFormWrapper>
   );
 };
 

@@ -574,10 +574,16 @@ const WriteForm = ({ contentType, router, isEdit }) => {
           </Upload>
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
-              style={{ width: "100px" }}
+              type="primary"
+              style={{
+                width: "100px",
+                background: "#313355",
+                color: "#fff",
+                border: "1px solid #313355",
+              }}
               onClick={isEdit ? onStudyAndProjectEdit : onStudyAndProjectSubmit}
             >
-              등록
+              {isEdit ? "수정" : "등록"}
             </Button>
           </div>
         </WriteFormWrapper>
@@ -653,7 +659,13 @@ const WriteForm = ({ contentType, router, isEdit }) => {
 
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
-              style={{ width: "100px" }}
+              type="primary"
+              style={{
+                width: "100px",
+                background: "#313355",
+                color: "#fff",
+                border: "1px solid #313355",
+              }}
               onClick={isEdit ? onForumEdit : onForumSubmit}
             >
               {isEdit ? "수정" : "등록"}

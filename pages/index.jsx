@@ -104,13 +104,13 @@ const index = () => {
   useEffect(async () => {
     if (me) {
       await firebase.auth().signInWithEmailAndPassword(me.email, me.email);
-      console.log("firebase 로그인 성공");
+      // console.log("firebase 로그인 성공");
     }
     // firebase.auth().onAuthStateChanged((user) => {
     //   console.log("firebase 새로 생성된 사용자 : ", user);
     // });
     let user = firebase.auth().currentUser;
-    console.log("firebase 로그인된 user : ", user);
+    // console.log("firebase 로그인된 user : ", user);
 
     //firebaseSetUserRequestAction(user);
   }, [me]);

@@ -16,8 +16,19 @@ const CardWrapper = styled.div`
 const ButtonsWrapper = styled.div`
   margin-top: 30px;
   text-align: center;
+  .mypage {
+    &:hover {
+      color: #313355;
+      border: 1px solid #313355;
+    }
+  }
   .logout {
     margin-left: 10px;
+    background: #313355;
+    color: #fff;
+    &:hover {
+      border: 1px solid #313355;
+    }
   }
 `;
 
@@ -94,13 +105,7 @@ const MyProfile = ({ me }) => {
             </a>
           </Link>
 
-          <Button
-            type="primary"
-            className="logout"
-            onClick={onLogout}
-            loading={logoutLoading}
-            // style={{ back: "#16172a" }}
-          >
+          <Button className="logout" onClick={onLogout} loading={logoutLoading}>
             로그아웃
           </Button>
         </ButtonsWrapper>
