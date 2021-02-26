@@ -153,7 +153,16 @@ const EditProfile = () => {
           textAlign: "center",
         }}
       >
-        <Button type="primary" onClick={onSubmit} loading={loading}>
+        <Button
+          type="primary"
+          onClick={onSubmit}
+          loading={loading}
+          style={{
+            background: "#313355",
+            color: "#fff",
+            border: "1px solid #313355",
+          }}
+        >
           저장하기
         </Button>
       </div>

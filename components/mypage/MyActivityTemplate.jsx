@@ -12,21 +12,32 @@ const MyActivityWrapper = styled.div`
   display: flex;
   .activity_type {
     flex: 1;
-    /* // border: 1px solid black; */
+    /* border: 1px solid black; */
     padding: 20px;
     .ant-radio-group {
-      .ant-radio-button-wrapper {
-        width: 300px;
-        text-align: center;
+      .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
+        border-color: #4f528a;
       }
-      @media (max-width: 768px) {
+      .ant-radio-button-wrapper {
+        width: 200px;
+        text-align: center;
+        border-radius: 0px;
+      }
+      span {
+        color: #111;
       }
     }
   }
   .myActivity {
-    flex: 3;
-    /* // border: 1px solid black; */
+    flex: 4;
+    /* border: 1px solid black; */
     padding: 20px;
+    .ant-tabs-tab-btn {
+      color: #111;
+    }
+    .ant-tabs-ink-bar {
+      background: #4f528a;
+    }
   }
   @media (max-width: 768px) {
     display: block;

@@ -11,6 +11,18 @@ import Router from "next/router";
 import firebase from "../../firebase";
 
 const EditProfileFormWrapper = styled(Form)`
+  .image-edit-btn {
+    &:hover {
+      color: #111;
+      border: 1px solid #313355;
+    }
+  }
+  .password-edit-btn {
+    &:hover {
+      color: #111;
+      border: 1px solid #313355;
+    }
+  }
   @media (max-width: 900px) {
     width: 100%;
     .profile-card {
@@ -153,12 +165,16 @@ const EditProfileForm = ({
               onRemove={onDeleteProfileImage}
             >
               {/* // defaultFileList> */}
-              <Button icon={<UploadOutlined />}>이미지 변경</Button>
+              <Button className="image-edit-btn" icon={<UploadOutlined />}>
+                이미지 변경
+              </Button>
             </Upload>
           </ProfileItemWrapper>
           <Link href="/auth/passwordUpdate">
             <a>
-              <Button block>비밀번호 변경</Button>
+              <Button className="password-edit-btn" block>
+                비밀번호 변경
+              </Button>
             </a>
           </Link>
           <Button

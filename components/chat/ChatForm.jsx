@@ -13,11 +13,20 @@ const ChatFormWrapper = styled.div`
 const InputWrapper = styled.div`
   /* border: 1px solid black; */
   flex: 7;
+  .chat-input {
+  }
 `;
 
 const ButtonWrapper = styled.div`
   /* border: 1px solid black; */
+
   flex: 1;
+  .submit-btn {
+    &:hover {
+      color: #111;
+      border: 1px solid #313355;
+    }
+  }
 `;
 
 const ChatForm = ({ chatRoomKey }) => {
@@ -166,13 +175,18 @@ const ChatForm = ({ chatRoomKey }) => {
     <ChatFormWrapper>
       <InputWrapper>
         <Input
+          className="chat-input"
           onChange={onChangeContent}
           value={content}
           onKeyPress={handleEnterPress}
         />
       </InputWrapper>
       <ButtonWrapper>
-        <Button style={{ width: "100%" }} onClick={onSubmit}>
+        <Button
+          className="submit-btn"
+          style={{ width: "100%" }}
+          onClick={onSubmit}
+        >
           {/* <UpCircleOutlined /> */}
           전송
         </Button>

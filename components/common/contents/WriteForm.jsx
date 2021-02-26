@@ -24,6 +24,12 @@ const WriteFormWrapper = styled.div`
   margin: 40px 0;
   background: #fff;
   padding: 40px;
+  .file-btn {
+    &:hover {
+      color: #111;
+      border: 1px solid #313355;
+    }
+  }
 `;
 
 const TitleWrapper = styled.h3`
@@ -570,7 +576,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             onRemove={onRemoveFile}
           >
             {/* // defaultFileList> */}
-            <Button icon={<UploadOutlined />}>파일 업로드</Button>
+            <Button className="file-btn" icon={<UploadOutlined />}>
+              파일 업로드
+            </Button>
           </Upload>
           <div style={{ textAlign: "center", margin: "50px 0" }}>
             <Button
@@ -654,7 +662,9 @@ const WriteForm = ({ contentType, router, isEdit }) => {
             onRemove={onRemoveFile}
           >
             {/* // defaultFileList> */}
-            <Button icon={<UploadOutlined />}>파일 업로드</Button>
+            <Button className="file-btn" icon={<UploadOutlined />}>
+              파일 업로드
+            </Button>
           </Upload>
 
           <div style={{ textAlign: "center", margin: "50px 0" }}>

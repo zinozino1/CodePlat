@@ -45,6 +45,29 @@ const MenuWrapper = styled.div`
     /* .ant-badge {
       padding: 3px;
     } */
+    .ant-menu-item {
+      &:hover {
+        color: #111;
+      }
+    }
+    .ant-menu-item-selected {
+      background: #4f528a;
+      color: #fff;
+      &::after {
+        border-right: none;
+      }
+      &:hover {
+        color: #fff;
+      }
+    }
+    .ant-menu-submenu-title {
+      &:hover {
+        color: #111;
+        .ant-menu-submenu-arrow {
+          color: #111;
+        }
+      }
+    }
   }
   .menu-content {
     flex: 4;
