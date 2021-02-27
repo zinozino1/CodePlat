@@ -7,29 +7,37 @@ import wrapper from "../../store/configureStore";
 import { setUserRequestAction } from "../../reducers/user";
 import { END } from "redux-saga";
 import client from "../../lib/api/client";
-import styled from "styled-components";
 import axios from "axios";
 import Router, { withRouter } from "next/router";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 비밀번호 변경 페이지
+ */
+
 const passwordUpdate = () => {
+  // local state
+
   const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [newPasswordMatchError, setNewPasswordMatchError] = useState(false);
+  const [currentPasswordError, setCurrentPasswordError] = useState(false);
+
+  // event listener
+
   const onChangeCurrentPassword = useCallback((e) => {
     setCurrentPassword(e.target.value);
   }, []);
-  const [newPassword, setNewPassword] = useState("");
   const onChangeNewPassword = useCallback((e) => {
     setNewPassword(e.target.value);
   }, []);
-  const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const onChangeNewPasswordConfirm = useCallback((e) => {
     setNewPasswordConfirm(e.target.value);
   }, []);
 
-  const [newPasswordMatchError, setNewPasswordMatchError] = useState(false);
-  const [currentPasswordError, setCurrentPasswordError] = useState(false);
-
   const onSubmit = useCallback(() => {
-    console.log({ currentPassword, newPassword, newPasswordConfirm });
     if (
       currentPassword === "" ||
       newPassword === "" ||
