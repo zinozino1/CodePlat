@@ -1,37 +1,23 @@
 import React, { Component } from "react";
-import { Divider, Row, Col, Button, Form, Menu, Badge } from "antd";
+import { Menu, Badge } from "antd";
 import {
   AppstoreOutlined,
   MailOutlined,
-  SettingOutlined,
-  CalendarOutlined,
-  LinkOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import MypageLayout from "../components/layout/MypageLayout";
-import EditProfileForm from "../components/mypage/EditProfileForm";
 import MyActivityTemplate from "../components/mypage/MyActivityTemplate";
-import SkillFilterForm from "../components/common/contents/SkillFilterForm";
 import styled from "styled-components";
 import Head from "next/head";
 import EditProfile from "../components/mypage/EditProfile";
 import ChatContainer from "../components/chat/ChatContainer";
 import wrapper from "../store/configureStore";
-import {
-  setUserRequestAction,
-  setCurrentOpponentRequestAction,
-} from "../reducers/user";
+import { setUserRequestAction } from "../reducers/user";
 import { END } from "redux-saga";
 import client from "../lib/api/client";
 import firebase from "../firebase";
-import { useSelector, useDispatch } from "react-redux";
-import shortid from "shortid";
-import {
-  setCurrentChatRoomAction,
-  initializeChatRoomAction,
-} from "../reducers/chat";
+import { setCurrentChatRoomAction } from "../reducers/chat";
 import { connect } from "react-redux";
-import Header from "../components/common/Header";
 
 /**
  * @author 박진호
@@ -254,6 +240,8 @@ class mypage extends Component {
     }
     this.setState({ firstLoad: false });
   };
+
+  // life cycle method
 
   componentCleanup = () => {
     let lastKnown = [];

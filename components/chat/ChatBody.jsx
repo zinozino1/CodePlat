@@ -4,6 +4,15 @@ import firebase from "../../firebase";
 import moment from "moment";
 import { connect } from "react-redux";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 마이페이지 채팅 바디 컴포넌트
+ * @note 함수형 컴포넌트와 firebase realtime database가 충돌하는 이슈가 있어 클래스형으로 리팩토링
+ */
+
+// style
+
 const ChatContainer = styled.div`
   height: 60vh;
   margin: 30px;
@@ -15,32 +24,8 @@ const ChatContainer = styled.div`
   background: #eee;
 `;
 
-const ChatBodyWrapper = styled.div`
-  /* height: 60vh;
-  margin: 30px;
-  overflow: auto; */
-
-  .stranger {
-    /* border: 1px solid black; */
-    padding: 5px;
-  }
-  .me {
-    /* border: 1px solid black; */
-    text-align: right;
-    padding: 5px;
-  }
-  .me-content,
-  .stranger-content {
-    /* border: 1px solid black; */
-    padding: 3px 10px;
-    border-radius: 4px;
-  }
-`;
-
 const MessageWrapper = styled.div`
-  /* border: 1px solid black; */
   padding: 5px;
-
   .message-timestamp {
     font-size: 10px;
     color: #999;
@@ -60,9 +45,7 @@ const MessageWrapper = styled.div`
               `}
 
             text-align: left;
-
             padding: 5px;
-            /* border: 1px solid black; */
             border-radius: 4px;
             background: #fee500;
           }
@@ -79,7 +62,6 @@ const MessageWrapper = styled.div`
 
             text-align: left;
             padding: 5px;
-            /* border: 1px solid black; */
             border-radius: 4px;
             background: #fff;
             color: #111;
@@ -88,6 +70,8 @@ const MessageWrapper = styled.div`
 `;
 
 export class ChatBody extends Component {
+  // local state
+
   messagesEnd = React.createRef();
 
   state = {
@@ -95,10 +79,10 @@ export class ChatBody extends Component {
     messagesRef: firebase.database().ref("messages"),
   };
 
+  // life cycle method
+
   componentDidMount() {
-    //console.log(this.state.messagesRef);
     const { chatRoom } = this.props;
-    const { me } = this.props;
 
     if (chatRoom) {
       this.addMessagesListeners(chatRoom.id);
@@ -116,27 +100,22 @@ export class ChatBody extends Component {
     this.messagesEnd = null;
   }
 
+  // event listener
+
   addMessagesListeners = (chatRoomId) => {
     let messagesArray = [];
     this.setState({ messages: [] });
     this.state.messagesRef
       .child(chatRoomId)
       .on("child_added", (DataSnapshot) => {
-        // console.log(DataSnapshot.ref_.parent.key);
-        // if (DataSnapshot.ref_.parent.key === chatRoomId) {
-        //   messagesArray.push(DataSnapshot.val());
-
-        //   this.setState({
-        //     messages: messagesArray,
-        //   });
-        // }
         messagesArray.push(DataSnapshot.val());
-
         this.setState({
           messages: messagesArray,
         });
       });
   };
+
+  // helper method
 
   scrollToBottom = () => {
     this.scrollRef.current.scrollIntoView({
@@ -187,6 +166,8 @@ export class ChatBody extends Component {
     );
   }
 }
+
+// redux
 
 const mapStateToProps = (state) => {
   return {

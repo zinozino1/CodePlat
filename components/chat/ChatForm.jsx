@@ -1,9 +1,16 @@
 import React, { useState, useCallback, useEffect } from "react";
 import styled from "styled-components";
 import { Input, Button } from "antd";
-import { UpCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import firebase from "../../firebase";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 마이페이지 채팅 폼 컴포넌트
+ */
+
+// style
 
 const ChatFormWrapper = styled.div`
   margin: 30px;
@@ -11,15 +18,12 @@ const ChatFormWrapper = styled.div`
 `;
 
 const InputWrapper = styled.div`
-  /* border: 1px solid black; */
   flex: 7;
   .chat-input {
   }
 `;
 
 const ButtonWrapper = styled.div`
-  /* border: 1px solid black; */
-
   flex: 1;
   .submit-btn {
     &:hover {
@@ -30,21 +34,25 @@ const ButtonWrapper = styled.div`
 `;
 
 const ChatForm = ({ chatRoomKey }) => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
   const { currentChatRoom } = useSelector((state) => state.chat);
-  const [content, setContent] = useState("");
 
+  // local state
+
+  const [content, setContent] = useState("");
   const [messagesRef, setMessagesRef] = useState(
     firebase.database().ref("messages"),
   );
-  // const messagesRef = firebase.database().ref("messages");
+
+  // helper method
 
   const createMessage = () => {
     const message = {
       timestamp: firebase.database.ServerValue.TIMESTAMP,
       user: {
         clientId: currentChatRoom.users.filter((v, i) => {
-          //console.log(v);
           if (v.clientId === me._id) {
             return v;
           }
@@ -53,12 +61,18 @@ const ChatForm = ({ chatRoomKey }) => {
       },
       content,
     };
-    //console.log(message.user.clientId);
     return message;
   };
 
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter") {
+      onSubmit();
+    }
+  };
+
+  // event listener
+
   const onChangeContent = useCallback((e) => {
-    //console.log(e.target.value);
     setContent(e.target.value);
   }, []);
 
@@ -68,9 +82,6 @@ const ChatForm = ({ chatRoomKey }) => {
       return;
     }
     try {
-      // 여기서 작업하면 댐 상대방이 마이페이지 밖에 있는 것을 판단해야함
-      // user -> isInMypage : boolean
-      // 채팅방의 상대방이 마이페이지 바깥에 있다면 상대방 firebase의 lastknown업데이트 하면 댐
       await messagesRef.child(currentChatRoom.id).push().set(createMessage());
       setContent("");
       let opponentNickname = null;
@@ -84,9 +95,8 @@ const ChatForm = ({ chatRoomKey }) => {
               opponentNickname = v.nickname;
             }
           });
-          // console.log(data.val());
         });
-      //console.log("상대방 닉네임은 ", opponentNickname);
+
       let opponentUid = null;
 
       await firebase
@@ -95,10 +105,8 @@ const ChatForm = ({ chatRoomKey }) => {
         .orderByChild("nickname")
         .equalTo(opponentNickname)
         .once("value", function (data) {
-          //console.log("상대방의 정보는", data.val());
           opponentUid = Object.keys(data.val())[0];
         });
-      //console.log("상대방 uid는", opponentUid);
 
       let opponentInfo = null;
       await firebase
@@ -108,7 +116,6 @@ const ChatForm = ({ chatRoomKey }) => {
         .once("value", function (data) {
           opponentInfo = data.val();
         });
-      //console.log("상대방 정보는 ", opponentInfo);
 
       let isExistOpponentLeave = null;
       await firebase
@@ -116,16 +123,12 @@ const ChatForm = ({ chatRoomKey }) => {
         .ref("chatRooms")
         .child(currentChatRoom.id)
         .once("value", function (data) {
-          // console.log(data.val());
           if (data.val()[opponentNickname]) {
             isExistOpponentLeave = data.val()[opponentNickname];
           }
         });
-      //console.log("상대방 나간 흔적이 있니?", isExistOpponentLeave);
 
-      // 상대방이 마이페이지에 없을 때
       if (!opponentInfo.isInMypage) {
-        // 상대방이 읽지않은채로 마이페이지 벗어난 경우
         if (isExistOpponentLeave) {
           await firebase
             .database()
@@ -139,7 +142,6 @@ const ChatForm = ({ chatRoomKey }) => {
               lastKnownTotal: isExistOpponentLeave.lastKnownTotal,
             });
         } else {
-          // 상대방이 모두 읽은채로 마이페이지 벗어난 경우 = 초기상태 정의
           await firebase
             .database()
             .ref("chatRooms")
@@ -161,11 +163,7 @@ const ChatForm = ({ chatRoomKey }) => {
     }
   }, [content, messagesRef, chatRoomKey]);
 
-  const handleEnterPress = (e) => {
-    if (e.key === "Enter") {
-      onSubmit();
-    }
-  };
+  // hooks
 
   useEffect(() => {
     return () => messagesRef.off();
@@ -187,7 +185,6 @@ const ChatForm = ({ chatRoomKey }) => {
           style={{ width: "100%" }}
           onClick={onSubmit}
         >
-          {/* <UpCircleOutlined /> */}
           전송
         </Button>
       </ButtonWrapper>
