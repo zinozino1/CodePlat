@@ -3,11 +3,16 @@ import Link from "next/link";
 import { Layout, Menu, Button, Badge } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import { withRouter } from "next/router";
-import { useSelector, useDispatch } from "react-redux";
-import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
+import { logoutRequestAction } from "../../reducers/user";
 import firebase from "../../firebase";
 import { connect } from "react-redux";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 헤더 컴포넌트(클래스형)
+ * @note deprecated
+ */
 
 const AntHeader = Layout.Header;
 
@@ -164,23 +169,14 @@ class Header extends Component {
   };
 
   async componentDidMount() {
-    // const route = router.route.split("/");
-    // this.setState({ currentMenu: `/${route[1]}/${route[2]}` });
-    console.log("쌔거 실행");
-
     let globalCount = 0;
     this.props.me &&
       this.state.chatRoomsRef.on("child_added", (DataSnapshot) => {
-        // 초기
-        //console.log(DataSnapshot.val());
         if (DataSnapshot.val()[this.props.me.nickname]) {
-          //  globalCount += DataSnapshot.val()[me.nickname].count;
-          //console.log(DataSnapshot.val()[me.nickname].count);
           globalCount += DataSnapshot.val()[this.props.me.nickname].count;
-          //setGlobalCount(globalCount);
+
           this.setState({ globalCount });
         }
-        // globalCount = 0;
       });
     this.props.me &&
       this.state.chatRoomsRef.on("child_changed", (DataSnapshot) => {

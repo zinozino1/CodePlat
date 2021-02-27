@@ -5,8 +5,16 @@ import { BellOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { withRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
-import { loginRequestAction, logoutRequestAction } from "../../reducers/user";
+import { logoutRequestAction } from "../../reducers/user";
 import firebase from "../../firebase";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 헤더 컴포넌트(함수형)
+ */
+
+// style
 
 const AntHeader = Layout.Header;
 
@@ -151,8 +159,12 @@ const MobileMenuWrapper = styled(Menu)`
 `;
 
 const Header = ({ router }) => {
+  // redux
+
   const dispatch = useDispatch();
   const { me, logoutLoading } = useSelector((state) => state.user);
+
+  // local state
 
   const [currentMenu, setCurrentMenu] = useState(null);
   const [globalCount, setGlobalCount] = useState(0);
@@ -160,15 +172,15 @@ const Header = ({ router }) => {
     firebase.database().ref("chatRooms"),
   );
 
+  // event listener
+
   const onLogout = useCallback(async () => {
     let user = firebase.auth().currentUser;
     if (user) {
       await firebase
         .auth()
         .signOut()
-        .then(() => {
-          console.log("firebase logout 성공");
-        });
+        .then(() => {});
       let firebaseMe = null;
       await firebase
         .database()
@@ -194,15 +206,9 @@ const Header = ({ router }) => {
       me &&
         chatRoomsRef.on("child_changed", (DataSnapshot) => {
           if (DataSnapshot.val()[me.nickname]) {
-            //console.log(DataSnapshot.val());
-            //console.log(DataSnapshot.val()[me.nickname].count);
-
-            //globalCount += DataSnapshot.val()[me.nickname].count;
             globalCount++;
             setGlobalCount(globalCount);
           } else {
-            //console.log("제거된 객체", DataSnapshot.val());
-            // 여기서 datasnapshot.val()의 채팅방 id랑 tmpchatroominfo배열 원소 중 같은 것의 count를 뺴내어 globalcount에서 뺴준다
             tmpChatRoomInfo.forEach((v, i) => {
               if (v.chatRoomId === DataSnapshot.val().id) {
                 globalCount -= v.count;
@@ -210,32 +216,26 @@ const Header = ({ router }) => {
             });
             setGlobalCount(globalCount);
           }
-          //globalCount = 0;
         });
       me &&
         chatRoomsRef.on("child_added", (DataSnapshot) => {
-          // 초기
-          //console.log(DataSnapshot.val());
           if (DataSnapshot.val()[me.nickname]) {
-            //  globalCount += DataSnapshot.val()[me.nickname].count;
-            //console.log(DataSnapshot.val());
             globalCount += DataSnapshot.val()[me.nickname].count;
             tmpChatRoomInfo.push(DataSnapshot.val()[me.nickname]);
             setGlobalCount(globalCount);
           }
-          //console.log(tmpChatRoomInfo);
-          // globalCount = 0;
         });
       me &&
         chatRoomsRef.on("child_removed", (DataSnapshot) => {
-          console.log("removed", DataSnapshot);
+          // deprecated.
         });
     }, 700);
   }, []);
 
+  // hooks
+
   useEffect(() => {
     const route = router.route.split("/");
-
     setCurrentMenu(`/${route[1]}/${route[2]}`);
   }, [router]);
 

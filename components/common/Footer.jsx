@@ -1,14 +1,17 @@
 import React from "react";
-import { Layout, Menu, Breadcrumb } from "antd";
+import { Layout } from "antd";
 import { Card } from "antd";
 import styled from "styled-components";
 import { Row, Col } from "antd";
 import Link from "next/link";
-import {
-  InstagramOutlined,
-  YoutubeOutlined,
-  FacebookOutlined,
-} from "@ant-design/icons";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 푸터 컴포넌트
+ */
+
+// style
 
 const AntFooter = Layout.Footer;
 
@@ -21,8 +24,6 @@ const FooterWrapper = styled(AntFooter)`
 const PartialStyle = {
   margin: "0 auto 24px",
   fontWeight: "bold",
-
-  //font-weight :bold
 };
 
 const FooterAnchor = {
