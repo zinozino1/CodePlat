@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
-  // searchPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
 import { Spin, Select } from "antd";
@@ -16,6 +15,14 @@ import wrapper from "../../../store/configureStore";
 import { setUserRequestAction } from "../../../reducers/user";
 import { END } from "redux-saga";
 import client from "../../../lib/api/client";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 프로젝트 포스트 리스트 뷰어 페이지
+ */
+
+// style
 
 const SelectLocationWrapper = styled.div`
   text-align: right;
@@ -31,6 +38,8 @@ const SpinWrapper = styled.div`
   margin: 100px 0;
 `;
 
+// helper variables
+
 let skip = 0;
 const LocationSelectChildren = [];
 Locations.forEach((v, i) => {
@@ -40,15 +49,24 @@ Locations.forEach((v, i) => {
 });
 
 const Project = ({ router }) => {
+  // redux
+
   const dispatch = useDispatch();
   const { skill } = useSelector((state) => state.skill);
   const { projectPosts, loadPostsLoading } = useSelector((state) => state.post);
-
   const { temporalPostsLength } = useSelector((state) => state.post);
+
+  // local state
+
   const [location, setLocation] = useState("전체");
+
+  // event listener
+
   const onChangeLocation = useCallback((value) => {
     setLocation(value);
   }, []);
+
+  // helper method
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -70,8 +88,9 @@ const Project = ({ router }) => {
     }
   };
 
+  // hooks
+
   useEffect(() => {
-    //console.log(encodeURIComponent(skill.toString()));
     dispatch(
       loadPostsReqeustAction({
         type: "project",
@@ -127,27 +146,13 @@ const Project = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
-    // context.store.dispatch(
-    //   loadPostsReqeustAction({
-    //     type: "project",
-    //     term: "",
-    //     skip: 0,
-    //     techStack: [],
-    //     location: "전체",
-    //   }),
-    // );
-    //context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

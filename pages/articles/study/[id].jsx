@@ -13,16 +13,21 @@ import { setUserRequestAction } from "../../../reducers/user";
 import { END } from "redux-saga";
 import client from "../../../lib/api/client";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 스터디 포스트 뷰어 페이지
+ */
+
 const StudyDetail = ({ router }) => {
+  // redux
+
   const dispatch = useDispatch();
   const { post } = useSelector((state) => state.post);
 
+  // hooks
+
   useEffect(() => {
-    // dispatch(
-    //   loadPostRequestAction({
-    //     postId: router.query.id,
-    //   }),
-    // );
     return () => {
       dispatch(initializePostAction());
     };
@@ -43,12 +48,9 @@ const StudyDetail = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
@@ -56,8 +58,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
     context.store.dispatch(
       loadPostRequestAction({ postId: context.params.id }),
     );
-    //context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

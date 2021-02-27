@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   loadPostsReqeustAction,
   initializePostsAction,
-  //searchPostsRequestAction,
 } from "../../../reducers/post";
 import List from "../../../components/common/contents/List";
 import { Spin, Select } from "antd";
@@ -16,6 +15,14 @@ import wrapper from "../../../store/configureStore";
 import { setUserRequestAction } from "../../../reducers/user";
 import { END } from "redux-saga";
 import client from "../../../lib/api/client";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 스터디 포스트 리스트 뷰어 페이지
+ */
+
+// style
 
 const SelectLocationWrapper = styled.div`
   text-align: right;
@@ -31,6 +38,8 @@ const SpinWrapper = styled.div`
   margin: 100px 0;
 `;
 
+// helper variables
+
 let skip = 0;
 const LocationSelectChildren = [];
 Locations.forEach((v, i) => {
@@ -40,16 +49,24 @@ Locations.forEach((v, i) => {
 });
 
 const Study = ({ router }) => {
-  //console.log("skip : ", skip);
+  // redux
+
   const dispatch = useDispatch();
   const { skill } = useSelector((state) => state.skill);
   const { studyPosts, loadPostsLoading } = useSelector((state) => state.post);
   const { temporalPostsLength } = useSelector((state) => state.post);
 
+  // local state
+
   const [location, setLocation] = useState("전체");
+
+  // event listener
+
   const onChangeLocation = useCallback((value) => {
     setLocation(value);
   }, []);
+
+  // helper method
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -71,6 +88,8 @@ const Study = ({ router }) => {
       }
     }
   };
+
+  // hooks
 
   useEffect(() => {
     dispatch(

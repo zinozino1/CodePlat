@@ -2,7 +2,6 @@ import React, { useEffect, useCallback, useState } from "react";
 import ArticleLayout from "../../../components/layout/ArticleLayout";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  loadPostsReqeustAction,
   initializePostsAction,
   loadForumPostsRequestAction,
 } from "../../../reducers/post";
@@ -15,6 +14,14 @@ import wrapper from "../../../store/configureStore";
 import { setUserRequestAction } from "../../../reducers/user";
 import { END } from "redux-saga";
 import client from "../../../lib/api/client";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포럼 포스트 리스트 뷰어 페이지
+ */
+
+// style
 
 const SpinWrapper = styled.div`
   text-align: center;
@@ -50,13 +57,24 @@ const ForumFilterWrapper = styled.div`
   }
 `;
 
+// helper variables
+
 let skip = 0;
 
 const Forum = ({ router }) => {
+  // redux
+
+  const dispatch = useDispatch();
+  const { forumPosts, loadPostsLoading } = useSelector((state) => state.post);
+  const { temporalPostsLength } = useSelector((state) => state.post);
+
+  // local state
+
   const [radioValue, setRadioValue] = useState("latest");
   const [field, setField] = useState("전체");
-
   const { term } = router.query;
+
+  // event listener
 
   const onChangeField = useCallback(
     (e) => {
@@ -85,9 +103,7 @@ const Forum = ({ router }) => {
     [router],
   );
 
-  const dispatch = useDispatch();
-  const { forumPosts, loadPostsLoading } = useSelector((state) => state.post);
-  const { temporalPostsLength } = useSelector((state) => state.post);
+  // helper method
 
   const handleScroll = () => {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -107,6 +123,8 @@ const Forum = ({ router }) => {
       skip += 10;
     }
   };
+
+  // hooks
 
   useEffect(() => {
     dispatch(
@@ -176,27 +194,13 @@ const Forum = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-    //console.log("store1", context.store.getState());
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
-    // context.store.dispatch(
-    //   loadForumPostsRequestAction({
-    //     type: "latest",
-    //     skip: 0,
-    //     term: "",
-    //     field: "전체",
-    //   }),
-    // );
-    //context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },
