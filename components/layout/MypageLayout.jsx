@@ -17,12 +17,12 @@ const Content = Layout.Content;
 const ContentWrapper = styled(Content)`
   width: 1300px;
   margin: 0 auto;
-  margin-top: 65px;
+  margin-top: 60px;
   @media (max-width: 1368px) {
     width: 100%;
   }
   @media (max-width: 950px) {
-    margin-top: 120px;
+    margin-top: 124px;
   }
 `;
 

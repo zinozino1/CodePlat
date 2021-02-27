@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { Layout, Menu, Button, Badge } from "antd";
 import { BellOutlined } from "@ant-design/icons";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { withRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { logoutRequestAction } from "../../reducers/user";
@@ -35,7 +35,7 @@ const InnerHeader = styled.div`
   @media (max-width: 1368px) {
     width: 100%;
   }
-  @media (max-width: 950px) {
+  @media (max-width: 1368px) {
     justify-content: space-between;
   }
 `;
@@ -50,41 +50,33 @@ const LogoWrapper = styled.div`
   width: 100px;
 `;
 
-const MenuWrapper = styled(Menu)`
+const MenuWrapper = styled.div`
   background: #16172b;
   font-size: 18px;
   margin: 0 auto;
   height: 64px;
+  display: flex;
 
-  .ant-menu-item-active {
-    a:hover {
-      color: #188fffad;
-    }
-    border-bottom: 2px solid transparent !important;
-  }
-
-  .ant-menu-submenu-title > span {
-    color: white;
-  }
-  .ant-menu-item {
-    a {
-      color: white;
-      font-weight: bold;
-      margin: 0 40px;
-    }
-  }
-  .ant-menu-item-selected {
-    border-bottom: 2px solid transparent !important;
-    a {
-      color: #1890ff;
-    }
-  }
   @media (max-width: 950px) {
     display: none;
   }
 `;
 
-const MenuItemWrapper = styled(Menu.Item)``;
+const MenuItemWrapper = styled.div`
+  padding: 0 30px;
+
+  a {
+    color: #fff;
+    font-weight: 500;
+    ${(props) => {
+      if (props.currentMenu) {
+        return css`
+          color: #1890ff;
+        `;
+      }
+    }}
+  }
+`;
 
 const ButtonGroup = styled.div`
   .btn-register {
@@ -116,8 +108,11 @@ const ButtonGroup = styled.div`
     }
   }
   @media (max-width: 768px) {
+    .btn-mypage,
     .btn-logout {
-      display: none;
+      width: 70px;
+      font-size: 12px;
+      padding: 0;
     }
   }
 `;
@@ -126,7 +121,7 @@ const BadgeWrapper = styled.div`
   margin-right: 60px;
 `;
 
-const MobileMenuWrapper = styled(Menu)`
+const MobileMenuWrapper = styled.div`
   position: fixed;
   top: 64px;
   left: 0;
@@ -137,22 +132,13 @@ const MobileMenuWrapper = styled(Menu)`
   z-index: 10;
   display: flex;
   justify-content: center;
-  .ant-menu-item-active {
-    a:hover {
-      color: #188fffad;
+  ${(props) => {
+    if (props.currentMenu) {
+      return css`
+        color: #1890ff;
+      `;
     }
-  }
-  .ant-menu-item {
-    a {
-      color: white;
-      font-weight: bold;
-    }
-  }
-  .ant-menu-item-selected {
-    a {
-      color: #1890ff;
-    }
-  }
+  }}
   @media (min-width: 950px) {
     display: none;
   }
@@ -236,7 +222,7 @@ const Header = ({ router }) => {
 
   useEffect(() => {
     const route = router.route.split("/");
-    setCurrentMenu(`/${route[1]}/${route[2]}`);
+    setCurrentMenu(`${route[2]}`);
   }, [router]);
 
   useEffect(() => {
@@ -252,20 +238,32 @@ const Header = ({ router }) => {
           </a>
         </Link>
 
-        <MenuWrapper mode="horizontal" selectedKeys={[currentMenu]}>
-          <MenuItemWrapper key="/articles/study" className="menu-study">
+        <MenuWrapper>
+          <MenuItemWrapper
+            key="/articles/study"
+            className="menu-study"
+            currentMenu={currentMenu === "study" ? true : false}
+          >
             <Link href="/articles/study">
               <a>스터디</a>
             </Link>
           </MenuItemWrapper>
 
-          <MenuItemWrapper key="/articles/project" className="menu-project">
+          <MenuItemWrapper
+            key="/articles/project"
+            className="menu-project"
+            currentMenu={currentMenu === "project" ? true : false}
+          >
             <Link href="/articles/project">
               <a>프로젝트</a>
             </Link>
           </MenuItemWrapper>
 
-          <MenuItemWrapper key="/articles/forum" className="menu-forum">
+          <MenuItemWrapper
+            key="/articles/forum"
+            className="menu-forum"
+            currentMenu={currentMenu === "forum" ? true : false}
+          >
             <Link href="/articles/forum">
               <a>포럼</a>
             </Link>
@@ -316,20 +314,32 @@ const Header = ({ router }) => {
           </ButtonGroup>
         )}
       </InnerHeader>
-      <MobileMenuWrapper selectedKeys={[currentMenu]}>
-        <MenuItemWrapper key="/articles/study" className="menu-study">
+      <MobileMenuWrapper>
+        <MenuItemWrapper
+          key="/articles/study"
+          className="menu-study"
+          currentMenu={currentMenu === "study" ? true : false}
+        >
           <Link href="/articles/study">
             <a>스터디</a>
           </Link>
         </MenuItemWrapper>
 
-        <MenuItemWrapper key="/articles/project" className="menu-project">
+        <MenuItemWrapper
+          key="/articles/project"
+          className="menu-project"
+          currentMenu={currentMenu === "project" ? true : false}
+        >
           <Link href="/articles/project">
             <a>프로젝트</a>
           </Link>
         </MenuItemWrapper>
 
-        <MenuItemWrapper key="/articles/forum" className="menu-forum">
+        <MenuItemWrapper
+          key="/articles/forum"
+          className="menu-forum"
+          currentMenu={currentMenu === "forum" ? true : false}
+        >
           <Link href="/articles/forum">
             <a>포럼</a>
           </Link>
