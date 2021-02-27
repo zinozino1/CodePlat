@@ -11,10 +11,8 @@ import {
 } from "antd";
 import {
   UserOutlined,
-  LockOutlined,
   UploadOutlined,
   SolutionOutlined,
-  LoadingOutlined,
   SmileOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
@@ -26,12 +24,16 @@ import SkillFilterForm from "../common/contents/SkillFilterForm";
 import { EmailRegex } from "../../lib/constant/constant";
 import axios from "axios";
 import { withRouter } from "next/router";
-import { setUserRequestAction } from "../../reducers/user";
 import FormData from "form-data";
 import firebase from "../../firebase";
-import shortid from "shortid";
 
-const { Option } = Select;
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 회원가입 종합 컴포넌트
+ */
+
+// style
 
 const formItemLayout = {
   labelCol: {
@@ -85,12 +87,13 @@ const StyledDivider = styled(Divider)``;
 
 const formData = new FormData();
 const RegisterInputForm = ({ router }) => {
+  // redux
+
   const { skill } = useSelector((state) => state.skill);
 
-  const dispatch = useDispatch();
+  // local state
 
   const [form] = Form.useForm();
-
   const [userId, setUserId] = useState(null);
   const [registerType, setRegisterType] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -99,27 +102,42 @@ const RegisterInputForm = ({ router }) => {
   const [nicknameExistError, setNicknameExistError] = useState(false);
   const [emailExistError, setEmailExistError] = useState(false);
   const [noneEmailUser, setNoneEmailUser] = useState(false);
-
   const [firebaseLoading, setFirebaseLoading] = useState(false);
-
   const [imageFile, setImageFile] = useState(null);
-
   const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [confirmEmail, onChangeConfirmEmail] = useInput("");
+  const [password, onChangePassword] = useInput("");
+  const [confirmPassword, onChangeConfirmPassword] = useInput("");
+  const [githubUrl, onChangeGithubUrl] = useInput("");
+
+  // helper method
+
+  const normFile = (e) => {
+    if (e.file.status === "done") {
+      formData.append("avatar", e.fileList[0].originFileObj);
+    } else if (e.file.status === "removed") {
+      formData.delete("avatar");
+    }
+    let fileList = e.fileList;
+    fileList = fileList.slice(-1);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && fileList;
+  };
+
+  // event listener
+
   const onChangeNickname = useCallback((e) => {
     setNickname(e.target.value);
     setNicknameExistError(false);
   }, []);
 
-  const [email, setEmail] = useState("");
   const onChangeEmail = useCallback((e) => {
     setEmail(e.target.value);
     setEmailExistError(false);
   }, []);
-
-  const [confirmEmail, onChangeConfirmEmail] = useInput("");
-  const [password, onChangePassword] = useInput("");
-  const [confirmPassword, onChangeConfirmPassword] = useInput("");
-  const [githubUrl, onChangeGithubUrl] = useInput("");
 
   const onClickEmailVerify = useCallback(() => {
     setProgress(2);
@@ -129,16 +147,6 @@ const RegisterInputForm = ({ router }) => {
         enctype: "multipart/form-data",
       },
     };
-    // formData.append(
-    //   "data",
-    //   JSON.stringify({
-    //     type: "local",
-    //     id: userId,
-    //     techStack: skill,
-    //     githubUrl,
-    //     //avatar: imageFile,
-    //   }),
-    // );
     formData.append("type", "local");
     formData.append("id", userId);
     formData.append("techStack", JSON.stringify(skill));
@@ -146,25 +154,22 @@ const RegisterInputForm = ({ router }) => {
     axios.post("/api/join/optionForm", formData, config);
   }, [userId, skill, githubUrl]);
 
-  // 로컬 회원가입
   const onClickLocalButton = useCallback(async () => {
     if (formError) return;
     await axios
       .post("/api/join", { email, nickname, password })
       .then(async (res) => {
-        //console.log(res);
         setUserId(res.data.userId);
         setEmailExistError(false);
         setNicknameExistError(false);
         setRegisterType("local");
         setProgress(1);
 
-        // firebase 유저 저장 of local회원가입
         setFirebaseLoading(true);
         let createdUser = await firebase
           .auth()
           .createUserWithEmailAndPassword(email, email);
-        //console.log("createdUser", createdUser);
+
         await createdUser.user.updateProfile({
           displayName: nickname,
         });
@@ -174,12 +179,6 @@ const RegisterInputForm = ({ router }) => {
           type: "local",
           isInMypage: false,
         });
-        // 회원가입 시 자동 로그인 -> 로컬은 자동로그인 안됨
-        // let SignedInUser = await firebase
-        //   .auth() // auth 서비스에 접근
-        //   .signInWithEmailAndPassword(email, email);
-        // //console.log("SignedInUser", SignedInUser);
-        // setFirebaseLoading(false);
       })
       .catch((err) => {
         if (err.response.data.error.name === "UserExistsError") {
@@ -190,59 +189,11 @@ const RegisterInputForm = ({ router }) => {
       });
   }, [formError, email, nickname, password]);
 
-  // const onClickSocialButton = useCallback((e) => {
-  //   switch (e.target.innerText) {
-  //     case "Naver":
-  //       setSocialType("naver");
-  //       break;
-  //     case "Google":
-  //       setSocialType("google");
-  //       //axios.get(`/api/google`);
-  //       break;
-  //     case "Github":
-  //       setSocialType("github");
-  //       //axios.get(`/api/github`);
-  //       break;
-  //     case "Kakao":
-  //       setSocialType("kakao");
-  //       //axios.get(`/api/kakao`);
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  //   setRegisterType("social");
-  //   // setProgress(1);
-  // }, []);
-
   const onPushBack = useCallback(() => {
     setRegisterType(null);
     setProgress(0);
   }, []);
 
-  const normFile = (e) => {
-    //console.log("norm file : ", e);
-    //console.log(e.fileList[0].originFileObj);
-    if (e.file.status === "done") {
-      formData.append("avatar", e.fileList[0].originFileObj);
-
-      // console.log(e.fileList[0].originFileObj);
-      // setImageFile(formData);
-      // console.log("done");
-    } else if (e.file.status === "removed") {
-      formData.delete("avatar");
-      // console.log("removed");
-    }
-
-    let fileList = e.fileList;
-    fileList = fileList.slice(-1);
-
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e && fileList;
-  };
-
-  // social 회원가입 중복처리 필요
   const onSocialRegisterSubmit = useCallback(
     (e) => {
       if (nickname === "") {
@@ -258,22 +209,10 @@ const RegisterInputForm = ({ router }) => {
         headers: {
           Accept: "application/json",
           enctype: "multipart/form-data",
-          // withCredentials: true,
         },
       };
-      // formData.append(
-      //   "data",
-      //   JSON.stringify({
-      //     type: "local",
-      //     id: userId,
-      //     techStack: skill,
-      //     githubUrl,
-      //     //avatar: imageFile,
-      //   }),
-      // );
-      if (noneEmailUser) {
-        // github, kakao
 
+      if (noneEmailUser) {
         formData.append("type", "email");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -299,7 +238,7 @@ const RegisterInputForm = ({ router }) => {
               formData.delete("email");
               return;
             }
-            //dispatch(setUserRequestAction());
+
             setNicknameExistError(false);
             setEmailExistError(false);
             setProgress(2);
@@ -307,7 +246,7 @@ const RegisterInputForm = ({ router }) => {
             let createdUser = await firebase
               .auth()
               .createUserWithEmailAndPassword(email, email);
-            //console.log("createdUser", createdUser);
+
             await createdUser.user.updateProfile({
               displayName: nickname,
             });
@@ -320,22 +259,11 @@ const RegisterInputForm = ({ router }) => {
                 type: "social",
                 isInMypage: false,
               });
-            // 임마도 자동로그인 x
-            // let SignedInUser = await firebase
-            //   .auth() // auth 서비스에 접근
-            //   .signInWithEmailAndPassword(email, anonymousPassword);
-            // //console.log("SignedInUser", SignedInUser);
-            // setFirebaseLoading(false);
           })
 
           .catch((error) => {
             console.log(error);
             alert("에러 발생.");
-            // if (error.response.data.message === "email is reduplication") {
-            //   setEmailExistError(true);
-            // } else {
-            //   setNicknameExistError(true);
-            // }
             formData.delete("type");
             formData.delete("nickname");
             formData.delete("techStack");
@@ -343,8 +271,6 @@ const RegisterInputForm = ({ router }) => {
             formData.delete("email");
           });
       } else {
-        // google, naver
-        console.log(nickname, skill, githubUrl);
         formData.append("type", "sns");
         formData.append("nickname", nickname);
         formData.append("techStack", JSON.stringify(skill));
@@ -360,24 +286,21 @@ const RegisterInputForm = ({ router }) => {
               formData.delete("githubUrl");
               return;
             }
-            //dispatch(setUserRequestAction());
-            //console.log(res.data);
-            setNicknameExistError(false);
 
+            setNicknameExistError(false);
             setFirebaseLoading(true);
 
-            // let anonymousPassword = shortid.generate();
             let createdUser = await firebase
               .auth()
               .createUserWithEmailAndPassword(
                 res.data.user.email,
                 res.data.user.email,
               );
-            //console.log("createdUser", createdUser);
+
             await createdUser.user.updateProfile({
               displayName: nickname,
             });
-            // db 저장
+
             await firebase
               .database()
               .ref("users")
@@ -388,21 +311,19 @@ const RegisterInputForm = ({ router }) => {
                 type: "social",
                 isInMypage: false,
               });
-            // 파이어베이스 로그인
+
             let SignedInUser = await firebase
-              .auth() // auth 서비스에 접근
+              .auth()
               .signInWithEmailAndPassword(
                 res.data.user.email,
                 res.data.user.email,
               );
-            //console.log("SignedInUser", SignedInUser);
             setFirebaseLoading(false);
             router.push("/");
           })
           .catch((error) => {
             alert("에러 발생.");
             console.log(error);
-
             formData.delete("type");
             formData.delete("nickname");
             formData.delete("techStack");
@@ -413,6 +334,8 @@ const RegisterInputForm = ({ router }) => {
 
     [nickname, skill, githubUrl],
   );
+
+  // hooks
 
   useEffect(() => {
     if (
@@ -440,13 +363,8 @@ const RegisterInputForm = ({ router }) => {
       setProgress(1);
       setRegisterType("social");
       setNoneEmailUser(true);
-      //setEmail("");
     }
   }, [router]);
-
-  useEffect(() => {
-    console.log(email);
-  }, [email]);
 
   return (
     <RegisterFormWrapper {...formItemLayout} form={form} name="register">
@@ -540,15 +458,6 @@ const RegisterInputForm = ({ router }) => {
                   required: true,
                   message: "이메일을 입력해주세요.",
                 },
-                // ({ getFieldValue }) => ({
-                //   validator(_, value) {
-                //     if (!emailExistError) {
-                //       return Promise.resolve();
-                //     } else {
-                //       return Promise.reject("이미 존재하는 이메일입니다.");
-                //     }
-                //   },
-                // }),
               ]}
               onChange={onChangeEmail}
             >
@@ -559,10 +468,6 @@ const RegisterInputForm = ({ router }) => {
             name="confirmEmail"
             label="이메일 확인"
             rules={[
-              // {
-              // type: 'email',
-              // message :''
-              //},
               {
                 required: true,
                 message: "이메일 확인을 입력해주세요.",
@@ -660,11 +565,7 @@ const RegisterInputForm = ({ router }) => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            //onRemove={console.log("fuck")}
-            //onChange={onChangeImageFile}
           >
-            {/* action="/upload.do" */}
-            {/* beforeUpload 함수 사용해야함  */}
             <Upload name="logo" listType="picture" accept="image/*">
               <Button
                 style={{
@@ -682,7 +583,6 @@ const RegisterInputForm = ({ router }) => {
           <div className="email-btn" style={{ textAlign: "center" }}>
             <Button
               type="primary"
-              // htmlType="submit"
               onClick={onClickEmailVerify}
               style={{
                 background: "#313355",
@@ -790,10 +690,7 @@ const RegisterInputForm = ({ router }) => {
             label="사용자 이미지 설정"
             valuePropName="fileList"
             getValueFromEvent={normFile}
-            //onChange={onChangeImageFile}
           >
-            {/* action="/upload.do" */}
-            {/* beforeUpload 함수 사용해야함  */}
             <Upload name="logo" listType="picture" accept="image/*">
               <Button icon={<UploadOutlined />}>파일 업로드</Button>
             </Upload>
@@ -802,7 +699,6 @@ const RegisterInputForm = ({ router }) => {
           <div className="email-btn" style={{ textAlign: "center" }}>
             <Button
               type="primary"
-              // htmlType="submit"
               onClick={onSocialRegisterSubmit}
               style={{
                 background: "#313355",
@@ -826,13 +722,6 @@ const RegisterInputForm = ({ router }) => {
               status="success"
               title={`${email} 으로 인증 요청
               메일을 보냈습니다. `}
-              //subTitle="해당 이메일을 확인 하시고, 인증 확인 링크를 눌러 주시기 바랍니다."
-              // extra={[
-              //   <Button type="primary" key="console">
-              //     Go Console
-              //   </Button>,
-              //   <Button key="buy">Buy Again</Button>,
-              // ]}
             />
           </div>
           <div style={{ fontSize: "16px", textAlign: "center" }}>

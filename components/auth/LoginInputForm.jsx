@@ -1,18 +1,26 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Form, Input, Button, Checkbox, Divider, Modal } from "antd";
+import { Form, Input, Button, Divider, Modal } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import styled from "styled-components";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRequestAction } from "../../reducers/user";
-import Router, { withRouter } from "next/router";
+import Router from "next/router";
 import SocialTemplate from "../common/auth/SocialTemplate";
-import useInput from "../../hooks/useInput";
 import axios from "axios";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 로그인 종합 컴포넌트
+ */
+
 const LoginInputForm = () => {
+  // redux
+
   const dispatch = useDispatch();
   const { loginLoading, me, loginError } = useSelector((state) => state.user);
+
+  // local state
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +28,8 @@ const LoginInputForm = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchEmail, setSearchEmail] = useState("");
+
+  // event listener
 
   const onChangeEmail = useCallback((e) => {
     setEmail(e.target.value);
@@ -66,8 +76,6 @@ const LoginInputForm = () => {
       .catch((err) => {
         console.log(err);
       });
-
-    //console.log(searchEmail);
   }, [searchEmail]);
 
   useEffect(() => {
@@ -91,7 +99,6 @@ const LoginInputForm = () => {
         initialValues={{
           remember: true,
         }}
-        //onFinish={onFinish}
       >
         {emailError ? (
           <Form.Item
