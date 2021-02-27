@@ -1,8 +1,16 @@
-import React, { useCallback } from "react";
-import styled, { css } from "styled-components";
+import React from "react";
+import styled from "styled-components";
 import { Button } from "antd";
 import Link from "next/link";
 import { SERVER_URL } from "../../../lib/constant/constant";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 소셜 로그인 컴포넌트
+ */
+
+// style
 
 const SocialLoginWrapper = styled.div`
   display: flex;
@@ -26,7 +34,6 @@ const SocialLoginWrapper = styled.div`
 `;
 
 const SocialLoginButton = styled(Button)`
-  /* flex: 1; */
   width: 100%;
   color: #fff;
   font-size: 12px;
@@ -37,19 +44,13 @@ const SocialLoginButton = styled(Button)`
 `;
 
 const SocialTemplate = () => {
-  // const onClickSocialLogin = useCallback(() => {
-  //   console.log("fuck");
-  // }, []);
   return (
     <>
       <SocialLoginWrapper>
         <div className="login-google">
           <Link href={`${SERVER_URL}/api/google`}>
             <a>
-              <SocialLoginButton
-                style={{ background: "#dd4b39" }}
-                // onClick={onClickSocialLogin}
-              >
+              <SocialLoginButton style={{ background: "#dd4b39" }}>
                 Google
               </SocialLoginButton>
             </a>
