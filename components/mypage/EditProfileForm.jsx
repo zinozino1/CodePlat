@@ -1,6 +1,6 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { Card, Form, Input, Button, Upload, Checkbox } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import shortid from "shortid";
 import { SERVER_URL } from "../../lib/constant/constant";
@@ -9,6 +9,14 @@ import Link from "next/link";
 import axios from "axios";
 import Router from "next/router";
 import firebase from "../../firebase";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 프로필 수정 폼 컴포넌트
+ */
+
+// style
 
 const EditProfileFormWrapper = styled(Form)`
   .image-edit-btn {
@@ -57,7 +65,11 @@ const EditProfileForm = ({
   onToggleGitSecret,
   gitSecret,
 }) => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
+
+  // event listener
 
   const onDeleteAccount = useCallback(() => {
     let deleteConfirm = confirm("정말 회원 탈퇴를 진행하시겠습니까?");
@@ -80,7 +92,6 @@ const EditProfileForm = ({
                 console.log(err);
               });
           }
-
           Router.push(`/`);
         })
         .catch((err) => {
@@ -100,15 +111,6 @@ const EditProfileForm = ({
           style={{ width: 300 }}
           className="profile-card"
         >
-          {/* <RegisterInputItemWrapper
-            name="nickname"
-            label="닉네임"
-            hasFeedback
-            //   onChange={onChangePassword}
-          >
-            <Input placeholder="닉네임" value={me && me.nickname} />
-          </RegisterInputItemWrapper> */}
-
           <ProfileItemWrapper>
             <span>닉네임</span>
             <Input
@@ -132,17 +134,7 @@ const EditProfileForm = ({
               비공개
             </Checkbox>
           </ProfileItemWrapper>
-          {/* <RegisterInputItemWrapper
-            name="github"
-            label="Github"
-            hasFeedback
-            //   onChange={onChangePassword}
-          >
-            <div>
-              <Input placeholder="깃허브" value={me && me.githubId} />
-              <Checkbox>비공개</Checkbox>
-            </div>
-          </RegisterInputItemWrapper> */}
+
           <ProfileItemWrapper>
             <div>프로필 사진 변경</div>
             <Upload
@@ -164,7 +156,6 @@ const EditProfileForm = ({
               }
               onRemove={onDeleteProfileImage}
             >
-              {/* // defaultFileList> */}
               <Button className="image-edit-btn" icon={<UploadOutlined />}>
                 이미지 변경
               </Button>

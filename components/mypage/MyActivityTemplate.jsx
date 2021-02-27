@@ -1,18 +1,24 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Radio, Button, Pagination } from "antd";
+import { Card, Radio } from "antd";
 import List from "../common/contents/List";
 import styled from "styled-components";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import shortid from "shortid";
 import Link from "next/link";
 import moment from "moment";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 유저 활동 정보(게시글, 댓글, 스크랩) 컴포넌트
+ */
+
+// style
 
 const MyActivityWrapper = styled.div`
   display: flex;
   .activity_type {
     flex: 1;
-    /* border: 1px solid black; */
     padding: 20px;
     .ant-radio-group {
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child {
@@ -30,7 +36,6 @@ const MyActivityWrapper = styled.div`
   }
   .myActivity {
     flex: 4;
-    /* border: 1px solid black; */
     padding: 20px;
     .ant-tabs-tab-btn {
       color: #111;
@@ -51,8 +56,22 @@ const MyCommentWrapper = styled.div`
 `;
 
 const MyActivityTemplate = () => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
+
+  // local state
+
   const [currentType, setCurrentType] = useState("study");
+  const [loading, setLoading] = useState(false);
+  const [contents, setContents] = useState(null);
+  const [posts, setPosts] = useState(null);
+  const [currTab, setCurrTab] = useState({
+    key: "post",
+    tab: "게시글",
+  });
+
+  // event listener
 
   const onClickTypeBtn = useCallback((e) => {
     setContents(null);
@@ -60,16 +79,13 @@ const MyActivityTemplate = () => {
     setCurrentType(e.target.value);
   }, []);
 
-  const [currTab, setCurrTab] = useState({
-    key: "post",
-    tab: "게시글",
-  });
-
   const onTabChange = (key, type) => {
     setContents(null);
     setPosts(null);
     setCurrTab({ [type]: key });
   };
+
+  // helper variable
 
   const tabListTitle = [
     {
@@ -86,21 +102,14 @@ const MyActivityTemplate = () => {
     },
   ];
 
-  const [loading, setLoading] = useState(false);
-
-  const [contents, setContents] = useState(null);
-  const [posts, setPosts] = useState(null);
+  // hooks
 
   useEffect(async () => {
     if (me) {
       setLoading(true);
-
-      //console.log({ currentType, key: currTab.key });
       await axios
         .get(`/api/users/${me._id}?type=${currentType}&sort=${currTab.key}`)
         .then((res) => {
-          //console.log(res.data);
-          //console.log("activities : ", res.data.activities);
           setContents(res.data.activities);
           if (res.data.posts) {
             setPosts(res.data.posts);
@@ -113,11 +122,6 @@ const MyActivityTemplate = () => {
       setLoading(false);
     }
   }, [currentType, currTab, me]);
-
-  // useEffect(() => {
-  //   console.log("contents : ", contents);
-  //   console.log("posts : ", posts);
-  // }, [contents, posts]);
 
   if (!contents) return null;
   if (loading) return null;
@@ -142,9 +146,6 @@ const MyActivityTemplate = () => {
             </Radio.Button>
           </div>
         </Radio.Group>
-        {/* <Button value = "study" onClick= {onClickBtn} block>스터디</Button>
-          <Button value = "project" onClick = {onClickBtn} block>프로젝트</Button>
-          <Button value = "forum"  onClick = {onClickBtn} block>커뮤니티</Button> */}
       </div>
       <div className="myActivity">
         <Card
@@ -156,9 +157,6 @@ const MyActivityTemplate = () => {
           }}
         >
           {currTab.key === "post" && (
-            //   contents.map((v, i) => {
-            //     return <div key={i}>{v.title}</div>;
-            //   })
             <div
               style={{
                 overflow: "auto",
@@ -166,7 +164,6 @@ const MyActivityTemplate = () => {
               }}
             >
               <List data={contents} type={currentType} />
-              {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
             </div>
           )}
           {currTab.key === "comments" && (
@@ -179,11 +176,9 @@ const MyActivityTemplate = () => {
               {contents.map((v, i) => {
                 let flag = false;
                 let post = null;
-
                 posts.forEach((s, j) => {
                   if (v.postId === s._id) {
                     flag = true;
-                    // postTitle = s.title;
                     post = s;
                   }
                 });
@@ -220,7 +215,6 @@ const MyActivityTemplate = () => {
               }}
             >
               <List data={posts} type={currentType} />
-              {/* <Pagination defaultCurrent={1} total={contents.length} /> */}
             </div>
           )}
         </Card>

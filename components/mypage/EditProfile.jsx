@@ -6,24 +6,25 @@ import { Button, Card } from "antd";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../lib/constant/constant";
 import shortid from "shortid";
-import useToggle from "../../hooks/useToggle";
 import { message } from "antd";
-//import { profileEdit } from "../../lib/api/post";
-
 import axios from "axios";
 import FormData from "form-data";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 프로필 수정 폼 + 기술 스택 수정 폼 컨테이너 컴포넌트
+ */
 
 const ProfileReviseFormWrapper = styled.div`
   display: flex;
   padding: 2rem 0;
   .edit-profile-form {
     flex: 1;
-    /* border: 1px solid black; */
     padding: 20px;
   }
   .skill-filter-form {
     flex: 2;
-    /* border: 1px solid black; */
     padding: 20px;
   }
   @media (max-width: 900px) {
@@ -32,23 +33,30 @@ const ProfileReviseFormWrapper = styled.div`
 `;
 
 const EditProfile = () => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
   const { skill } = useSelector((state) => state.skill);
+
+  // local state
+
   const [nickname, setNickname] = useState("");
+  const [githubId, setGithubId] = useState("");
+  const [gitSecret, setGitSecret] = useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // event listener
+
   const onChangeNickname = useCallback((e) => {
     setNickname(e.target.value);
   }, []);
-
-  const [githubId, setGithubId] = useState("");
   const onChangeGithubId = useCallback((e) => {
     setGithubId(e.target.value);
   }, []);
-  const [gitSecret, setGitSecret] = useState(false);
   const onToggleGitSecret = useCallback(() => {
     setGitSecret(!gitSecret);
   }, [gitSecret]);
-
-  const [profileImage, setProfileImage] = useState(null);
 
   const onChangeProfileImage = useCallback((e) => {
     setProfileImage(e);
@@ -58,20 +66,7 @@ const EditProfile = () => {
     setProfileImage(null);
   }, []);
 
-  const [loading, setLoading] = useState(false);
-
-  const submitDoneMessage = () => {
-    message.success({
-      content: "저장 완료!",
-      className: "custom-class",
-      style: {
-        marginTop: "5vh",
-      },
-    });
-  };
-
   const onSubmit = useCallback(() => {
-    // axios
     setLoading(true);
     const config = {
       headers: {
@@ -86,11 +81,9 @@ const EditProfile = () => {
     formData.append("secretGithub", gitSecret);
     formData.append("avatar", profileImage);
 
-    console.log({ skill, nickname, githubId, gitSecret, profileImage });
     axios
       .patch(`/api/users`, formData, config)
       .then((res) => {
-        console.log(res.data.user);
         submitDoneMessage();
       })
       .catch((err) => {
@@ -99,6 +92,20 @@ const EditProfile = () => {
 
     setLoading(false);
   }, [skill, nickname, githubId, gitSecret, profileImage]);
+
+  // helper method
+
+  const submitDoneMessage = () => {
+    message.success({
+      content: "저장 완료!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
+
+  // hooks
 
   useEffect(() => {
     setProfileImage({
@@ -110,10 +117,6 @@ const EditProfile = () => {
     setNickname(me.nickname);
     setGithubId(me.githubId);
   }, [me]);
-
-  // useEffect(() => {
-  //   console.log(profileImage);
-  // }, [profileImage]);
 
   useEffect(() => {
     if (me) {
