@@ -3,6 +3,12 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 });
 const withAssetsImport = require("next-assets-import");
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 커스텀 웹팩 파일
+ */
+
 module.exports = withBundleAnalyzer({
   compress: true,
   webpack(config, { webpack }) {

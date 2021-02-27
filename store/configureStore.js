@@ -5,6 +5,12 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "../sagas";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary redux + next 미들웨어 설정파일
+ */
+
 const configureStore = () => {
   const sagaMiddleware = createSagaMiddleware();
   const middlewares = [sagaMiddleware];

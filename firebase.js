@@ -3,6 +3,12 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary firebase 설정 파일
+ */
+
 var firebaseConfig = {
   apiKey: "AIzaSyCXSgDJHxhc7C7i5xxUghDhP4dwkNvdvHU",
   authDomain: "project-for-developer.firebaseapp.com",
@@ -13,13 +19,11 @@ var firebaseConfig = {
   appId: "1:779772457500:web:7c2e6be322d9dac1c4a5d9",
   measurementId: "G-MJ3SQW1H2S",
 };
-// Initialize Firebase
-// firebase.initializeApp(firebaseConfig);
+
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
 } else {
-  firebase.app(); // if already initialized, use that one
+  firebase.app();
 }
-// firebase.analytics();
 
 export default firebase;
