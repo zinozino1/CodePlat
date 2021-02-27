@@ -1,0 +1,1 @@
+{"ast":null,"code":"import axios from \"axios\";\naxios.defaults.baseURL = \"http://localhost:4000\"; // 서버 URL 정의\n\naxios.defaults.withCredentials = true; // 클라에서 서버로 쿠키 전달\n//axios.defaults.headers.post[\"Access-Control-Allow-Origin\"] = \"*\";\n\nconst client = axios.create();\nexport default client;","map":null,"metadata":{},"sourceType":"module"}

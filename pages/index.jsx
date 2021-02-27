@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Layout, Row, Col, Divider, Skeleton, Carousel, Button } from "antd";
+import React, { useEffect } from "react";
+import { Layout, Row, Col, Skeleton } from "antd";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 import styled from "styled-components";
@@ -13,12 +13,19 @@ import {
 } from "../reducers/post";
 import { END } from "redux-saga";
 import wrapper from "../store/configureStore";
-import { setUserRequestAction, SET_USER_REQUEST } from "../reducers/user";
-import axios from "axios";
+import { setUserRequestAction } from "../reducers/user";
 import firebase from "../firebase";
 import client from "../lib/api/client";
-import { SERVER_URL } from "../lib/constant/constant";
 import logo from "../statics/logo.png";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 메인페이지 - 커뮤니티 인기글, 스터디 및 프로젝트 최신글, 유저정보를
+ * getServerSideProps SSR로 불러온다
+ */
+
+// style
 
 const Content = Layout.Content;
 
@@ -52,7 +59,7 @@ const MainInfoWrapper = styled.div`
   height: 62vh;
   margin-bottom: 20px;
   position: relative;
-  /* border: 1px solid black; */
+
   @media (max-width: 1368px) {
     .main-info-content {
       position: relative;
@@ -89,6 +96,8 @@ const MainInfoBackground = styled.div`
 `;
 
 const index = () => {
+  // redux
+
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
   const {
@@ -98,10 +107,9 @@ const index = () => {
     mainLoadPostsLoading,
   } = useSelector((state) => state.post);
 
+  // hooks
+
   useEffect(() => {
-    //dispatch(mainLoadPostsReqeustAction());
-    //console.log("rerender");
-    //dispatch(setUserRequestAction());
     return () => {
       dispatch(initializePostsAction());
     };
@@ -110,28 +118,13 @@ const index = () => {
   useEffect(async () => {
     if (me) {
       await firebase.auth().signInWithEmailAndPassword(me.email, me.email);
-      // console.log("firebase 로그인 성공");
     }
-    // firebase.auth().onAuthStateChanged((user) => {
-    //   console.log("firebase 새로 생성된 사용자 : ", user);
-    // });
-    let user = firebase.auth().currentUser;
-    // console.log("firebase 로그인된 user : ", user);
-
-    //firebaseSetUserRequestAction(user);
   }, [me]);
 
   return (
     <Layout>
       <Header />
-      {/* <div style={{ border: "1px solid black", marginTop: "65px" }}>
-        codeplat
-        <img
-          alt="background"
-          src="https://gw.alipayobjects.com/mdn/rms_08e378/afts/img/A*kJM2Q6uPXCAAAAAAAAAAAABkARQnAQ"
-          style={{ width: "100%", height: "40vh" }}
-        ></img>
-      </div> */}
+
       <ContentWrapper>
         <Row>
           {me ? (
@@ -144,14 +137,6 @@ const index = () => {
               <Row>
                 <MainInfoWrapper>
                   <MainInfoContent className="main-info-content">
-                    {/* <span
-                      style={{
-                        fontSize: "24px",
-                        fontWeight: "500",
-                      }}
-                    >
-                      CodePlat
-                    </span> */}
                     <div style={{ textAlign: "center" }}>
                       <img className="logo-image" src={logo} alt="logo" />
                     </div>
@@ -166,10 +151,6 @@ const index = () => {
                       "학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은
                       스터디 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다."
                     </p>
-
-                    {/* <div style={{ border: "1px solid black", height: "70%" }}>
-                      <Button>시작하기</Button>
-                    </div> */}
                   </MainInfoContent>
                   <MainInfoBackground className="main-info-back" />
                 </MainInfoWrapper>
@@ -209,9 +190,6 @@ const index = () => {
                       "학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은
                       스터디 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다."
                     </p>
-                    {/* <div style={{ border: "1px solid black", height: "70%" }}>
-                      <Button>시작하기</Button>
-                    </div> */}
                   </MainInfoContent>
                   <MainInfoBackground className="main-info-back" />
                 </MainInfoWrapper>
@@ -231,22 +209,8 @@ const index = () => {
           )}
 
           <Col xs={24} sm={16} md={16}>
-            {/* <Row>
-              <div
-                style={{
-                  border: "1px solid black",
-                  width: "100%",
-                  marginTop: "20px",
-                  height: "30vh",
-                }}
-              >
-                1
-              </div>
-            </Row> */}
             <Row>
               <Col xs={24} sm={24} md={24}>
-                {/* 스터디
-                <Divider orientation="left">스터디</Divider> */}
                 <div
                   style={{
                     padding: "20px",
@@ -323,21 +287,16 @@ const index = () => {
   );
 };
 
-// 프론트 서버에서 실행되는 코드
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
     context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

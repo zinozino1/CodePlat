@@ -4,12 +4,17 @@ import Head from "next/head";
 import styled from "styled-components";
 import Footer from "../components/common/Footer";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 커스텀 404 error page
+ */
+
 const ErrorPageWrapper = styled.div`
   width: 400px;
   height: 300px;
   border: 1px solid #eee;
   margin: 290px auto;
-  /* background: #eeeeee; */
   border-radius: 5px;
 `;
 

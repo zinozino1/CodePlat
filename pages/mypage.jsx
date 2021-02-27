@@ -33,18 +33,23 @@ import {
 import { connect } from "react-redux";
 import Header from "../components/common/Header";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 마이페이지 - 프로필수정, 내 활동, 채팅 기능 구현.
+ * @note 함수형 컴포넌트와 firebase realtime database가 충돌하는 이슈가 있어 클래스형으로 리팩토링
+ */
+
+// style
+
 const { SubMenu } = Menu;
 
 const MenuWrapper = styled.div`
   display: flex;
   .menu-bar {
     flex: 1;
-    /* border: 1px solid red; */
     width: 200px;
     height: 90vh;
-    /* .ant-badge {
-      padding: 3px;
-    } */
     .ant-menu-item {
       &:hover {
         color: #111;
@@ -71,7 +76,6 @@ const MenuWrapper = styled.div`
   }
   .menu-content {
     flex: 4;
-    /* border: 1px solid black; */
   }
   @media (max-width: 768px) {
     flex-direction: column;
@@ -88,30 +92,28 @@ const MenuWrapper = styled.div`
 class mypage extends Component {
   constructor(props, context) {
     super(props, context);
-
     this.componentCleanup = this.componentCleanup.bind(this);
   }
+
+  // local state
+
   state = {
     chatRoomsRef: firebase.database().ref("chatRooms"),
     messagesRef: firebase.database().ref("messages"),
-    // show: false,
-    // name: "",
-    // description: "",
     chatRooms: [],
     chatRoomsLoading: false,
-    // activeChatRoomId: "",
     firstLoad: true,
-
     notifications: [],
     currentMenu: "profile",
     chatRoomKey: "",
   };
 
+  // event listener
+
   onChangeCurrentMenu = (e) => {
     if (e.key === "profile" || e.key == "activity") {
       this.props.dispatch(setCurrentChatRoomAction(null));
     }
-    //console.log(e.key);
     this.setState({ currentMenu: e.key });
   };
 
@@ -120,12 +122,7 @@ class mypage extends Component {
   };
 
   onSetCurrentChatRoom = (chatRoom) => {
-    // if (
-    //   this.state.currentMenu !== "profile" &&
-    //   this.state.currentMenu !== "activity"
-    // ) {
     this.props.dispatch(setCurrentChatRoomAction(chatRoom));
-    //}
     this.clearNotifications(chatRoom.id);
   };
 
@@ -152,18 +149,17 @@ class mypage extends Component {
 
   addNotificationListener = (chatRoomId, chatRoomInfo) => {
     this.state.messagesRef.child(chatRoomId).on("value", (DataSnapshot) => {
-      // if (this.props.chatRoom) {
-      //console.log(DataSnapshot.val());
       this.handleNotifications(
         chatRoomId,
-        this.props.chatRoom ? this.props.chatRoom.id : "", // 현재 채팅룸 아이디
+        this.props.chatRoom ? this.props.chatRoom.id : "",
         this.state.notifications,
         DataSnapshot,
         chatRoomInfo,
       );
-      //}
     });
   };
+
+  // helper method
 
   handleNotifications = async (
     chatRoomId,
@@ -179,21 +175,16 @@ class mypage extends Component {
     );
 
     if (index === -1) {
-      // 초기 렌더링
-      // 여기서 디비 로직?
       let firebaseSnapshot = null;
       await firebase
         .database()
         .ref(`/chatRooms/${chatRoomId}/${this.props.me.nickname}`)
         .once("value")
         .then((snapshot) => {
-          //console.log(snapshot.val());
           firebaseSnapshot = snapshot.val();
         });
-      //let firebaseData = this.state.chatRoomsRef.child(this.props.me.nickname);
+
       if (firebaseSnapshot) {
-        //console.log("있음");
-        // 빨간거 안읽은 채로 마이페이지 벗어났다가 다시 들온 경우
         notifications.push({
           id: chatRoomId,
           total: firebaseSnapshot.total,
@@ -201,8 +192,6 @@ class mypage extends Component {
           count: firebaseSnapshot.count,
         });
       } else {
-        //console.log("없음");
-        // 빨간 거 다 읽고 마이페이지 벗어났다가 다시 들온 경우
         notifications.push({
           id: chatRoomId,
           total: DataSnapshot.numChildren(),
@@ -210,10 +199,7 @@ class mypage extends Component {
           count: 0,
         });
       }
-
-      //console.log(chatRoomInfo);
     } else {
-      // 업데이트
       if (chatRoomId !== currentChatRoomId) {
         lastTotal = notifications[index].lastKnownTotal;
 
@@ -223,16 +209,12 @@ class mypage extends Component {
       } else {
         notifications[index].lastKnownTotal = DataSnapshot.numChildren();
       }
-
       notifications[index].total = DataSnapshot.numChildren();
     }
-    //console.log(notifications);
     this.setState({ notifications });
   };
 
   clearNotifications = async (currentChatRoomId) => {
-    // console.log("실행.");
-    // console.log("chat room id", currentChatRoomId);
     let index = this.state.notifications.findIndex(
       (notification) => notification.id === currentChatRoomId,
     );
@@ -261,7 +243,6 @@ class mypage extends Component {
     });
 
     if (count > 0) {
-      //this.setState({ totalCount: this.state.totalCount + count });
       return count;
     }
   };
@@ -270,13 +251,11 @@ class mypage extends Component {
     const firstChatRoom = this.state.chatRooms[0];
     if (this.state.firstLoad && this.state.chatRooms.length > 0) {
       this.props.dispatch(setCurrentChatRoomAction(firstChatRoom));
-      //this.setState({ activeChatRoomId: firstChatRoom.id })
     }
     this.setState({ firstLoad: false });
   };
 
   componentCleanup = () => {
-    // 새로고침시에도 파이어베이스에 저장
     let lastKnown = [];
     this.state.notifications.forEach((notification, i) => {
       if (notification.total !== notification.lastKnownTotal) {
@@ -291,31 +270,15 @@ class mypage extends Component {
     });
     if (lastKnown) {
       lastKnown.forEach(async (v, i) => {
-        //const key = this.state.chatRoomsRef.child(v.chatRoomId).push().key;
         await this.state.chatRoomsRef
           .child(v.chatRoomId)
           .child(this.props.me.nickname)
           .update({ ...v });
       });
     }
-    // return "FUck";
-    // // alert("F");
   };
-  // componentDidUpdate() {
-  //   console.log("컴포넌트 업데이트");
-  //   let totalCount = 0;
-  //   this.state.notifications.forEach((v, i) => {
-  //     console.log(v);
-  //     totalCount += v.count;
-  //   });
-  //   console.log(totalCount);
-  //   globalTotalCount = totalCount;
-  //   //this.setState({ totalCount });
-  // }
 
   async componentDidMount() {
-    //console.log(this.state.totalCount);
-    // 내가 마이페이지 들어오면 파이어베이스 isInMypage = true
     await firebase
       .auth()
       .signInWithEmailAndPassword(this.props.me.email, this.props.me.email);
@@ -329,7 +292,6 @@ class mypage extends Component {
         firebaseMe = data.val();
       });
 
-    //console.log({ ...firebaseMe });
     await firebase
       .database()
       .ref("users")
@@ -337,17 +299,11 @@ class mypage extends Component {
       .update({ ...firebaseMe, isInMypage: true });
 
     window.addEventListener("beforeunload", this.componentCleanup);
-    //console.log(this.state.me);
-    //console.log(this.props.chatRoom);
-    //console.log(this.state.notifications);
+
     this.addChatRoomListener();
   }
 
   async componentWillUnmount() {
-    // 내가 마이페이지 나가면 파이어베이스 isInMypage = false
-    // 다른 페이지로 갈 경우 파이어베이스에 읽지않은 메시지 저장
-    //this.componentCleanup();
-    //console.log(notifications);
     let firebaseMe = null;
     let user = firebase.auth().currentUser;
     await firebase
@@ -358,7 +314,6 @@ class mypage extends Component {
         firebaseMe = data.val();
       });
 
-    //console.log({ ...firebaseMe });
     await firebase
       .database()
       .ref("users")
@@ -366,7 +321,7 @@ class mypage extends Component {
       .update({ ...firebaseMe, isInMypage: false });
 
     window.removeEventListener("beforeunload", this.componentCleanup);
-    //console.log(this.state.notifications, "저장해버리겠습니다~");
+
     let lastKnown = [];
     this.state.notifications.forEach((notification, i) => {
       if (notification.total !== notification.lastKnownTotal) {
@@ -381,23 +336,20 @@ class mypage extends Component {
     });
     if (lastKnown) {
       lastKnown.forEach(async (v, i) => {
-        //const key = this.state.chatRoomsRef.child(v.chatRoomId).push().key;
         await this.state.chatRoomsRef
           .child(v.chatRoomId)
           .child(this.props.me.nickname)
           .update({ ...v });
       });
     }
-    //console.log("lastknwon", lastKnown);
-    this.state.chatRoomsRef.off();
 
+    this.state.chatRoomsRef.off();
     this.state.chatRooms.forEach((chatRoom) => {
       this.state.messagesRef.child(chatRoom.id).off();
     });
   }
 
   render() {
-    //if (!this.state.me) return null;
     const { chatRooms } = this.state;
     const { me } = this.props;
     return (
@@ -414,7 +366,6 @@ class mypage extends Component {
                 mode="inline"
                 style={{ height: "100%" }}
                 defaultSelectedKeys={["profile"]}
-                //defaultOpenKeys={["sub1"]}
                 onClick={this.onChangeCurrentMenu}
               >
                 <Menu.Item key="profile" icon={<UserOutlined />}>
@@ -423,15 +374,12 @@ class mypage extends Component {
                 <Menu.Item key="activity" icon={<AppstoreOutlined />}>
                   내 활동
                 </Menu.Item>
-                {/* <Menu.Item key="note" icon={<MailOutlined />}>
-            채팅
-          </Menu.Item> */}
+
                 <SubMenu
                   key="note"
                   icon={<MailOutlined />}
                   title="채팅"
                   onClick={this.onChangeCurrentMenu}
-                  //onTitleClick={loadChatRooms}
                 >
                   <>
                     {<span style={{ color: "transparent" }}>loading</span>}
@@ -452,7 +400,6 @@ class mypage extends Component {
                                 })[0].nickname
                               }
                               onClick={(e) => {
-                                //this.onChangeCurrentMenu(e);
                                 this.setChatRoomKey(v.id);
                                 this.onSetCurrentChatRoom(v);
                               }}
@@ -474,7 +421,6 @@ class mypage extends Component {
                                 </span>
                                 <span>
                                   <Badge
-                                    //count={1}
                                     count={this.getNotificationCount(v)}
                                     style={{
                                       borderRadius: "3px",
@@ -494,61 +440,6 @@ class mypage extends Component {
                       })}
                   </>
                 </SubMenu>
-                {/* {chatRooms.map((v, i) => {
-                  let flag = false;
-                  v.users.forEach((s, j) => {
-                    if (me && s.clientId === me._id) flag = true;
-                  });
-                  if (flag) {
-                    return (
-                      <Menu.Item
-                        key={
-                          v.users.filter((s, j) => {
-                            if (me && s.nickname !== me.nickname) {
-                              return s;
-                            }
-                          })[0].nickname
-                        }
-                        onClick={() => {
-                          this.setChatRoomKey(v.id);
-                          this.onSetCurrentChatRoom(v);
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span style={{}}>
-                            {
-                              v.users.filter((s, j) => {
-                                if (me && s.nickname !== me.nickname) {
-                                  return s;
-                                }
-                              })[0].nickname
-                            }
-                          </span>
-                          <span>
-                            <Badge
-                              //count={1}
-                              count={this.getNotificationCount(v)}
-                              style={{
-                                borderRadius: "3px",
-                                fontSize: "9px",
-                                padding: "0 2px",
-                                height: "13px",
-                                minWidth: "13px",
-                                lineHeight: "13px",
-                              }}
-                            />
-                          </span>
-                        </div>
-                      </Menu.Item>
-                    );
-                  }
-                  flag = false;
-                })} */}
               </Menu>
             </div>
             <div className="menu-content">
@@ -558,9 +449,6 @@ class mypage extends Component {
                 this.state.currentMenu !== "activity" && (
                   <ChatContainer chatRoomKey={this.state.chatRoomKey} />
                 )}
-
-              {/* <div style={{ border: "0.2px solid white", margin: "10px" }}></div>
-        <MyActivityTemplate></MyActivityTemplate> */}
             </div>
           </MenuWrapper>
         </MypageLayout>
@@ -571,22 +459,19 @@ class mypage extends Component {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
-    //context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },
 );
+
+// redux
 
 const mapStateToProps = (state) => {
   return {
