@@ -1,11 +1,17 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
-import { Rate, Button, Tag } from "antd";
+import { Button, Tag } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import firebase from "../../firebase";
 import Router, { withRouter } from "next/router";
-import { setCurrentChatRoomAction } from "../../reducers/chat";
-import Link from "next/link";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 프로필 모달 창 컴포넌트, 메시지보내기 버튼 클릭 시 파이어베이스 채팅방 생성
+ */
+
+// style
 
 const ProfileWrapper = styled.div`
   margin: 0;
@@ -19,7 +25,6 @@ const ProfileWrapper = styled.div`
 
 const RowWrapper = styled.div`
   padding: 5px;
-
   .tag-partial {
     width: 55px;
     text-align: center;
@@ -27,24 +32,24 @@ const RowWrapper = styled.div`
 `;
 
 const ProfileModal = ({ writer }) => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  // console.log(me.id);
-  // console.log(writer.id);
+
+  // local state
 
   const [chatRoomsRef, setChatRoomsRef] = useState(
     firebase.database().ref("chatRooms"),
   );
-
   const [chatRooms, setChatRooms] = useState([]);
+
+  // event listener
 
   const addChatRoomListener = () => {
     let chatRoomsArray = [];
 
     chatRoomsRef.on("child_added", (DataSnapShot) => {
       chatRoomsArray.push(DataSnapShot.val());
-      // charRooms
-      //console.log(chatRoomsArray);
       setChatRooms(chatRoomsArray);
     });
   };
@@ -60,15 +65,12 @@ const ProfileModal = ({ writer }) => {
           { clientId: writer._id, nickname: writer.nickname },
         ],
       };
-      //console.log(chatRooms);
+
       let chatRoomExist = false;
-      //console.log(chatRooms);
       if (chatRooms.length !== 0) {
         chatRooms.forEach((v, i) => {
           let cnt = 0;
-
           v.users.forEach((s, j) => {
-            //console.log(s.clientId);
             if (
               s.clientId === newChatRoom.users[0].clientId ||
               s.clientId === newChatRoom.users[1].clientId
@@ -82,25 +84,13 @@ const ProfileModal = ({ writer }) => {
         });
       }
 
-      // let cnt = 0;
-      //console.log("cnt", cnt);
-      // if (chatRooms.length === 0) {
-      //   alert("로딩중.. 잠시만 기다려주세요.");
-      //   return;
-      // }
       if (chatRoomExist) {
-        // 이미 채팅방이 있다면
-        // alert("이미 채팅방이 있ㅅ브니다");
-        //dispatch(setCurrentChatRoomAction(newChatRoom));
         Router.push(`/mypage`);
       } else {
-        // 없다면 새로 생성
         try {
           await chatRoomsRef.child(key).update(newChatRoom);
-          //dispatch(setCurrentChatRoomAction(newChatRoom));
           alert("채팅방 생성완료");
           Router.push(`/mypage`);
-          //setChatRoomsRef(null);
         } catch (error) {
           alert("오류발생! 다시 시도해주세요.");
         }
@@ -109,16 +99,14 @@ const ProfileModal = ({ writer }) => {
     }
   }, [chatRoomsRef, chatRooms]);
 
+  // hooks
+
   useEffect(() => {
     addChatRoomListener();
     return () => {
       chatRoomsRef.off();
     };
   }, []);
-
-  // useEffect(() => {
-  //   console.log(chatRooms);
-  // }, [chatRooms]);
 
   return (
     <ProfileWrapper>
@@ -160,21 +148,9 @@ const ProfileModal = ({ writer }) => {
           <span>{writer.githubUrl}</span>
         )}
       </RowWrapper>
-      {/* <RowWrapper>
-        <span>
-          <Tag className="tag-partial" color="#ccc">
-            평점
-          </Tag>
-        </span>
-        <span>
-          <Rate allowHalf disabled defaultValue={(writer.rating = 0)} />
-        </span>
-      </RowWrapper> */}
+
       <RowWrapper className="btn-wrapper">
         {me && me._id !== writer._id && (
-          // <Link href="/mypage">
-          //   <a onClick={onCreateChatRoom}></a>
-          // </Link>
           <Button
             type="primary"
             className="note-btn"
