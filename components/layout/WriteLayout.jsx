@@ -4,6 +4,14 @@ import Header from "../common/Header";
 import styled from "styled-components";
 import Footer from "../common/Footer";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 글쓰기 레이아웃
+ */
+
+// style
+
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`

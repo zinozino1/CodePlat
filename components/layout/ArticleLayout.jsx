@@ -5,10 +5,17 @@ import styled from "styled-components";
 import SkillFilterForm from "../common/contents/SkillFilterForm";
 import SearchContentForm from "../common/contents/SearchContentForm";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 리스트 뷰어 레이아웃
+ */
+
+// style
+
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
-  /* background: #fff; */
   width: 1300px;
   margin: 0 auto;
   margin-top: 65px;
@@ -39,10 +46,6 @@ const ArticleLayout = ({ children, contentType }) => {
       </ContentWrapper>
     </Layout>
   );
-};
-
-ArticleLayout.propTypes = {
-  // children: PropTypes.node.isRequired,
 };
 
 export default ArticleLayout;

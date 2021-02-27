@@ -1,8 +1,13 @@
 import React from "react";
 import { Layout } from "antd";
-import Header from "../common/Header";
 import Footer from "../common/Footer";
 import styled, { css } from "styled-components";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary auth 컴포넌트(로그인, 회원가입, 비밀번호 찾기 등) 레이아웃
+ */
 
 const Content = Layout.Content;
 
@@ -29,10 +34,6 @@ const AuthLayout = ({ children, type }) => {
       <Footer />
     </Layout>
   );
-};
-
-AuthLayout.propTypes = {
-  // children: PropTypes.node.isRequired,
 };
 
 export default AuthLayout;

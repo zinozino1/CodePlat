@@ -4,10 +4,17 @@ import Header from "../common/Header";
 import Footer from "../common/Footer";
 import styled from "styled-components";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 마이페이지 레이아웃
+ */
+
+// style
+
 const Content = Layout.Content;
 
 const ContentWrapper = styled(Content)`
-  /* background: #fff; */
   width: 1300px;
   margin: 0 auto;
   margin-top: 65px;
