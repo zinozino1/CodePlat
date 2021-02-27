@@ -3,7 +3,13 @@ import styled from "styled-components";
 import PostViewerHeader from "./PostViewerHeader";
 import PostViewerContent from "./PostViewerContent";
 
-// 리렌더링 분산화를 위해 컴포넌트 분리
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 뷰어 컨테이너
+ */
+
+// style
 
 const PostWrapper = styled.div`
   margin-top: 30px;

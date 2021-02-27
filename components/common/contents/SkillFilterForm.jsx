@@ -2,11 +2,19 @@ import React, { useState, useCallback, useEffect } from "react";
 import { Select, Radio, Checkbox } from "antd";
 import styled, { css } from "styled-components";
 import { StackList } from "../../../lib/constant/constant";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   skillChangeAction,
   initializeSkillAction,
 } from "../../../reducers/skill";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 기술 스택 선택 폼 컴포넌트
+ */
+
+// style
 
 const SkillFilterFormWrapper = styled.div`
   margin: 0 auto;
@@ -79,13 +87,19 @@ const SelectWrapper = styled.div`
 `;
 
 const SkillFilterForm = ({ type, isEdit, values }) => {
+  // redux
+
   const dispatch = useDispatch();
+
+  // local state
 
   const [radioValue, setRadioValue] = useState("language");
   const [checkList, setCheckList] = useState(StackList.language);
   const [checkedValues, setCheckedValues] = isEdit
     ? useState(values)
     : useState([]);
+
+  // event listener
 
   const onClickRadio = useCallback((e) => {
     setRadioValue(e.target.value);
@@ -107,6 +121,8 @@ const SkillFilterForm = ({ type, isEdit, values }) => {
     },
     [checkedValues, values],
   );
+
+  // hooks
 
   useEffect(() => {
     dispatch(skillChangeAction(checkedValues));

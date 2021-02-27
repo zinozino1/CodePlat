@@ -1,19 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  List,
-  Avatar,
-  Space,
-  Tag,
-  Popover,
-  Skeleton,
-  Button,
-  Comment,
-  Divider,
-  Input,
-  Image,
-  Checkbox,
-} from "antd";
+import { Avatar, Popover, Comment, Input, Image, Checkbox } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import {
   UserOutlined,
@@ -21,23 +8,25 @@ import {
   LikeOutlined,
   LikeFilled,
 } from "@ant-design/icons";
-import CommentForm from "./CommentForm";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
 import { SERVER_URL } from "../../../lib/constant/constant";
-import shortid from "shortid";
 import {
-  addCommentRequestAction,
-  deleteCommentRequestAction,
   likeCommentRequestAction,
   unLikeCommentRequestAction,
 } from "../../../reducers/post";
-import useInput from "../../../hooks/useInput";
 import Router from "next/router";
 import axios from "axios";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 대댓글 아이템 컴포넌트
+ */
+
+// style
+
 const ReApplyFormWrapper = styled.div`
-  /* border: 1px solid black; */
   width: 800px;
   display: flex;
   @media (max-width: 768px) {
@@ -71,25 +60,38 @@ const CommentActivityWrapper = styled.div`
   font-size: 11px;
   padding: 0 3px;
   cursor: pointer;
-  /* border: 1px solid black; */
 `;
 
 const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
+  // redux
+
   const dispatch = useDispatch();
 
+  // local state
+
   const [editReCommentText, setEditReCommentText] = useState("");
+  const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
+  const [isReEditSecret, setIsReEditSecret] = useState(false);
+  const [currentReComment, setCurrentReComment] = useState(null);
+  const [like, setLike] = useState(
+    reComment.likes.some((v, i) => {
+      if (me && v.userId === me._id) {
+        return true;
+      }
+    })
+      ? true
+      : false,
+  );
+
+  // event listener
+
   const onChangeEditReCommentText = useCallback((e) => {
     setEditReCommentText(e.target.value);
   }, []);
-  const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
-  const [isReEditSecret, setIsReEditSecret] = useState(false);
 
   const onToggleIsReEditSecret = useCallback(() => {
     setIsReEditSecret(!isReEditSecret);
   }, [isReEditSecret]);
-
-  // const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
-  const [currentReComment, setCurrentReComment] = useState(null);
 
   const onUpdateReComment = useCallback(
     (reComment) => {
@@ -107,9 +109,7 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           })
           .then((res) => {
             onToggleIsEditReComment();
-            Router.push(
-              `http://localhost:3000/articles/${post.type}/${post._id}`,
-            );
+            Router.push(`/articles/${post.type}/${post._id}`);
           })
           .catch((error) => {
             alert("댓글수정 실패");
@@ -117,22 +117,8 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
       } else {
         return;
       }
-
-      // console.log("id", reComment._id);
-      // console.log("editCommentText", editReCommentText);
-      // console.log("isReEditSecret", isReEditSecret);
     },
     [editReCommentText, isReEditSecret],
-  );
-
-  const [like, setLike] = useState(
-    reComment.likes.some((v, i) => {
-      if (me && v.userId === me._id) {
-        return true;
-      }
-    })
-      ? true
-      : false,
   );
 
   const onToggleLike = useCallback(() => {
@@ -161,11 +147,6 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
     }
   }, [like, me, reComment]);
 
-  useEffect(() => {
-    setEditReCommentText(reComment.content);
-    setIsReEditSecret(reComment.secretComment);
-  }, [reComment]);
-
   const onCancelEdit = useCallback(() => {
     setEditReCommentText(reComment.content);
     setIsReEditSecret(reComment.secretComment);
@@ -173,9 +154,15 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
   }, [reComment, isEditReComment]);
 
   const onChangeCurrentReComment = useCallback((reComment) => {
-    // 현재 수정버튼이 눌러진 자식 댓글 표시
     setCurrentReComment(reComment);
   }, []);
+
+  // hooks
+
+  useEffect(() => {
+    setEditReCommentText(reComment.content);
+    setIsReEditSecret(reComment.secretComment);
+  }, [reComment]);
 
   return (
     <div key={reComment._id}>
@@ -191,30 +178,13 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
           ))
         }
         actions={
-          me //&& me._id === reComment.writer._id
-            ? isEditReComment && // 수정중이니
-              currentReComment && // 현재 수정중인 대댓글
+          me
+            ? isEditReComment &&
+              currentReComment &&
               currentReComment._id === reComment._id
               ? [
-                  // 자녀댓글에서 수정을 눌렀을 떄
                   <>
                     <ReApplyFormWrapper>
-                      {/* {editReCommentText === "" ? (
-                        <ReApplyInput
-                          rows={1}
-                          onChange={onChangeEditReCommentText}
-                          defaultValue={reComment.content}
-                        />
-                      ) : (
-                        <ReApplyInput
-                          rows={1}
-                          onChange={onChangeEditReCommentText}
-                        />
-                      )} */}
-                      {/* <ReApplyInput
-                        rows={1}
-                        onChange={onChangeEditReCommentText}
-                      /> */}
                       <ReApplyInput
                         rows={1}
                         onChange={onChangeEditReCommentText}
@@ -244,7 +214,6 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                         >
                           <Checkbox
                             onChange={onToggleIsReEditSecret}
-                            //value={isSecret}
                             style={{ color: "#999" }}
                             defaultChecked={reComment.secretComment}
                           >
@@ -256,12 +225,9 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                   </>,
                 ]
               : [
-                  // 자녀댓글 기본상태
                   <CommentActivityWrapper>
                     {me && (
                       <span
-                        //key="comment-list-reply-to-0"
-                        //onClick={onToggleIsEdit}
                         onClick={onToggleLike}
                         style={{ marginRight: "10px" }}
                       >
@@ -298,7 +264,6 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                     {reComment.writer && me._id === reComment.writer._id && (
                       <span
                         key="comment-list-reply-to-0"
-                        //onClick={onToggleIsEditReComment}
                         onClick={() => {
                           onToggleIsEditReComment();
                           onChangeCurrentReComment(reComment);
@@ -350,14 +315,10 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
         content={
           reComment.writer && reComment.writer.constructor == Object ? (
             reComment.secretComment ? (
-              // 비밀댓글일 경우
               me &&
-              // 내가쓴 대댓글이거나 or 루트댓글이 내가 쓴거고 대댓글이 비밀댓글일 경우
               ((reComment.writer && reComment.writer._id === me._id) ||
                 post.comments.find((v, i) => {
                   if (v._id === reComment.commentTo) {
-                    // console.log("루트댓글작성자의 id", v.writer._id);
-                    // console.log("object", me._id);
                     return true;
                   }
                 }).writer._id === me._id) ? (
@@ -375,7 +336,6 @@ const ReCommentListItem = ({ reComment, post, me, onDeleteComment }) => {
                 </>
               )
             ) : (
-              // 공개댓글일 경우
               reComment.content
             )
           ) : (

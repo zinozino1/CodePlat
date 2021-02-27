@@ -1,19 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  List,
-  Avatar,
-  Space,
-  Tag,
-  Popover,
-  Skeleton,
-  Button,
-  Comment,
-  Divider,
-  Input,
-  Image,
-  Checkbox,
-} from "antd";
+import { Avatar, Popover, Comment, Input, Image, Checkbox } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import {
   UserOutlined,
@@ -21,11 +8,9 @@ import {
   LikeOutlined,
   LikeFilled,
 } from "@ant-design/icons";
-import CommentForm from "./CommentForm";
 import { useSelector, useDispatch } from "react-redux";
 import useToggle from "../../../hooks/useToggle";
 import { SERVER_URL } from "../../../lib/constant/constant";
-import shortid from "shortid";
 import {
   addCommentRequestAction,
   deleteCommentRequestAction,
@@ -37,8 +22,15 @@ import Router from "next/router";
 import axios from "axios";
 import ReCommentListItem from "./ReCommentListItem";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 댓글 리스트 아이템 컴포넌트
+ */
+
+// style
+
 const ReApplyFormWrapper = styled.div`
-  /* border: 1px solid black; */
   width: 800px;
   display: flex;
   @media (max-width: 768px) {
@@ -72,50 +64,21 @@ const CommentActivityWrapper = styled.div`
   font-size: 11px;
   padding: 0 3px;
   cursor: pointer;
-  /* border: 1px solid black; */
 `;
 
 const CommentListItem = ({ item, post }) => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  //console.log(item);
-  // 대댓글
+  // local state
   const [reComment, onChangeReComment] = useInput("");
-  // const [reComment, setReComment] = useState("");
-  // const onChangeReComment = useCallback(() => {
-  //   setReComment(e.target.value);
-  // }, []);
-  // 루트댓글 수정텍스트
-  // const [editCommentText, onChangeEditCommentText] = useInput("");
   const [editCommentText, setEditCommentText] = useState("");
-  const onChangeEditCommentText = useCallback((e) => {
-    setEditCommentText(e.target.value);
-  }, []);
-  // 자녀댓글 수정텍스트
-  // const [editReCommentText, onChangeEditReCommentText] = useInput("");
-
   const [isSecret, onToggleIsSecret] = useToggle(false);
-  // 루트댓글이 수정중인가
   const [isEdit, onToggleIsEdit] = useToggle(false);
-  // 자녀댓글이 수정중인가
-  // const [isEditReComment, onToggleIsEditReComment] = useToggle(false);
-
-  // const [currentReComment, setCurrentReComment] = useState(null);
-
-  // const [isEditSecret, onToggleIsEditSecret] = useToggle(false);
   const [isEditSecret, setIsEditSecret] = useState(false);
-  const onToggleIsEditSecret = useCallback(() => {
-    setIsEditSecret(!isEditSecret);
-  }, [isEditSecret]);
-
-  // const [isReEditSecret, onToggleIsReEditSecret] = useToggle(false);
-
-  // const onChangeCurrentReComment = useCallback((reComment) => {
-  //   // 현재 수정버튼이 눌러진 자식 댓글 표시
-  //   setCurrentReComment(reComment);
-  // }, []);
-
+  const [applyToggle, onChangeApplyToggle] = useToggle(false);
   const [like, setLike] = useState(
     item.likes.some((v, i) => {
       if (me && v.userId === me._id) {
@@ -124,7 +87,17 @@ const CommentListItem = ({ item, post }) => {
     })
       ? true
       : false,
-  ); //useState(false);
+  );
+
+  // event listener
+
+  const onChangeEditCommentText = useCallback((e) => {
+    setEditCommentText(e.target.value);
+  }, []);
+
+  const onToggleIsEditSecret = useCallback(() => {
+    setIsEditSecret(!isEditSecret);
+  }, [isEditSecret]);
 
   const onToggleLike = useCallback(() => {
     setLike(!like);
@@ -152,11 +125,6 @@ const CommentListItem = ({ item, post }) => {
     }
   }, [like, me, item]);
 
-  useEffect(() => {
-    setEditCommentText(item.content);
-    setIsEditSecret(item.secretComment);
-  }, [item]);
-
   const onCancelEdit = useCallback(() => {
     setEditCommentText(item.content);
     setIsEditSecret(item.secretComment);
@@ -182,8 +150,7 @@ const CommentListItem = ({ item, post }) => {
     } else {
       return;
     }
-
-    Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+    Router.push(`/articles/${post.type}/${post._id}`);
   }, [post, item, reComment, isSecret]);
 
   const onUpdateComment = useCallback(
@@ -202,9 +169,7 @@ const CommentListItem = ({ item, post }) => {
           })
           .then((res) => {
             onToggleIsEdit();
-            Router.push(
-              `http://localhost:3000/articles/${post.type}/${post._id}`,
-            );
+            Router.push(`/articles/${post.type}/${post._id}`);
           })
           .catch((error) => {
             alert("댓글수정 실패");
@@ -212,10 +177,6 @@ const CommentListItem = ({ item, post }) => {
       } else {
         return;
       }
-
-      // console.log("id", comment._id);
-      // console.log("editCommentText", editCommentText);
-      // console.log("isEditSecret", isEditSecret);
     },
     [isEditSecret, editCommentText],
   );
@@ -259,9 +220,7 @@ const CommentListItem = ({ item, post }) => {
 
             axios.delete(`/api/comments/${parentId}`).then(() => {
               axios.delete(`/api/comments/${id}`).then(() => {
-                Router.push(
-                  `http://localhost:3000/articles/${post.type}/${post._id}`,
-                );
+                Router.push(`/articles/${post.type}/${post._id}`);
                 return;
               });
             });
@@ -270,7 +229,7 @@ const CommentListItem = ({ item, post }) => {
           }
         }
 
-        Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
+        Router.push(`/articles/${post.type}/${post._id}`);
       } else {
         return;
       }
@@ -278,7 +237,12 @@ const CommentListItem = ({ item, post }) => {
     [item, post],
   );
 
-  const [applyToggle, onChangeApplyToggle] = useToggle(false);
+  // hooks
+
+  useEffect(() => {
+    setEditCommentText(item.content);
+    setIsEditSecret(item.secretComment);
+  }, [item]);
 
   return (
     <li>
@@ -289,22 +253,8 @@ const CommentListItem = ({ item, post }) => {
           (!applyToggle
             ? isEdit
               ? [
-                  //루트 댓글에서 수정눌렀을 떄
                   <>
                     <ReApplyFormWrapper>
-                      {/* {editCommentText === "" ? (
-                        <ReApplyInput
-                          rows={1}
-                          onChange={onChangeEditCommentText}
-                          defaultValue={item.content}
-                        />
-                      ) : (
-                        <ReApplyInput
-                          rows={1}
-                          onChange={onChangeEditCommentText}
-                          // defaultValue={item.content}
-                        />
-                      )} */}
                       <ReApplyInput
                         rows={1}
                         onChange={onChangeEditCommentText}
@@ -345,12 +295,9 @@ const CommentListItem = ({ item, post }) => {
                   </>,
                 ]
               : [
-                  // 루트댓글 원래상태
                   <CommentActivityWrapper>
                     {me && (
                       <span
-                        //key="comment-list-reply-to-0"
-                        //onClick={onToggleIsEdit}
                         style={{ marginRight: "10px" }}
                         onClick={onToggleLike}
                       >
@@ -408,7 +355,6 @@ const CommentListItem = ({ item, post }) => {
                   ,
                 ]
             : [
-                // 루트 댓글에서 대댓글쓰기 눌렀을 떄
                 <>
                   <ReApplyFormWrapper>
                     <ReApplyInput rows={1} onChange={onChangeReComment} />
@@ -491,15 +437,8 @@ const CommentListItem = ({ item, post }) => {
           </Popover>
         }
         content={
-          // item._id ===
-          //   post.deletedComments.map((v, i) => {
-          //     if (v._id === item._id) {
-          //       return v._id;
-          //     }
-          //   }) &&
           item.writer && item.writer.constructor == Object ? (
             item.secretComment ? (
-              // 비밀댓글일 경우
               me &&
               ((post.writer && me._id === post.writer._id) ||
                 item.writer._id === me._id) ? (
@@ -517,7 +456,6 @@ const CommentListItem = ({ item, post }) => {
                 </>
               )
             ) : (
-              // 공개댓글일 경우
               item.content
             )
           ) : (
@@ -536,7 +474,6 @@ const CommentListItem = ({ item, post }) => {
             : new Date(item.createdAt).getSeconds()
         }`}
       >
-        {/* 자녀 댓글 렌더링 */}
         {post.comments.map((reComment, i) => {
           if (reComment.commentTo === item._id) {
             return (

@@ -1,12 +1,18 @@
 import React, { useCallback, useState } from "react";
 import { Form, Button, Input, Checkbox } from "antd";
-import useInput from "../../../hooks/useInput";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addCommentRequestAction } from "../../../reducers/post";
 import Router, { withRouter } from "next/router";
 import useToggle from "../../../hooks/useToggle";
 import axios from "axios";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 댓글 작성 폼 컴포넌트
+ */
+
+// style
 
 const CommentFormWrapper = styled.div`
   .comment-input {
@@ -26,23 +32,25 @@ const TextAreaWrapper = styled(Input.TextArea)`
 `;
 
 const CommentForm = ({ post, router }) => {
-  const dispatch = useDispatch();
+  // redux
+
   const { me } = useSelector((state) => state.user);
+
+  // local state
+
   const [comment, setComment] = useState("");
+  const [isSecret, onToggleIsSecret] = useToggle(false);
+
+  // event listener
+
   const onChangeComment = useCallback((e) => {
     setComment(e.target.value);
   }, []);
-  //const [comment, onChangeComment] = useInput("");
-
-  const [isSecret, onToggleIsSecret] = useToggle(false);
 
   const onSubmit = useCallback(() => {
-    // 1) 댓글 등록시 새로고침되며 article페이지의 useEffect가 재호출되면서 데이터가 업데이트 됨
-    // 2) 일부러 새로고침시킨다
     let sumbitConfirm = confirm("댓글을 등록하시겠습니까?");
     if (sumbitConfirm) {
       setComment("");
-
       axios
         .post(`/api/comments`, {
           postId: post._id,
@@ -51,23 +59,11 @@ const CommentForm = ({ post, router }) => {
           secretComment: isSecret,
         })
         .then((res) => {
-          Router.push(
-            `http://localhost:3000/articles/${post.type}/${post._id}`,
-          );
+          Router.push(`/articles/${post.type}/${post._id}`);
         })
         .catch((err) => {
           console.log(err);
         });
-      // dispatch(
-      //   // post말고 comment받는 것도 고려
-      //   addCommentRequestAction({
-      //     postId: post._id,
-      //     type: post.type,
-      //     content: comment,
-      //     secretComment: isSecret,
-      //   }),
-      // );
-      // Router.push(`http://localhost:3000/articles/${post.type}/${post._id}`);
     } else {
       return;
     }
@@ -98,7 +94,6 @@ const CommentForm = ({ post, router }) => {
           <Button
             className="comment-btn"
             htmlType="submit"
-            //loading={submitting}
             onClick={onSubmit}
             type="primary"
             disabled={me ? false : true}

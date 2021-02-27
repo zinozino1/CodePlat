@@ -1,36 +1,26 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import styled from "styled-components";
-import {
-  List,
-  Avatar,
-  Space,
-  Tag,
-  Popover,
-  Skeleton,
-  Button,
-  Comment,
-  Divider,
-  Upload,
-  Dropdown,
-  Menu,
-} from "antd";
+import { List, Avatar, Tag, Popover, Comment, Divider } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
 import CommentForm from "./CommentForm";
 import { useSelector } from "react-redux";
-import useToggle from "../../../hooks/useToggle";
 import CommentListItem from "./CommentListItem";
 import { SERVER_URL } from "../../../lib/constant/constant";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 뷰어 컨텐트 컴포넌트
+ */
+
+// style
 
 const PostViewerContentWrapper = styled.div`
   background: #fff;
   padding: 20px 40px;
-  /* border: 1px solid red; */
-  .post-title {
-    /* border: 1px solid black; */
-  }
+
   .post-summary {
-    /* border: 1px solid black; */
     padding: 20px 0;
     .label {
       color: #888;
@@ -39,7 +29,6 @@ const PostViewerContentWrapper = styled.div`
     .content {
       flex: 10;
     }
-
     .summary-row {
       display: flex;
       padding: 5px 0;
@@ -54,7 +43,6 @@ const PostViewerContentWrapper = styled.div`
     }
   }
   .post-content {
-    /* border: 1px solid black; */
     font-weight: 400;
     font-size: 16px;
     padding: 20px 0;
@@ -68,21 +56,20 @@ const PostViewerContentWrapper = styled.div`
     }
   }
 
-  .comment-list-wrapper {
-    /* border: 1px solid black; */
-  }
   .comment-form {
-    /* border: 1px solid black; */
     padding: 15px 0;
   }
 `;
 
 const PostViewerContent = ({ post, contentType }) => {
+  // redux
+
   const { me } = useSelector((state) => state.user);
+
+  // helper method
 
   const mergeFiles = () => {
     let mergedFiles = [];
-
     for (let i = 0; i < post.fileUrl.length; i++) {
       let newFile = {};
       newFile.url = `${SERVER_URL}/${post.fileUrl[i]}`;
@@ -161,21 +148,6 @@ const PostViewerContent = ({ post, contentType }) => {
         <div dangerouslySetInnerHTML={{ __html: post.content }} />
       </div>
       <div>
-        {/* {post.fileUrl.map((v, i) => {
-          return (
-            <div key={i}>
-              <a href={`http://localhost:4000/${v}`}>{v}</a>
-            </div>
-          );
-        })} */}
-        {/* <Upload
-          name="logo"
-          //listType="picture"
-          //beforeUpload={onChangeFileList}
-          defaultFileList={mergeFiles()}
-          //onRemove={onRemoveFile}
-        ></Upload> */}
-
         <div>
           {mergeFiles().length > 0 && (
             <div style={{ textAlign: "right", color: "#999" }}>첨부파일</div>

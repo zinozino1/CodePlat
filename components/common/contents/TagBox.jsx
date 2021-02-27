@@ -1,6 +1,12 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { Tag, Input, Tooltip } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포럼 포스트 작성에 쓰이는 태그박스 컴포넌트
+ */
 
 const TagBox = ({
   tags,
@@ -14,6 +20,8 @@ const TagBox = ({
   editInputValue,
   setEditInputValue,
 }) => {
+  // event listener
+
   const handleClose = useCallback(
     (removedTag) => {
       setTags(tags.filter((tag) => tag !== removedTag));

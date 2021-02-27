@@ -1,19 +1,27 @@
 import React from "react";
-import { List, Avatar, Space, Tag, Popover, Skeleton, Image } from "antd";
+import { List, Avatar, Space, Tag, Popover, Image } from "antd";
 import {
   MessageOutlined,
   LikeOutlined,
-  StarOutlined,
   EyeOutlined,
   CommentOutlined,
   UserOutlined,
   TagsOutlined,
 } from "@ant-design/icons";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 import ProfileModal from "../../modal/ProfileModal";
 import shortid from "shortid";
 import { SERVER_URL } from "../../../lib/constant/constant";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 리스트 아이템 컴포넌트
+ * @note 렌더링 최적화를 위해 List 컴포넌트와 ListItem 컴포넌트로 분리
+ */
+
+// style
 
 const ListItemWrapper = styled(List.Item)`
   background: #fff;
@@ -58,6 +66,8 @@ const ListHeader = styled.div`
   }
 `;
 
+// helper method
+
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
@@ -68,12 +78,7 @@ const IconText = ({ icon, text }) => (
 const ListItem = ({ item, type }) => {
   if (type == "study" || type == "project") {
     return (
-      <Link
-        href={
-          // item.writer ? `/articles/${type}/${item._id}` : `/articles/${type}`
-          `/articles/${type}/${item._id}`
-        }
-      >
+      <Link href={`/articles/${type}/${item._id}`}>
         <a>
           <ListItemWrapper
             actions={[
@@ -125,12 +130,10 @@ const ListItem = ({ item, type }) => {
                   <Avatar
                     onClick={(e) => {
                       e.preventDefault();
-                      //console.log("아바타 클릭했음");
                     }}
                     style={{ cursor: "pointer" }}
                     size={24}
                     icon={<UserOutlined />}
-                    //width={100}
                     src={
                       item.writer &&
                       item.writer.avatarUrl !== "" &&
@@ -152,17 +155,9 @@ const ListItem = ({ item, type }) => {
                 ).getFullYear()}.${
                   new Date(item.createdAt).getMonth() + 1
                 }.${new Date(item.createdAt).getDate()}`}</span>
-                {/* <span className="create-time">
-                  {`${new Date(item.createdAt).getHours()}:${new Date(
-                    item.createdAt,
-                  ).getMinutes()}:${new Date(item.createdAt).getSeconds()}`}
-                </span> */}
               </div>
             </ListHeader>
-            <List.Item.Meta
-              //avatar={<Avatar src={item.avatar} />}
-              title={item.title}
-            />
+            <List.Item.Meta title={item.title} />
             {""}
           </ListItemWrapper>
         </a>
@@ -170,12 +165,7 @@ const ListItem = ({ item, type }) => {
     );
   } else {
     return (
-      <Link
-        href={
-          // item.writer ? `/articles/forum/${item._id}` : "/articles/forum"
-          `/articles/${type}/${item._id}`
-        }
-      >
+      <Link href={`/articles/${type}/${item._id}`}>
         <a>
           <ListItemWrapper
             actions={[
@@ -224,10 +214,8 @@ const ListItem = ({ item, type }) => {
                   <Avatar
                     onClick={(e) => {
                       e.preventDefault();
-                      //console.log("아바타 클릭했음");
                     }}
                     style={{ cursor: "pointer" }}
-                    //width={100}
                     size={24}
                     icon={<UserOutlined />}
                     src={
@@ -253,10 +241,7 @@ const ListItem = ({ item, type }) => {
                 }.${new Date(item.createAt).getDate()}`}</span>
               </div>
             </ListHeader>
-            <List.Item.Meta
-              //avatar={<Avatar src={item.avatar} />}
-              title={item.title}
-            />
+            <List.Item.Meta title={item.title} />
             {""}
           </ListItemWrapper>
         </a>

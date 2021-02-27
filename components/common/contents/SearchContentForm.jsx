@@ -5,6 +5,14 @@ import Link from "next/link";
 import useInput from "../../../hooks/useInput";
 import Router, { withRouter } from "next/router";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 글 검색 컴포넌트 in 포스트 리스트 뷰어 페이지
+ */
+
+// style
+
 const SearchContentFormWrapper = styled.div`
   margin: 30px auto;
   width: 900px;
@@ -24,13 +32,11 @@ const SearchContentFormWrapper = styled.div`
         border: 1px solid #ddd;
       }
     }
-
     .ant-input-affix-wrapper-focused {
       border-color: #fff;
       box-shadow: none;
       border: 1px solid #ddd;
     }
-
     .ant-input-search-button {
       background: #313355;
       color: #fff;
@@ -43,10 +49,13 @@ const SearchContentFormWrapper = styled.div`
 `;
 
 const SearchContentForm = ({ contentType, router }) => {
+  // local state
+
   const [content, onChangeContent] = useInput("");
 
+  // event listener
+
   const onSubmit = useCallback(
-    // post 조작해야함.
     (value) => {
       if (value === "") {
         Router.push(`${router.route}`);
@@ -66,8 +75,6 @@ const SearchContentForm = ({ contentType, router }) => {
         enterButton
         onChange={onChangeContent}
         onSearch={onSubmit}
-
-        //onSearch={onSearch}
       />
       <Link href={`/articles/${contentType}/write`}>
         <a>

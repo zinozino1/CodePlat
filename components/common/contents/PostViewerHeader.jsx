@@ -3,25 +3,13 @@ import styled from "styled-components";
 import {
   MessageOutlined,
   LikeOutlined,
-  StarOutlined,
   EyeOutlined,
-  CommentOutlined,
   UserOutlined,
   TagsOutlined,
   LikeFilled,
-  TagFilled,
   TagsFilled,
 } from "@ant-design/icons";
-import {
-  List,
-  Avatar,
-  Space,
-  Tag,
-  Popover,
-  Skeleton,
-  Button,
-  Image,
-} from "antd";
+import { Avatar, Popover, Button, Image } from "antd";
 import ProfileModal from "../../modal/ProfileModal";
 import {
   postScrapRequestAction,
@@ -33,12 +21,17 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { SERVER_URL } from "../../../lib/constant/constant";
 import Router from "next/router";
-import useToggle from "../../../hooks/useToggle";
-import WriteForm from "./WriteForm";
 import { message } from "antd";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 뷰어 헤더 컴포넌트
+ */
+
+// style
+
 const PostViewerHeaderWrapper = styled.div`
-  /* display: flex; */
   justify-content: space-between;
   font-size: 18px;
   font-weight: 300;
@@ -79,15 +72,6 @@ const PostViewerHeaderWrapper = styled.div`
     .post-forum-scraps {
       margin: 0 7px;
     }
-    /* .post-comments {
-      margin: 0 7px;
-    }
-    .post-forum-likes {
-      margin: 0 7px;
-    }
-    .post-forum-scraps {
-      margin: 0 7px;
-    } */
     .scrap-btn,
     .delete-btn,
     .like-btn,
@@ -97,25 +81,16 @@ const PostViewerHeaderWrapper = styled.div`
       border: none;
       text-align: center;
     }
-    /* .delete-btn {
-      padding: 5px;
-      margin-left: 10px;
-      border: none;
-      text-align: center;
-    }
-    .like-btn {
-      padding: 5px;
-      margin-left: 10px;
-      border: none;
-      text-align: center;
-    } */
   }
 `;
 
 const PostViewerHeader = ({ post, contentType }) => {
-  const dispatch = useDispatch();
+  // redux
 
+  const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
+
+  // local state
 
   const [like, setLike] = useState(
     post.likes.some((v, i) => {
@@ -125,8 +100,7 @@ const PostViewerHeader = ({ post, contentType }) => {
     })
       ? true
       : false,
-  ); //useState(false);
-
+  );
   const [isScraped, setIsScraped] = useState(
     post.scraps.some((v, i) => {
       if (me && v.userId === me._id) {
@@ -136,6 +110,30 @@ const PostViewerHeader = ({ post, contentType }) => {
       ? true
       : false,
   );
+
+  // helper method
+
+  const scrapDoneMessage = () => {
+    message.success({
+      content: "스크랩 완료!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
+
+  const unScrapDoneMessage = () => {
+    message.success({
+      content: "스크랩 취소!",
+      className: "custom-class",
+      style: {
+        marginTop: "5vh",
+      },
+    });
+  };
+
+  // event listener
 
   const onToggleLike = useCallback(() => {
     setLike(!like);
@@ -163,30 +161,9 @@ const PostViewerHeader = ({ post, contentType }) => {
     }
   }, [like, me, post]);
 
-  const scrapDoneMessage = () => {
-    message.success({
-      content: "스크랩 완료!",
-      className: "custom-class",
-      style: {
-        marginTop: "5vh",
-      },
-    });
-  };
-
-  const unScrapDoneMessage = () => {
-    message.success({
-      content: "스크랩 취소!",
-      className: "custom-class",
-      style: {
-        marginTop: "5vh",
-      },
-    });
-  };
-
   const onScrap = useCallback(() => {
     setIsScraped(!isScraped);
     if (isScraped) {
-      //console.log("이미 스크랩된 게시글임");
       unScrapDoneMessage();
       dispatch(
         postUnScrapRequestAction({
@@ -216,7 +193,7 @@ const PostViewerHeader = ({ post, contentType }) => {
           : confirm("정말로 삭제하시겠습니까?");
       if (confirmDelete) {
         dispatch(deletePostRequestAction(post._id));
-        Router.push(`http://localhost:3000/articles/${contentType}`);
+        Router.push(`/articles/${contentType}`);
       } else {
         return;
       }
@@ -227,7 +204,7 @@ const PostViewerHeader = ({ post, contentType }) => {
   const onPostRevise = useCallback(() => {
     let confirmRevise = confirm("글을 수정하시겠습니까?");
     if (confirmRevise) {
-      Router.push(`http://localhost:3000/articles/edit/${post._id}`);
+      Router.push(`/articles/edit/${post._id}`);
     } else {
     }
   }, [post]);
@@ -296,7 +273,7 @@ const PostViewerHeader = ({ post, contentType }) => {
             <span className="post-views">{post.views}</span>
             <MessageOutlined />
             <span className="post-comments">{post.comments.length}</span>
-            {/* {contentType === "forum" && ( */}
+
             <>
               {contentType === "forum" && (
                 <>
@@ -307,7 +284,6 @@ const PostViewerHeader = ({ post, contentType }) => {
               <TagsOutlined />
               <span className="post-forum-scraps">{post.scraps.length}</span>
             </>
-            {/* )} */}
           </div>
           <div className="post-btns">
             {me && (
@@ -353,7 +329,6 @@ const PostViewerHeader = ({ post, contentType }) => {
                     }}
                   >
                     모집완료
-                    {/* <Tag color="green">모집완료</Tag> */}
                   </Button>
                   <span>/</span>
                 </>
