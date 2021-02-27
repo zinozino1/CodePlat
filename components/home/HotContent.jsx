@@ -1,8 +1,14 @@
 import React from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
 import List from "../common/contents/List";
-import { Skeleton } from "antd";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포럼 인기글 컴포넌트
+ */
+
+// style
 
 const HotContentWrapper = styled.div``;
 

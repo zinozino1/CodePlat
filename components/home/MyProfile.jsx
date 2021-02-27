@@ -9,6 +9,14 @@ import ProfileModal from "../modal/ProfileModal";
 import { UserOutlined } from "@ant-design/icons";
 import firebase from "../../firebase";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 메인 페이지 내 프로필 컴포넌트
+ */
+
+// style
+
 const CardWrapper = styled.div`
   padding: 20px;
 `;
@@ -33,9 +41,12 @@ const ButtonsWrapper = styled.div`
 `;
 
 const MyProfile = ({ me }) => {
-  const dispatch = useDispatch();
+  // redux
 
+  const dispatch = useDispatch();
   const { logoutLoading } = useSelector((state) => state.user);
+
+  // event listener
 
   const onLogout = useCallback(async () => {
     let user = firebase.auth().currentUser;
@@ -43,9 +54,7 @@ const MyProfile = ({ me }) => {
       await firebase
         .auth()
         .signOut()
-        .then(() => {
-          console.log("firebase logout 성공");
-        });
+        .then(() => {});
       let firebaseMe = null;
       await firebase
         .database()
@@ -104,7 +113,6 @@ const MyProfile = ({ me }) => {
               <Button className="mypage">마이페이지</Button>
             </a>
           </Link>
-
           <Button className="logout" onClick={onLogout} loading={logoutLoading}>
             로그아웃
           </Button>

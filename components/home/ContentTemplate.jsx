@@ -2,9 +2,14 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Card } from "antd";
 import HotContent from "./HotContent";
-import ScrapContent from "./ScrapContent";
-import { useSelector } from "react-redux";
-import ScrapNeedLogin from "./ScrapNeedLogin";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 메인 페이지 포럼 인기글 컨테이너
+ */
+
+// style
 
 const ContentTemplateWrapper = styled.div`
   padding: 20px;
@@ -21,12 +26,14 @@ const ContentTemplateWrapper = styled.div`
 `;
 
 const ContentTemplate = ({ forumData }) => {
-  const { me } = useSelector((state) => state.user);
-
+  // local state
   const [currTab, setCurrTab] = useState({
     key: "hot",
     tab: "커뮤니티 인기글",
   });
+
+  // event listener
+
   const onChangeTap = (key, type) => {
     setCurrTab({ [type]: key });
   };
@@ -35,21 +42,13 @@ const ContentTemplate = ({ forumData }) => {
     <ContentTemplateWrapper>
       <Card
         style={{ width: "100%" }}
-        tabList={[
-          { key: "hot", tab: "포럼 인기글" },
-          //{ key: "scrap", tab: "스크랩" },
-        ]}
+        tabList={[{ key: "hot", tab: "포럼 인기글" }]}
         activeTabKey={currTab.key}
         onTabChange={(key) => {
           onChangeTap(key, "key");
         }}
       >
         <HotContent forumData={forumData} />
-        {/* {currTab.key == "hot" ? (
-          <HotContent forumData={forumData} />
-        ) : (
-          <>{me ? <ScrapContent /> : <ScrapNeedLogin />}</>
-        )} */}
       </Card>
     </ContentTemplateWrapper>
   );

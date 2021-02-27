@@ -1,6 +1,12 @@
 import React from "react";
 import styled from "styled-components";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary deprecated.
+ */
+
 const ScrapNeedLoginWrapper = styled.div`
   background: #fff;
   padding: 50px;
