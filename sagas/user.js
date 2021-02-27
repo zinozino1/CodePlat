@@ -16,18 +16,23 @@ import {
 import { register, login, setUser, logout } from "../lib/api/user";
 import axios from "axios";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 유저 관련 사가 설정파일
+ * @note deprecated 된 것은 컴포넌트 혹은 페이지 내부에서 axios 직접 요청으로 대체
+ */
+
 // saga
 
 function* setUserSaga(action) {
   try {
     const res = yield call(setUser);
-
     if (!res.data.user) {
       yield put({ type: SET_USER_SUCCESS, user: null });
     } else {
       yield put({ type: SET_USER_SUCCESS, user: res.data.user });
     }
-    //yield put({ type: SET_USER_SUCCESS, user: res.data.user });
   } catch (error) {
     console.log(error);
     yield put({ type: SET_USER_FAILURE });
@@ -41,7 +46,6 @@ function* loginSaga(action) {
   } catch (error) {
     console.log(error);
     alert("이메일 인증을 완료해주세요.");
-
     axios
       .post(`/api/mailAuth`, { email: action.payload.email })
       .then((res) => {
@@ -65,8 +69,8 @@ function* logoutSaga(action) {
   }
 }
 
+// -> deprecated
 function* registerSaga(action) {
-  // 제거예정
   try {
     yield call(register, action.data);
     yield put({ type: REGISTER_SUCCESS });

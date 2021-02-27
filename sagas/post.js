@@ -1,11 +1,4 @@
-import {
-  takeLatest,
-  call,
-  put,
-  delay,
-  throttle,
-  takeEvery,
-} from "redux-saga/effects";
+import { takeLatest, call, put, throttle, takeEvery } from "redux-saga/effects";
 import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
@@ -49,14 +42,8 @@ import {
   POST_UNSCRAP_SUCCESS,
   POST_UNSCRAP_FAILURE,
   POST_UNSCRAP_REQUEST,
-  // SEARCH_POSTS_REQUEST,
-  // SEARCH_POSTS_SUCCESS,
-  // SEARCH_POSTS_FAILURE,
-  // FILTER_SEARCH_REQUEST,
-  // FILTER_SEARCH_SUCCESS,
-  // FILTER_SEARCH_FAILURE,
 } from "../reducers/post";
-import { dummyPostCreator } from "../lib/util/dummyCreator";
+
 import {
   mainLoadPosts,
   writePost,
@@ -71,18 +58,21 @@ import {
   unLike,
   postScrap,
   postUnScrap,
-  // searchPosts,
-  // filterSearch,
 } from "../lib/api/post";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 관련 사가 설정파일
+ * @note deprecated 된 것은 컴포넌트 혹은 페이지 내부에서 axios 직접 요청으로 대체
+ */
 
 // saga
 
 function* loadPostSaga(action) {
   try {
     const { postId } = action.payload;
-
     const res = yield call(loadPost, postId);
-    //console.log(res);
     yield put({
       type: LOAD_POST_SUCCESS,
       post: res.data.post,
@@ -99,7 +89,6 @@ function* loadPostSaga(action) {
 function* loadPostsSaga(action) {
   try {
     const res = yield call(loadPosts, action.payload);
-    console.log(res);
     yield put({
       type: LOAD_POSTS_SUCCESS,
       contentType: action.payload.type,
@@ -111,7 +100,6 @@ function* loadPostsSaga(action) {
     yield put({
       type: LOAD_POSTS_FAILURE,
       contentType: action.payload,
-      //error: error.response,
     });
   }
 }
@@ -119,7 +107,6 @@ function* loadPostsSaga(action) {
 function* mainLoadPostsSaga(action) {
   try {
     const res = yield call(mainLoadPosts);
-    //console.log(res);
     const { study, project, forum } = res.data.posts;
     yield put({
       type: MAIN_LOAD_POSTS_SUCCESS,
@@ -127,8 +114,6 @@ function* mainLoadPostsSaga(action) {
       project,
       forum,
     });
-    //yield put({ type: MAIN_LOAD_POSTS_SUCCESS });
-    //yield delay(1000);
   } catch (error) {
     console.log(error);
     yield put({
@@ -140,9 +125,7 @@ function* mainLoadPostsSaga(action) {
 
 function* writePostSaga(action) {
   try {
-    // yield delay(1000);
     const res = yield call(writePost, action.payload);
-    // console.log(res);
     yield put({ type: WRITE_POST_SUCCESS });
     const post = res.data.post;
     window.location.href = `http://localhost:3000/articles/${post.type}/${post._id}`;
@@ -157,10 +140,7 @@ function* writePostSaga(action) {
 
 function* postScrapSaga(action) {
   try {
-    //console.log(action.payload);
     const res = yield call(postScrap, action.payload);
-    //yield delay(1000);
-    //console.log(action.payload);
     yield put({ type: POST_SCRAP_SUCCESS, scrap: res.data.scrap });
   } catch (error) {
     console.log(error);
@@ -173,10 +153,7 @@ function* postScrapSaga(action) {
 
 function* postUnScrapSaga(action) {
   try {
-    //console.log(action.payload);
     yield call(postUnScrap, action.payload);
-    //yield delay(1000);
-    //console.log(action.payload);
     yield put({ type: POST_UNSCRAP_SUCCESS, scrapId: action.payload.id });
   } catch (error) {
     console.log(error);
@@ -187,22 +164,17 @@ function* postUnScrapSaga(action) {
   }
 }
 
+// -> deprecated
 function* addCommentSaga(action) {
   try {
-    // action.payload = postID
-
-    //console.log(action.payload);
     const res = yield call(addComment, action.payload);
-    // console.log(res);
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      //post: res.data.post,
     });
   } catch (error) {
     console.log(error);
     yield put({
       type: ADD_COMMENT_FAILURE,
-      //error: error.response.data,
     });
   }
 }
@@ -210,14 +182,12 @@ function* addCommentSaga(action) {
 function* loadForumPostsSaga(action) {
   try {
     const res = yield call(loadForumPosts, action.payload);
-    console.log(res);
     yield put({
       type: LOAD_FORUM_POSTS_SUCCESS,
       forumPosts: res.data.posts,
       temporalPostsLength: res.data.postSize,
     });
   } catch (error) {
-    console.log(error);
     yield put({
       type: LOAD_FORUM_POSTS_FAILURE,
       error: error.response,
@@ -235,9 +205,9 @@ function* deletePostSaga(action) {
   }
 }
 
+// -> deprecated
 function* deleteCommentSaga(action) {
   try {
-    console.log(action.payload);
     if (action.payload.type === "children") {
       yield call(deleteCommentWithChildren, action.payload.id);
     } else {
@@ -310,44 +280,6 @@ function* unLikeCommentSaga(action) {
   }
 }
 
-// function* searchPostsSaga(action) {
-//   try {
-//     // action.payload = postID
-
-//     const res = yield call(searchPosts, action.payload);
-//     yield put({
-//       type: SEARCH_POSTS_SUCCESS,
-//       contentType: action.payload.type,
-//       posts: res.data.posts,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     yield put({
-//       type: SEARCH_POSTS_FAILURE,
-//       //error: error.response.data,
-//     });
-//   }
-// }
-
-// function* filterSearchSaga(action) {
-//   try {
-//     // action.payload = postID
-
-//     const res = yield call(filterSearch, action.payload);
-//     yield put({
-//       type: FILTER_SEARCH_SUCCESS,
-//       contentType: action.payload.type,
-//       posts: res.data.posts,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     yield put({
-//       type: FILTER_SEARCH_FAILURE,
-//       //error: error.response.data,
-//     });
-//   }
-// }
-
 // watcher
 
 export function* watchPost() {
@@ -365,6 +297,4 @@ export function* watchPost() {
   yield takeLatest(UNLIKE_POST_REQUEST, unLikePostSaga);
   yield takeLatest(LIKE_COMMENT_REQUEST, upLikeCommentSaga);
   yield takeLatest(UNLIKE_COMMENT_REQUEST, unLikeCommentSaga);
-  //yield takeLatest(SEARCH_POSTS_REQUEST, searchPostsSaga);
-  // yield takeLatest(FILTER_SEARCH_REQUEST, filterSearchSaga);
 }
