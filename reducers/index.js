@@ -5,19 +5,11 @@ import post from "./post";
 import skill from "./skill";
 import chat from "./chat";
 
-// const rootReducer = combineReducers({
-//   index: (state = {}, action) => {
-//     switch (action.type) {
-//       case HYDRATE:
-//         return action.payload;
-//       default:
-//         return state;
-//     }
-//   },
-//   user,
-//   post,
-//   skill,
-// });
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 루트 리덕스 설정파일
+ */
 
 const rootReducer = (state, action) => {
   switch (action.type) {

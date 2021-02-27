@@ -1,5 +1,11 @@
 import { handleActions, createAction } from "redux-actions";
 
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 기술스택 관련 리덕스 설정파일
+ */
+
 // initial state
 
 const initialState = {

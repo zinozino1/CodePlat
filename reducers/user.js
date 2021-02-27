@@ -1,5 +1,11 @@
 import { handleActions, createAction } from "redux-actions";
-import { dummyMeCreator } from "../lib/util/dummyCreator";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 유저 관련 리덕스 설정파일
+ * @note deprecated 된 것은 컴포넌트 혹은 페이지 내부에서 axios 직접 요청으로 대체
+ */
 
 // initial state
 
@@ -19,17 +25,6 @@ const initialState = {
   registerFailure: null,
 };
 
-// export me
-
-export const getMe = () => {
-  if (!initialState.me) {
-    return null;
-  } else {
-    console.log({ ...initialState.me });
-    return { ...initialState.me };
-  }
-};
-
 // action type
 
 export const SET_USER_REQUEST = "user/SET_USER_REQUEST";
@@ -44,7 +39,8 @@ export const LOG_OUT_REQUEST = "user/LOG_OUT_REQUEST";
 export const LOG_OUT_SUCCESS = "user/LOG_OUT_SUCCESS";
 export const LOG_OUT_FAILURE = "user/LOG_OUT_FAILURE";
 
-export const REGISTER_REQUEST = "user/REGISTER_REQUEST"; // 제거예정
+// -> deprecated
+export const REGISTER_REQUEST = "user/REGISTER_REQUEST";
 export const REGISTER_SUCCESS = "user/REGISTER_SUCCESS";
 export const REGISTER_FAILURE = "user/REGISTER_FAILURE";
 
@@ -58,8 +54,10 @@ export const setUserRequestAction = createAction(
 );
 
 export const loginRequestAction = createAction(LOG_IN_REQUEST, (data) => data);
+
 export const logoutRequestAction = createAction(LOG_OUT_REQUEST);
 
+// -> deprecated
 export const registerRequestAction = createAction(
   REGISTER_REQUEST,
   (data) => data,
@@ -131,8 +129,8 @@ const userReducer = handleActions(
       logoutDone: false,
       logoutError: action.error,
     }),
+    // -> deprecated
     [REGISTER_REQUEST]: (state, action) => ({
-      // 제거예정
       ...state,
       registerLoading: true,
       registerSuccess: false,

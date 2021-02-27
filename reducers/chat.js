@@ -1,3 +1,9 @@
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 채팅 관련 리덕스 설정파일
+ */
+
 import { handleActions, createAction } from "redux-actions";
 
 // initial state

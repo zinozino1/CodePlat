@@ -1,11 +1,11 @@
 import { handleActions, createAction } from "redux-actions";
-import {
-  dummyPostsCreator,
-  dummyPostCreator,
-  dummyMeCreator,
-} from "../lib/util/dummyCreator";
-import shortid from "shortid";
-import { getMe } from "./user";
+
+/**
+ * @author 박진호
+ * @version 1.0
+ * @summary 포스트 관련 리덕스 설정파일
+ * @note deprecated 된 것은 컴포넌트 혹은 페이지 내부에서 axios 직접 요청으로 대체
+ */
 
 // initial state
 
@@ -57,15 +57,6 @@ const initialState = {
   unLikePostLoading: false,
   unLikePostDone: false,
   unLikePostError: null,
-  // editPostLoading: false,
-  // editPostDone: false,
-  // editPostError: null,
-  // searchPostsLoading: false,
-  // searchPostsDone: false,
-  // searchPostsError: null,
-  // filterSearchLoading: false,
-  // filterSearchDone: false,
-  // filterSearchError: null,
 };
 
 // action type
@@ -97,10 +88,12 @@ export const POST_UNSCRAP_REQUEST = "post/POST_UNSCRAP_REQUEST";
 export const POST_UNSCRAP_SUCCESS = "post/POST_UNSCRAP_SUCCESS";
 export const POST_UNSCRAP_FAILURE = "post/POST_UNSCRAP_FAILURE";
 
+// -> deprecated
 export const ADD_COMMENT_REQUEST = "post/ADD_COMMENT_REQUEST";
 export const ADD_COMMENT_SUCCESS = "post/ADD_COMMENT_SUCCESS";
 export const ADD_COMMENT_FAILURE = "post/ADD_COMMENT_FAILURE";
 
+// -> deprecated
 export const DELETE_COMMENT_REQUEST = "post/DELETE_COMMENT_REQUEST";
 export const DELETE_COMMENT_SUCCESS = "post/DELETE_COMMENT_SUCCESS";
 export const DELETE_COMMENT_FAILURE = "post/DELETE_COMMENT_FAILURE";
@@ -129,18 +122,6 @@ export const UNLIKE_COMMENT_REQUEST = "post/UNLIKE_COMMENT_REQUEST";
 export const UNLIKE_COMMENT_SUCCESS = "post/UNLIKE_COMMENT_SUCCESS";
 export const UNLIKE_COMMENT_FAILURE = "post/UNLIKE_COMMENT_FAILURE";
 
-// export const EDIT_POST_REQUEST = "post/EDIT_POST_REQUEST";
-// export const EDIT_POST_SUCCESS = "post/EDIT_POST_SUCCESS";
-// export const EDIT_POST_FAILURE = "post/EDIT_POST_FAILURE";
-
-// export const SEARCH_POSTS_REQUEST = "post/SEARCH_POSTS_REQUEST";
-// export const SEARCH_POSTS_SUCCESS = "post/SEARCH_POSTS_SUCCESS";
-// export const SEARCH_POSTS_FAILURE = "post/SEARCH_POSTS_FAILURE";
-
-// export const FILTER_SEARCH_REQUEST = "post/FILTER_SEARCH_REQUEST";
-// export const FILTER_SEARCH_SUCCESS = "post/FILTER_SEARCH_SUCCESS";
-// export const FILTER_SEARCH_FAILURE = "post/FILTER_SEARCH_FAILURE";
-
 // action creator
 
 export const initializePostAction = createAction(INITIALIZE_POST);
@@ -148,7 +129,7 @@ export const initializePostsAction = createAction(INITIALIZE_POSTS);
 
 export const loadPostRequestAction = createAction(
   LOAD_POST_REQUEST,
-  (data) => data, // type, id를 포함한 객체
+  (data) => data,
 );
 export const loadPostsReqeustAction = createAction(
   LOAD_POSTS_REQUEST,
@@ -159,7 +140,7 @@ export const mainLoadPostsReqeustAction = createAction(MAIN_LOAD_POSTS_REQUEST);
 
 export const writePostRequestAction = createAction(
   WRITE_POST_REQUEST,
-  (data) => data, // saga에서 타입에 따라 분기해야함
+  (data) => data,
 );
 
 export const postScrapRequestAction = createAction(
@@ -172,11 +153,13 @@ export const postUnScrapRequestAction = createAction(
   (data) => data,
 );
 
+// -> deprecated
 export const addCommentRequestAction = createAction(
   ADD_COMMENT_REQUEST,
   (data) => data,
 );
 
+// -> deprecated
 export const deleteCommentRequestAction = createAction(
   DELETE_COMMENT_REQUEST,
   (data) => data,
@@ -211,21 +194,6 @@ export const unLikeCommentRequestAction = createAction(
   UNLIKE_COMMENT_REQUEST,
   (data) => data,
 );
-
-// export const editPostReqeustAction = createAction(
-//   EDIT_POST_REQUEST,
-//   (data) => data,
-// );
-
-// export const searchPostsRequestAction = createAction(
-//   SEARCH_POSTS_REQUEST,
-//   (data) => data,
-// );
-
-// export const filterSearchRequestAction = createAction(
-//   FILTER_SEARCH_REQUEST,
-//   (data) => data,
-// );
 
 // reducer
 
@@ -280,7 +248,6 @@ const postReducer = handleActions(
       ...state,
       loadPostsLoading: false,
       loadPostsDone: false,
-      //loadPostsError: action.error,
     }),
     [MAIN_LOAD_POSTS_REQUEST]: (state, action) => ({
       ...state,
@@ -296,9 +263,6 @@ const postReducer = handleActions(
       studyPosts: action.study,
       projectPosts: action.project,
       forumPosts: action.forum,
-      // studyPosts: [...dummyPostsCreator("study", 5), ...state.studyPosts],
-      // projectPosts: [...dummyPostsCreator("project", 5), ...state.projectPosts],
-      // forumPosts: [...dummyPostsCreator("forum", 8), ...state.forumPosts],
     }),
     [MAIN_LOAD_POSTS_FAILURE]: (state, action) => ({
       ...state,
@@ -372,6 +336,7 @@ const postReducer = handleActions(
       postUnScrapDone: false,
       postUnScrapError: action.error,
     }),
+    // -> deprecated
     [ADD_COMMENT_REQUEST]: (state, action) => ({
       ...state,
       addCommentLoading: true,
@@ -391,6 +356,7 @@ const postReducer = handleActions(
       addCommentDone: false,
       addCommentError: action.error,
     }),
+    // -> deprecated
     [DELETE_COMMENT_REQUEST]: (state, action) => ({
       ...state,
       deleteCommentLoading: true,
@@ -462,7 +428,6 @@ const postReducer = handleActions(
         ...state.post,
         likes: [...state.post.likes].concat(action.like),
       },
-      // todo
     }),
     [LIKE_POST_FAILURE]: (state, action) => ({
       ...state,
@@ -489,7 +454,6 @@ const postReducer = handleActions(
           }
         }),
       },
-      //todo
     }),
     [UNLIKE_POST_FAILURE]: (state, action) => ({
       ...state,
@@ -559,62 +523,6 @@ const postReducer = handleActions(
       unLikeCommentDone: false,
       unLikeCommentError: action.error,
     }),
-    // [EDIT_POST_REQUEST]: (state, action) => ({
-    //   ...state,
-    //   editPostLoading: true,
-    //   editPostDone: false,
-    //   editPostError: null,
-    // }),
-    // [EDIT_POST_SUCCESS]: (state, action) => ({
-    //   ...state,
-    //   editPostLoading: false,
-    //   editPostDone: true,
-    //   editPostError: null,
-    // }),
-    // [EDIT_POST_FAILURE]: (state, action) => ({
-    //   ...state,
-    //   unLikeCommentLoading: false,
-    //   unLikeCommentDone: false,
-    //   unLikeCommentError: action.error,
-    // }),
-    // [SEARCH_POSTS_REQUEST]: (state, action) => ({
-    //   ...state,
-    //   searchPostsLoading: true,
-    //   searchPostsDone: false,
-    //   searchPostsError: null,
-    // }),
-    // [SEARCH_POSTS_SUCCESS]: (state, action) => ({
-    //   ...state,
-    //   searchPostsLoading: false,
-    //   searchPostsDone: true,
-    //   searchPostsError: null,
-    //   [action.contentType + "Posts"]: action.posts,
-    // }),
-    // [SEARCH_POSTS_FAILURE]: (state, action) => ({
-    //   ...state,
-    //   searchPostsLoading: false,
-    //   searchPostsDone: false,
-    //   searchPostsError: null,
-    // }),
-    // [FILTER_SEARCH_REQUEST]: (state, action) => ({
-    //   ...state,
-    //   filterSearchLoading: true,
-    //   filterSearchDone: false,
-    //   filterSearchError: null,
-    // }),
-    // [FILTER_SEARCH_SUCCESS]: (state, action) => ({
-    //   ...state,
-    //   filterSearchLoading: false,
-    //   filterSearchDone: true,
-    //   filterSearchError: null,
-    //   [action.contentType + "Posts"]: action.posts,
-    // }),
-    // [FILTER_SEARCH_FAILURE]: (state, action) => ({
-    //   ...state,
-    //   filterSearchLoading: false,
-    //   filterSearchDone: false,
-    //   filterSearchError: null,
-    // }),
   },
 
   initialState,
