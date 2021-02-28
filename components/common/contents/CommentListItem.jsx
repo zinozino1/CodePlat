@@ -131,26 +131,31 @@ const CommentListItem = ({ item, post }) => {
     onToggleIsEdit();
   }, [item, isEdit]);
 
-  const onReCommentSubmit = useCallback(() => {
+  const onReCommentSubmit = useCallback(async () => {
     if (reComment === "") {
       alert("내용을 입력해주세요.");
       return;
     }
     let submitConfirm = confirm("댓글을 등록하시겠습니까?");
     if (submitConfirm) {
-      dispatch(
-        addCommentRequestAction({
+      await axios
+        .post(`/api/comments`, {
           postId: post._id,
           type: post.type,
           content: reComment,
           commentTo: item._id,
           secretComment: isSecret,
-        }),
-      );
+        })
+        .then((res) => {
+          onChangeApplyToggle();
+          Router.push(`/articles/${post.type}/${post._id}`);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } else {
       return;
     }
-    Router.push(`/articles/${post.type}/${post._id}`);
   }, [post, item, reComment, isSecret]);
 
   const onUpdateComment = useCallback(
@@ -182,7 +187,7 @@ const CommentListItem = ({ item, post }) => {
   );
 
   const onDeleteComment = useCallback(
-    (id) => {
+    async (id) => {
       let confirmDelete = confirm("정말로 삭제하시겠습니까?");
       if (confirmDelete) {
         let flag = false;
@@ -194,7 +199,14 @@ const CommentListItem = ({ item, post }) => {
           }
         });
         if (flag) {
-          dispatch(deleteCommentRequestAction({ type: "children", id }));
+          await axios
+            .put(`/api/comments/parentDelete`, { id })
+            .then((res) => {
+              Router.push(`/articles/${post.type}/${post._id}`);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         } else {
           let child;
           let parent;
@@ -225,11 +237,16 @@ const CommentListItem = ({ item, post }) => {
               });
             });
           } else {
-            dispatch(deleteCommentRequestAction({ type: "none", id }));
+            await axios
+              .delete(`/api/comments/${id}`)
+              .then((res) => {
+                Router.push(`/articles/${post.type}/${post._id}`);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }
         }
-
-        Router.push(`/articles/${post.type}/${post._id}`);
       } else {
         return;
       }
