@@ -17,7 +17,7 @@ const register = () => {
         <title>회원가입</title>
       </Head>
       <AuthLayout type="register">
-        <RegisterTemplate />x
+        <RegisterTemplate />
       </AuthLayout>
     </>
   );
