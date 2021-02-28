@@ -118,7 +118,6 @@ function* mainLoadPostsSaga(action) {
     console.log(error);
     yield put({
       type: MAIN_LOAD_POSTS_FAILURE,
-      error: error.response.data,
     });
   }
 }
