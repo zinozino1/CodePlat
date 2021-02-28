@@ -32,7 +32,14 @@ CodePlat은 2명의 팀원이 겨울방학 약 50여일 간 개발한 사이드 
 
 #### 3.2.1 Create & Read
 
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/52441478/109411483-c97fce00-79e5-11eb-99f3-74db9954966a.gif)
+
+quill editor 라이브러리를 적용하여 사용자가 작성한 코드 신택스 하이라이팅 기능을 추가하였습니다. 또한 사용자는 프로젝트 특성에 맞게 기술을 선정할 수 있고, 원하는 파일을 업로드할 수도 있습니다.
+인피니트 스크롤링 로직을 구현하여 별도의 페이지네이션 없이 사용자가 편리하게 게시글 리스트를 파악할 수 있도록 하였습니다. 또한 해당 스터디나 프로젝트의 기술 혹은 지역 정보로 게시글을 필터링할 수 있고 게시글 검색 기능도 추가하였습니다.
+
 #### 3.2.2 Update & Delete
+
+![ezgif com-gif-maker (3)](https://user-images.githubusercontent.com/52441478/109411665-10ba8e80-79e7-11eb-91ff-0206492dbd6a.gif)
 
 <br>
 
