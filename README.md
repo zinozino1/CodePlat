@@ -20,9 +20,9 @@ CodePlat은 2명의 팀원이 겨울방학 약 50여일 간 개발한 사이드 
 
 ### 3.1 Authentication
 
-<center><img src="https://user-images.githubusercontent.com/52441478/109410492-748c8980-79de-11eb-8be9-d629b8e851fa.png" width="450" height="450"></center>
+<center><img src="https://user-images.githubusercontent.com/52441478/109410492-748c8980-79de-11eb-8be9-d629b8e851fa.png" width="450" ></center>
 
-<center><img src="https://user-images.githubusercontent.com/52441478/109410540-cc2af500-79de-11eb-903b-f80d0c1c0863.png" width="450" height="450"></center>
+<center><img src="https://user-images.githubusercontent.com/52441478/109410540-cc2af500-79de-11eb-903b-f80d0c1c0863.png" width="450" ></center>
 
 로컬 회원가입 뿐 아니라 소셜 회원가입도 지원하여 사용자의 편의성을 증대하였습니다. 또한 비밀번호 찾기 및 변경기능을 제공하고, 이메일 인증 시스템을 제공하여 유연한 사용자 정보 관리를 할 수 있도록 노력하였습니다. 회원 인증 기능은 firebase의 인증 모듈 등과 같은 별도의 툴 없이 프론트와 백에서 직접 유효성 검증 로직을 구성하여 개발하였습니다.
 
@@ -34,7 +34,7 @@ CodePlat은 2명의 팀원이 겨울방학 약 50여일 간 개발한 사이드 
 
 ![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/52441478/109411483-c97fce00-79e5-11eb-99f3-74db9954966a.gif)
 
-quill editor 라이브러리를 적용하여 사용자가 작성한 코드 신택스 하이라이팅 기능을 추가하였습니다. 또한 사용자는 프로젝트 특성에 맞게 기술을 선정할 수 있고, 원하는 파일을 업로드할 수도 있습니다.
+quill editor 라이브러리를 적용하여 사용자가 작성한 코드 신택스 하이라이팅 기능을 적용하였습니다. 또한 사용자는 프로젝트 특성에 맞게 기술을 선정할 수 있고, 원하는 파일을 업로드할 수도 있습니다.
 인피니트 스크롤링 로직을 구현하여 별도의 페이지네이션 없이 사용자가 편리하게 게시글 리스트를 파악할 수 있도록 하였습니다. 또한 해당 스터디나 프로젝트의 기술 혹은 지역 정보로 게시글을 필터링할 수 있고 게시글 검색 기능도 추가하였습니다.
 
 #### 3.2.2 Update & Delete
@@ -57,7 +57,9 @@ realtime database를 지원하는 firebase를 사용하여 사용자간 실시�
 
 ### 3.5 Responsive Design
 
-영상
+![ezgif com-gif-maker (6)](https://user-images.githubusercontent.com/52441478/109413735-49139a00-79f2-11eb-8918-caf995f0a818.gif)
+
+각 페이지마다 반응형 CSS 디자인을 도입하여 모바일 환경에서도 플랫폼을 원활하게 이용할 수 있도록 하였습니다.
 
 <br>
 
@@ -85,12 +87,17 @@ React hook의 자유도 높은 활용성 덕분에 컴포넌트를 Container, Pr
 
 ### 4.4 Redux, Redux-saga Architecture
 
-Redux 패턴은 크게 action type, action creator, reducer 3가지의 분류로 나누어 설계하였고, Redux 데이터 비동기 처리는 redux-saga 를 이용하여 직관적으로 데이터 요청 과정을 파악할 수 있도록 Request-> Success/Failure의 패턴으로 설계 하였습니다. 또한 redux-actions 라이브러리를 사용하여 action 생성과 reducer handle을 보다 쉽게 다루도록 노력했습니다.
+Redux 패턴은 크게 action type, action creator, reducer 3가지의 분류로 나누어 설계하였고, Redux 데이터 비동기 처리는 redux-saga 를 이용하여 직관적으로 데이터 요청 과정을 파악할 수 있도록 Request-> Success/Failure의 패턴으로 설계 하였습니다. 또한 redux-actions 라이브러리를 사용하여 action 생성과 reducer handle을 보다 쉽게 하도록 노력했습니다.
 
 - 예시
-  ![image](https://user-images.githubusercontent.com/52441478/109409824-2fb22400-79d9-11eb-8e39-659a2b8a7408.png)
+
+<center><img src="https://user-images.githubusercontent.com/52441478/109409824-2fb22400-79d9-11eb-8e39-659a2b8a7408.png" width="400" ></center>
 
 <br>
+
+### 4.5 Styling
+
+개발 생산성을 위해 CSS UI 프레임워크인 antd를 사용하였고 styled-components 라이브러리를 적용하여 커스텀 디자인을 구현했습니다.
 
 ## 5. Backend
 
