@@ -6,21 +6,23 @@
 
 ## 0. Contents
 
-[1. Project Summary](#1.-project-summary)
+[1. Project Summary](#1-project-summary)
 
-[2. Project target](#2.-project-target)
+[2. Project target](#2-project-target)
 
-[3. Main features](#3.-main-features)
+[3. Main features](#3-main-features)
 
-[4. Frontend](#4.-frontend)
+[4. Frontend](#4-frontend)
 
-[5. Backend](#5.-backend)
+[5. Backend](#5-backend)
 
-[6. How to Run](#6.-how-to-run)
+[6. How to Run](#6-how-to-run)
 
-[7. Cooperation & Testing Tool](#7.-cooperation-&-testing-tool)
+[7. Cooperation & Testing Tool](#7-cooperation-&-testing-tool)
 
-[8. Contributor](#8.-contributor)
+[8. Contributor](#8-contributor)
+
+<br>
 
 ## 1. Project Summary
 
