@@ -81,7 +81,6 @@ function* loadPostSaga(action) {
     console.log(error);
     yield put({
       type: LOAD_POST_FAILURE,
-      error: error.response.data,
     });
   }
 }
@@ -132,7 +131,6 @@ function* writePostSaga(action) {
     console.log(error);
     yield put({
       type: WRITE_POST_FAILURE,
-      error: error.response.data,
     });
   }
 }
@@ -145,7 +143,6 @@ function* postScrapSaga(action) {
     console.log(error);
     yield put({
       type: POST_SCRAP_FAILURE,
-      error: error.response.data,
     });
   }
 }
@@ -158,7 +155,6 @@ function* postUnScrapSaga(action) {
     console.log(error);
     yield put({
       type: POST_UNSCRAP_FAILURE,
-      error: error.response.data,
     });
   }
 }
@@ -189,7 +185,6 @@ function* loadForumPostsSaga(action) {
   } catch (error) {
     yield put({
       type: LOAD_FORUM_POSTS_FAILURE,
-      error: error.response,
     });
   }
 }

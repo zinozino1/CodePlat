@@ -54,7 +54,7 @@ function* loginSaga(action) {
       .catch((err) => {
         console.log(err);
       });
-    yield put({ type: LOG_IN_FAILURE, error: error.response.data });
+    yield put({ type: LOG_IN_FAILURE });
   }
 }
 
@@ -65,7 +65,7 @@ function* logoutSaga(action) {
     window.location.href = `http://localhost:3000`;
   } catch (error) {
     console.log(error);
-    yield put({ type: LOG_OUT_FAILURE, error: error.response.data });
+    yield put({ type: LOG_OUT_FAILURE });
   }
 }
 
@@ -75,7 +75,7 @@ function* registerSaga(action) {
     yield call(register, action.data);
     yield put({ type: REGISTER_SUCCESS });
   } catch (error) {
-    yield put({ type: REGISTER_FAILURE, error: error.response.data });
+    yield put({ type: REGISTER_FAILURE });
   }
 }
 
