@@ -4,7 +4,27 @@
 
 <br>
 
+## 0. Contents
+
+[1. Project Summary](#1.-project-summary)
+
+[2. Project target](#2.-project-target)
+
+[3. Main features](#3.-main-features)
+
+[4. Frontend](#4.-frontend)
+
+[5. Backend](#5.-backend)
+
+[6. How to Run](#6.-how-to-run)
+
+[7. Cooperation & Testing Tool](#7.-cooperation-&-testing-tool)
+
+[8. Contributor](#8.-contributor)
+
 ## 1. Project Summary
+
+![image](https://user-images.githubusercontent.com/52441478/109414651-51220880-79f7-11eb-8d8a-6fa3376f0a73.png)
 
 CodePlat은 2명의 팀원이 겨울방학 약 50여일 간 개발한 사이드 프로젝트로, 학생, 직장인, 프리랜서, 디자이너 등에게 프로젝트 혹은 스터디 구인, 참여 및 커뮤니티 기능을 제공하는 서비스 플랫폼입니다. 사용자는 스터디 및 프로젝트 모집, 구인 뿐 아니라 커뮤니티 및 채팅 기능을 활용하여 다른 사용자와의 원활한 교류를 할 수 있습니다.
 
