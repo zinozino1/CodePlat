@@ -20,9 +20,9 @@ CodePlat은 2명의 팀원이 겨울방학 약 50여일 간 개발한 사이드 
 
 ### 3.1 Authentication
 
-![image](https://user-images.githubusercontent.com/52441478/109410492-748c8980-79de-11eb-8be9-d629b8e851fa.png)
+<center><img src="https://user-images.githubusercontent.com/52441478/109410492-748c8980-79de-11eb-8be9-d629b8e851fa.png" width="450" height="450"></center>
 
-![image](https://user-images.githubusercontent.com/52441478/109410540-cc2af500-79de-11eb-903b-f80d0c1c0863.png)
+<center><img src="https://user-images.githubusercontent.com/52441478/109410540-cc2af500-79de-11eb-903b-f80d0c1c0863.png" width="450" height="450"></center>
 
 로컬 회원가입 뿐 아니라 소셜 회원가입도 지원하여 사용자의 편의성을 증대하였습니다. 또한 비밀번호 찾기 및 변경기능을 제공하고, 이메일 인증 시스템을 제공하여 유연한 사용자 정보 관리를 할 수 있도록 노력하였습니다. 회원 인증 기능은 firebase의 인증 모듈 등과 같은 별도의 툴 없이 프론트와 백에서 직접 유효성 검증 로직을 구성하여 개발하였습니다.
 
