@@ -43,15 +43,17 @@ quill editor 라이브러리를 적용하여 사용자가 작성한 코드 신�
 
 <br>
 
-### 3.3 Post Scrap & Like, Comment Like
+### 3.3 Post Scrap & Like, Comment
 
-영상
+![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/52441478/109412767-3e0a3b00-79ed-11eb-9439-5e899adbdd0c.gif)
 
 <br>
 
 ### 3.4 Realtime Chat & Chat notification
 
-영상
+![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/52441478/109412980-6cd4e100-79ee-11eb-9f53-6e34b8e9f2c3.gif)
+
+realtime database를 지원하는 firebase를 사용하여 사용자간 실시간 채팅과 알림기능을 구현하였습니다.
 
 ### 3.5 Responsive Design
 
