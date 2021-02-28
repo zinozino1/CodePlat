@@ -114,6 +114,7 @@ const EditProfileForm = ({
           <ProfileItemWrapper>
             <span>닉네임</span>
             <Input
+              disabled
               placeholder="닉네임"
               onChange={onChangeNickname}
               defaultValue={me && me.nickname}

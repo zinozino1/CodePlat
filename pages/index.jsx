@@ -124,7 +124,6 @@ const index = () => {
   return (
     <Layout>
       <Header />
-
       <ContentWrapper>
         <Row>
           {me ? (

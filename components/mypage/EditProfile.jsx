@@ -12,7 +12,7 @@ import FormData from "form-data";
 
 /**
  * @author 박진호
- * @version 1.0
+ * @version 1.1
  * @summary 프로필 수정 폼 + 기술 스택 수정 폼 컨테이너 컴포넌트
  */
 
@@ -40,7 +40,7 @@ const EditProfile = () => {
 
   // local state
 
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState(me && me.nickname);
   const [githubId, setGithubId] = useState("");
   const [gitSecret, setGitSecret] = useState(false);
   const [profileImage, setProfileImage] = useState(null);

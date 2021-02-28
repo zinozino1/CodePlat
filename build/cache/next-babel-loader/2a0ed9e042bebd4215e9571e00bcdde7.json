@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { jsx as _jsx } from \"react/jsx-runtime\";\nimport React from \"react\";\n\nconst ScrapContent = () => {\n  return /*#__PURE__*/_jsx(\"div\", {\n    children: \"ScrapContent\"\n  });\n};\n\nexport default ScrapContent;","map":null,"metadata":{},"sourceType":"module"}

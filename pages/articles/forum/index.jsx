@@ -201,6 +201,14 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
+    // context.store.dispatch(
+    //   loadForumPostsRequestAction({
+    //     type: "latest",
+    //     term: "",
+    //     skip: 0,
+    //     field: "QnA",
+    //   }),
+    // );
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

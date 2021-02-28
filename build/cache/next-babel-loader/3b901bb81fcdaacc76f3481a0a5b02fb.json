@@ -1,1 +1,0 @@
-{"ast":null,"code":"import { all, put, call, fork } from \"redux-saga/effects\";\nimport { watchUser } from \"./user\";\nimport { watchPost } from \"./post\";\n\nfunction* rootSaga() {\n  yield all([fork(watchUser), fork(watchPost)]);\n}\n\nexport default rootSaga;","map":null,"metadata":{},"sourceType":"module"}

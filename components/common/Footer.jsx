@@ -53,20 +53,7 @@ const Footer = () => {
               </p>
             </Card>
           </Col>
-          <Col xs={12} lg={{ span: 6, offset: 2 }}>
-            <div style={PartialStyle}>고객센터</div>
-            <Link href="#">
-              <a style={FooterAnchor}>이용약관</a>
-            </Link>
-            <br />
-            <Link href="#">
-              <a style={FooterAnchor}>개인정보처리취급방침</a>
-            </Link>
-            <br />
-            <Link href="#">
-              <a style={FooterAnchor}>쿠키환경설정</a>
-            </Link>
-          </Col>
+
           <Col xs={12} lg={{ span: 6, offset: 2 }}>
             <div style={PartialStyle}>바로가기</div>
             <Link href="/articles/project">
@@ -79,6 +66,20 @@ const Footer = () => {
             <br />
             <Link href="/articles/forum">
               <a style={FooterAnchor}>포럼</a>
+            </Link>
+          </Col>
+          <Col xs={12} lg={{ span: 6, offset: 2 }}>
+            <div style={PartialStyle}>고객센터</div>
+            <Link href="#">
+              <a style={FooterAnchor}>이용약관</a>
+            </Link>
+            <br />
+            <Link href="#">
+              <a style={FooterAnchor}>개인정보처리취급방침</a>
+            </Link>
+            <br />
+            <Link href="#">
+              <a style={FooterAnchor}>쿠키환경설정</a>
             </Link>
           </Col>
         </Row>
