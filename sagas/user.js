@@ -62,7 +62,7 @@ function* logoutSaga(action) {
   try {
     yield call(logout);
     yield put({ type: LOG_OUT_SUCCESS });
-    window.location.href = `http://localhost:3000`;
+    window.location.href = `/`;
   } catch (error) {
     console.log(error);
     yield put({ type: LOG_OUT_FAILURE });

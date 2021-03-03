@@ -126,7 +126,7 @@ function* writePostSaga(action) {
     const res = yield call(writePost, action.payload);
     yield put({ type: WRITE_POST_SUCCESS });
     const post = res.data.post;
-    window.location.href = `http://localhost:3000/articles/${post.type}/${post._id}`;
+    window.location.href = `/articles/${post.type}/${post._id}`;
   } catch (error) {
     console.log(error);
     yield put({
