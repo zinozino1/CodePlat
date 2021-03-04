@@ -1,0 +1,1 @@
+{"ast":null,"code":"import axios from \"axios\";\nimport { SERVER_URL } from \"../constant/constant\";\n/**\n * @author 박진호\n * @version 1.0\n * @summary global axios 설정을 위한 파일\n */\n\naxios.defaults.baseURL = `${SERVER_URL}`;\naxios.defaults.withCredentials = true;\nconst client = axios.create();\nexport default client;","map":null,"metadata":{},"sourceType":"module"}

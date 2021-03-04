@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { all, fork } from \"redux-saga/effects\";\nimport { watchUser } from \"./user\";\nimport { watchPost } from \"./post\";\n/**\n * @author 박진호\n * @version 1.0\n * @summary 루트 사가 설정파일\n */\n\nfunction* rootSaga() {\n  yield all([fork(watchUser), fork(watchPost)]);\n}\n\nexport default rootSaga;","map":null,"metadata":{},"sourceType":"module"}
