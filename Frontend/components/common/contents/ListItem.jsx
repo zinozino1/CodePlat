@@ -141,8 +141,7 @@ const ListItem = ({ item, type }) => {
                         <Image
                           width={24}
                           height={24}
-                          src={`
-                          ${item.writer.avatarUrl}`}
+                          src={`${item.writer.avatarUrl}`}
                         />
                       )
                     }
