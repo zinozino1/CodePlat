@@ -59,7 +59,7 @@ const ForumFilterWrapper = styled.div`
 
 // helper variables
 
-let skip = 0;
+var skip = 0;
 
 const Forum = ({ router }) => {
   // redux
@@ -108,6 +108,8 @@ const Forum = ({ router }) => {
   // hooks
 
   useEffect(() => {
+    skip = 0;
+
     dispatch(
       loadForumPostsRequestAction({
         type: radioValue,
@@ -116,7 +118,10 @@ const Forum = ({ router }) => {
         field,
       }),
     );
-    skip += 10;
+
+    if (loadForumPostsDone) {
+      skip += 10;
+    }
 
     return () => {
       skip = 0;
@@ -131,7 +136,7 @@ const Forum = ({ router }) => {
       const clientHeight = document.documentElement.clientHeight;
 
       if (scrollTop + clientHeight > scrollHeight - 300) {
-        if (loadForumPostsDone) {
+        if (loadForumPostsDone && !loadForumPostsLoading) {
           if (temporalPostsLength >= 10) {
             dispatch(
               loadForumPostsRequestAction({
