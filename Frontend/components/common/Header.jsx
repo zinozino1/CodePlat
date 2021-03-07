@@ -107,11 +107,18 @@ const ButtonGroup = styled.div`
       border: 1px solid #313355;
     }
   }
-  @media (max-width: 768px) {
+
+  @media (max-width: 1368px) {
+    .btn-login,
+    .btn-register {
+      width: 50px;
+      font-size: 11px;
+      padding: 0;
+    }
     .btn-mypage,
     .btn-logout {
-      width: 70px;
-      font-size: 12px;
+      width: 41px;
+      font-size: 8px;
       padding: 0;
     }
   }

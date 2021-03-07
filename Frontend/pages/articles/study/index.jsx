@@ -66,29 +66,6 @@ const Study = ({ router }) => {
     setLocation(value);
   }, []);
 
-  // helper method
-
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-
-    if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      if (temporalPostsLength >= 10) {
-        dispatch(
-          loadPostsReqeustAction({
-            type: "study",
-            skip,
-            techStack: skill,
-            term: router.query.term,
-            location,
-          }),
-        );
-        skip += 10;
-      }
-    }
-  };
-
   // hooks
 
   useEffect(() => {
@@ -110,11 +87,33 @@ const Study = ({ router }) => {
   }, [router, skill, location]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+
+      if (scrollTop + clientHeight > scrollHeight - 300) {
+        if (!loadPostsLoading) {
+          if (temporalPostsLength >= 10) {
+            dispatch(
+              loadPostsReqeustAction({
+                type: "study",
+                skip,
+                techStack: skill,
+                term: router.query.term,
+                location,
+              }),
+            );
+            skip += 10;
+          }
+        }
+      }
+    };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [temporalPostsLength]);
+  }, [temporalPostsLength, loadPostsLoading, studyPosts]);
 
   return (
     <>
@@ -147,18 +146,13 @@ const Study = ({ router }) => {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async (context) => {
-    //console.log(context);
-
     const cookie = context.req ? context.req.headers.cookie : "";
     client.defaults.headers.Cookie = "";
     if (context.req && cookie) {
-      //console.log("fuckcookie", cookie);
       client.defaults.withCredentials = true;
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
-    //context.store.dispatch(mainLoadPostsReqeustAction());
-    //context.store.dispatch(END);
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },

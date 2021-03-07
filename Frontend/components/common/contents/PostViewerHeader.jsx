@@ -50,9 +50,11 @@ const PostViewerHeaderWrapper = styled.div`
     color: #888;
     flex: 1;
     text-align: left;
-
     line-height: 30px;
     display: flex;
+    @media (max-width: 1368px) {
+      flex-direction: column;
+    }
     .post-summary {
     }
     .post-btns {
@@ -76,6 +78,7 @@ const PostViewerHeaderWrapper = styled.div`
     .delete-btn,
     .like-btn,
     .revise-btn {
+      border: 1px solid red;
       padding: 5px;
       margin: 0 5px;
       border: none;

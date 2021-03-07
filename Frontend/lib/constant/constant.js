@@ -4,7 +4,8 @@
  * @summary 프로젝트에 쓰이는 상수 변수 정의
  */
 
-export const SERVER_URL = "http://api.codeplat.co.kr";
+// export const SERVER_URL = "http://api.codeplat.co.kr";
+export const SERVER_URL = "http://localhost:4000";
 
 export const CLIENT_URL = "http://codeplat.co.kr";
 

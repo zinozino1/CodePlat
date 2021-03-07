@@ -65,7 +65,9 @@ const Forum = ({ router }) => {
   // redux
 
   const dispatch = useDispatch();
-  const { forumPosts, loadPostsLoading } = useSelector((state) => state.post);
+  const { forumPosts, loadForumPostsLoading } = useSelector(
+    (state) => state.post,
+  );
   const { temporalPostsLength } = useSelector((state) => state.post);
 
   // local state
@@ -103,27 +105,6 @@ const Forum = ({ router }) => {
     [router],
   );
 
-  // helper method
-
-  const handleScroll = () => {
-    const scrollHeight = document.documentElement.scrollHeight;
-    const scrollTop = document.documentElement.scrollTop;
-    const clientHeight = document.documentElement.clientHeight;
-    if (scrollTop + clientHeight >= scrollHeight && !loadPostsLoading) {
-      if (temporalPostsLength >= 10) {
-        dispatch(
-          loadForumPostsRequestAction({
-            type: radioValue,
-            skip,
-            term: router.query.term,
-            field,
-          }),
-        );
-      }
-      skip += 10;
-    }
-  };
-
   // hooks
 
   useEffect(() => {
@@ -141,14 +122,35 @@ const Forum = ({ router }) => {
       skip = 0;
       dispatch(initializePostsAction());
     };
-  }, [router]);
+  }, [router, radioValue, field]);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight;
+      const scrollTop = document.documentElement.scrollTop;
+      const clientHeight = document.documentElement.clientHeight;
+
+      if (scrollTop + clientHeight > scrollHeight - 300) {
+        if (!loadForumPostsLoading) {
+          if (temporalPostsLength >= 10) {
+            dispatch(
+              loadForumPostsRequestAction({
+                type: radioValue,
+                skip,
+                term: router.query.term,
+                field,
+              }),
+            );
+            skip += 10;
+          }
+        }
+      }
+    };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [temporalPostsLength]);
+  }, [temporalPostsLength, loadForumPostsLoading, forumPosts]);
 
   return (
     <>
@@ -182,7 +184,7 @@ const Forum = ({ router }) => {
           </Radio.Group>
         </ForumFilterWrapper>
         <List data={forumPosts} type="forum" />
-        {loadPostsLoading && (
+        {loadForumPostsLoading && (
           <SpinWrapper>
             <Spin tip="불러오는중..." />
           </SpinWrapper>
@@ -201,14 +203,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       client.defaults.headers.Cookie = cookie;
     }
     context.store.dispatch(setUserRequestAction());
-    // context.store.dispatch(
-    //   loadForumPostsRequestAction({
-    //     type: "latest",
-    //     term: "",
-    //     skip: 0,
-    //     field: "QnA",
-    //   }),
-    // );
     context.store.dispatch(END);
     await context.store.sagaTask.toPromise();
   },
