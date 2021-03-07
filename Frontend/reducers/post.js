@@ -381,14 +381,16 @@ const postReducer = handleActions(
       loadForumPostsDone: false,
       loadForumPostsError: null,
     }),
-    [LOAD_FORUM_POSTS_SUCCESS]: (state, action) => ({
-      ...state,
-      loadForumPostsLoading: false,
-      loadForumPostsDone: true,
-      loadForumPostsError: null,
-      temporalPostsLength: action.temporalPostsLength,
-      forumPosts: state.forumPosts.concat(action.forumPosts),
-    }),
+    [LOAD_FORUM_POSTS_SUCCESS]: (state, action) => {
+      return {
+        ...state,
+        loadForumPostsLoading: false,
+        loadForumPostsDone: true,
+        loadForumPostsError: null,
+        temporalPostsLength: action.temporalPostsLength,
+        forumPosts: state.forumPosts.concat(action.forumPosts),
+      };
+    },
     [LOAD_FORUM_POSTS_FAILURE]: (state, action) => ({
       ...state,
       loadForumPostsLoading: false,

@@ -65,7 +65,7 @@ const Forum = ({ router }) => {
   // redux
 
   const dispatch = useDispatch();
-  const { forumPosts, loadForumPostsLoading } = useSelector(
+  const { forumPosts, loadForumPostsLoading, loadForumPostsDone } = useSelector(
     (state) => state.post,
   );
   const { temporalPostsLength } = useSelector((state) => state.post);
@@ -131,7 +131,7 @@ const Forum = ({ router }) => {
       const clientHeight = document.documentElement.clientHeight;
 
       if (scrollTop + clientHeight > scrollHeight - 300) {
-        if (!loadForumPostsLoading) {
+        if (loadForumPostsDone) {
           if (temporalPostsLength >= 10) {
             dispatch(
               loadForumPostsRequestAction({
@@ -150,7 +150,7 @@ const Forum = ({ router }) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [temporalPostsLength, loadForumPostsLoading, forumPosts]);
+  }, [temporalPostsLength, loadForumPostsDone, forumPosts]);
 
   return (
     <>
@@ -184,7 +184,7 @@ const Forum = ({ router }) => {
           </Radio.Group>
         </ForumFilterWrapper>
         <List data={forumPosts} type="forum" />
-        {loadForumPostsLoading && (
+        {!loadForumPostsDone && (
           <SpinWrapper>
             <Spin tip="불러오는중..." />
           </SpinWrapper>

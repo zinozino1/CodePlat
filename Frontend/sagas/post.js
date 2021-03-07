@@ -103,6 +103,22 @@ function* loadPostsSaga(action) {
   }
 }
 
+function* loadForumPostsSaga(action) {
+  try {
+    const res = yield call(loadForumPosts, action.payload);
+    yield put({
+      type: LOAD_FORUM_POSTS_SUCCESS,
+      forumPosts: res.data.posts,
+      temporalPostsLength: res.data.postSize,
+    });
+  } catch (error) {
+    console.log(error);
+    yield put({
+      type: LOAD_FORUM_POSTS_FAILURE,
+    });
+  }
+}
+
 function* mainLoadPostsSaga(action) {
   try {
     const res = yield call(mainLoadPosts);
@@ -170,21 +186,6 @@ function* addCommentSaga(action) {
     console.log(error);
     yield put({
       type: ADD_COMMENT_FAILURE,
-    });
-  }
-}
-
-function* loadForumPostsSaga(action) {
-  try {
-    const res = yield call(loadForumPosts, action.payload);
-    yield put({
-      type: LOAD_FORUM_POSTS_SUCCESS,
-      forumPosts: res.data.posts,
-      temporalPostsLength: res.data.postSize,
-    });
-  } catch (error) {
-    yield put({
-      type: LOAD_FORUM_POSTS_FAILURE,
     });
   }
 }
