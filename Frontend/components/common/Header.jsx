@@ -207,7 +207,9 @@ const Header = ({ router }) => {
                 globalCount -= v.count;
               }
             });
-            setGlobalCount(globalCount);
+            if (globalCount >= 0) {
+              setGlobalCount(globalCount);
+            }
           }
         });
       me &&
