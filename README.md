@@ -2,7 +2,7 @@
 
 ![plat-logo](https://user-images.githubusercontent.com/52441478/109408651-b9a8bf80-79ce-11eb-97d5-2eb50bf0712c.png)
 
-## https://codeplat.co.kr
+## https://codeplat.co.kr  (서버과금으로인한 서비스 일시 중단)
 
 <br>
 
